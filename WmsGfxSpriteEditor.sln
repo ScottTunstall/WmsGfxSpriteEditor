@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmsGfxSpriteEditor", "WmsGfxSpriteEditor\WmsGfxSpriteEditor.csproj", "{40015AA0-D904-4C3E-A6B8-2383EF59A260}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40015AA0-D904-4C3E-A6B8-2383EF59A260}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40015AA0-D904-4C3E-A6B8-2383EF59A260}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40015AA0-D904-4C3E-A6B8-2383EF59A260}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40015AA0-D904-4C3E-A6B8-2383EF59A260}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8F0A4BE1-A0BA-4A9D-A3CC-7CDCE354F7B2}
+	EndGlobalSection
+EndGlobal
