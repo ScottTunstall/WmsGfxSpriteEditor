@@ -11,7 +11,7 @@ Here's how to use the current version of my app:
 
 1. Acquire the Robotron Tie Die Roms from WILLIAMS DEFENDER PLAYERS UNITE Facebook group
 2. Extract the zip file with the roms to a directory
-3. Build and run my app (don't worry, an installer is coming)
+3. Build and run my app in Visual Studio 2022 (don't worry, an installer is coming)
 4. In the app, select File/Load then select the folder you extracted the tie die ROMs to
 5. You can now use the dropdown menu and zoom to select the sprite and zoom in/out accordingly.
 
