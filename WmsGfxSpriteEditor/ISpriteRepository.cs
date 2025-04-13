@@ -16,7 +16,7 @@ namespace WmsGfxSpriteEditor
         /// Gets all available sprites
         /// </summary>
         /// <returns>A collection of sprite information</returns>
-        IEnumerable<SpriteInfo> GetAllSprites();
+        IReadOnlyCollection<SpriteInfo> GetAllSprites();
 
         /// <summary>
         /// Gets a sprite by its index

@@ -1,6 +1,7 @@
 ﻿using WmsGfxSpriteEditor.Controls;
-using WmsGfxSpriteEditor.Palettes;
-using WmsGfxSpriteEditor.Roms;
+using WmsGfxSpriteEditor.ROMs.Robotron.Shared;
+using WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes;
+using WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
@@ -32,7 +33,7 @@ namespace WmsGfxSpriteEditor
             // Initialize services
             _romService = new RobotronWDPUTieDieRomFileService();
             _spriteRenderer = new SpriteRenderer();
-            _spriteRepository = new RobotronBlueLabelSpriteRepository(); // Use the Robotron sprite repository
+            _spriteRepository = new RobotronSpriteRepository(); // Use the Robotron sprite repository
 
             // Create the Robotron palette
             IPalette robotronPalette = new RobotronPalette();
