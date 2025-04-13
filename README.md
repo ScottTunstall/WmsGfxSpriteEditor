@@ -1,8 +1,8 @@
-# WmsGfxSpriteEditor
+# Williams Graphics Sprite Editor
 
 Sprite editor for Robotron. I MIGHT extend this for other williams games, but to be honest I only play Robotron.
 
-It can only be used as a sprite viewer just now - that will change in the near future.
+It can only be used as a sprite viewer just now - *that will change in the near future* - keep checking for updates.
 
 If you're only interested in viewing sprites, not editing, go to https://www.seanriddle.com/ripper.html - Sean Riddle's viewer is more complete than mine, and supports more Williams games.
 
