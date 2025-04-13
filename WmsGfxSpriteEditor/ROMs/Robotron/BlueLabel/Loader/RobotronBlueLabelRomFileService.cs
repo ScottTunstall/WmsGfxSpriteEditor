@@ -1,4 +1,4 @@
-﻿namespace WmsGfxSpriteEditor.Roms
+﻿namespace WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader
 {
     public class RobotronBlueLabelRomFileService: RomFileServiceBase 
     {

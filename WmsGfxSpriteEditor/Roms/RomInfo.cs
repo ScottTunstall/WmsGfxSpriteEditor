@@ -1,4 +1,4 @@
-﻿namespace WmsGfxSpriteEditor.Roms
+﻿namespace WmsGfxSpriteEditor.ROMs
 {
     /// <summary>
     /// Represents information about a ROM file in the system

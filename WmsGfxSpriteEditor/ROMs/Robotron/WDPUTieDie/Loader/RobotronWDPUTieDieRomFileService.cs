@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WmsGfxSpriteEditor.Roms
+﻿namespace WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader
 {
     /// <summary>
     /// Robotron Tie Die ROMS from Williams Defender Players Unite (WDPU)
