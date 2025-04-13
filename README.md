@@ -9,7 +9,7 @@ If you're only interested in viewing sprites, not editing, go to https://www.sea
 
 Here's how to use the current version of my app:
 
-1. Acquire the Robotron Tie Die Roms from WILLIAMS DEFENDER PLAYERS UNITE Facebook group
+1. Acquire the Robotron Tie Die Roms from WILLIAMS DEFENDER PLAYERS UNITE Facebook group (I will support MAME compatible versions soon)
 2. Extract the zip file with the roms to a directory
 3. Build and run my app in Visual Studio 2022 (don't worry, an installer is coming)
 4. In the app, select File/Load then select the folder you extracted the tie die ROMs to
