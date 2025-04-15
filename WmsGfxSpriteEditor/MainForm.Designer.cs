@@ -30,7 +30,6 @@ namespace WmsGfxSpriteEditor
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
-            mnuViewPalette = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
             topPanel = new Panel();
@@ -80,51 +79,54 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFileLoad
             // 
+            mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(164, 24);
+            mnuFileLoad.Size = new Size(180, 24);
             mnuFileLoad.Text = "&Load";
-            mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
-
+            // 
+            // mnuFileLoadRobotron
+            // 
+            mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU, mnuFileLoadRobotronTieDieMAME });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(200, 24);
+            mnuFileLoadRobotron.Size = new Size(180, 24);
             mnuFileLoadRobotron.Text = "Robotron: 2084";
-            mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] {
-                mnuFileLoadRobotronBlueLabel,
-                mnuFileLoadRobotronTieDieWDPU,
-                mnuFileLoadRobotronTieDieMAME
-            });
-
+            // 
+            // mnuFileLoadRobotronBlueLabel
+            // 
             mnuFileLoadRobotronBlueLabel.Name = "mnuFileLoadRobotronBlueLabel";
-            mnuFileLoadRobotronBlueLabel.Size = new Size(200, 24);
-            mnuFileLoadRobotronBlueLabel.Text = "Blue Label";
             mnuFileLoadRobotronBlueLabel.ShortcutKeys = Keys.Control | Keys.B;
+            mnuFileLoadRobotronBlueLabel.Size = new Size(238, 24);
+            mnuFileLoadRobotronBlueLabel.Text = "Blue Label";
             mnuFileLoadRobotronBlueLabel.Click += mnuFileLoadRobotronBlueLabel_Click;
-
+            // 
+            // mnuFileLoadRobotronTieDieWDPU
+            // 
             mnuFileLoadRobotronTieDieWDPU.Name = "mnuFileLoadRobotronTieDieWDPU";
-            mnuFileLoadRobotronTieDieWDPU.Size = new Size(200, 24);
-            mnuFileLoadRobotronTieDieWDPU.Text = "Tie Die (WDPU)";
             mnuFileLoadRobotronTieDieWDPU.ShortcutKeys = Keys.Control | Keys.W;
+            mnuFileLoadRobotronTieDieWDPU.Size = new Size(238, 24);
+            mnuFileLoadRobotronTieDieWDPU.Text = "Tie Die (WDPU)";
             mnuFileLoadRobotronTieDieWDPU.Click += mnuFileLoadRobotronTieDieWDPU_Click;
-
+            // 
+            // mnuFileLoadRobotronTieDieMAME
+            // 
             mnuFileLoadRobotronTieDieMAME.Name = "mnuFileLoadRobotronTieDieMAME";
-            mnuFileLoadRobotronTieDieMAME.Size = new Size(200, 24);
-            mnuFileLoadRobotronTieDieMAME.Text = "Tie Die (MAME)";
             mnuFileLoadRobotronTieDieMAME.ShortcutKeys = Keys.Control | Keys.M;
+            mnuFileLoadRobotronTieDieMAME.Size = new Size(238, 24);
+            mnuFileLoadRobotronTieDieMAME.Text = "Tie Die (MAME)";
             mnuFileLoadRobotronTieDieMAME.Click += mnuFileLoadRobotronTieDieMAME_Click;
-
             // 
             // mnuFileSave
             // 
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(164, 24);
+            mnuFileSave.Size = new Size(180, 24);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
             // mnuView
             // 
-            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewPalette });
+            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut });
             mnuView.Name = "mnuView";
             mnuView.ShortcutKeys = Keys.Alt | Keys.V;
             mnuView.Size = new Size(53, 24);
@@ -145,13 +147,6 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut.Size = new Size(243, 24);
             mnuViewZoomOut.Text = "Zoom &Out";
             mnuViewZoomOut.Click += mnuViewZoomOut_Click;
-            // 
-            // mnuViewPalette
-            // 
-            mnuViewPalette.Name = "mnuViewPalette";
-            mnuViewPalette.ShortcutKeys = Keys.Control | Keys.P;
-            mnuViewPalette.Size = new Size(243, 24);
-            mnuViewPalette.Text = "&Palette";
             // 
             // statusStrip
             // 
@@ -347,7 +342,7 @@ namespace WmsGfxSpriteEditor
             MainMenuStrip = menuStrip;
             Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
-            Text = "Sprite Viewer - 2025-04-13 14:38:05 - ScottTunstall";
+            Text = "Williams Graphics Editor";
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             statusStrip.ResumeLayout(false);
@@ -380,7 +375,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
-        private ToolStripMenuItem mnuViewPalette;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
         private Panel topPanel;

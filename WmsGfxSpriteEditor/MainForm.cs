@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using WmsGfxSpriteEditor.Controls;
+using WmsGfxSpriteEditor.ROMs.Robotron;
 using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
 using WmsGfxSpriteEditor.ROMs.Robotron.Shared;
 using WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes;
@@ -11,9 +12,9 @@ namespace WmsGfxSpriteEditor
     public partial class MainForm : Form
     {
         // Service dependencies
-        private IRomService _romService;
-        private ISpriteRenderer _spriteRenderer;
-        private ISpriteRepository _spriteRepository;
+        private IRomService _romService = default!;
+        private ISpriteRenderer _spriteRenderer = default!;
+        private ISpriteRepository _spriteRepository = default!;
 
         // State variables
         private int _zoomLevel = 1; // Default zoom for the normal view
@@ -48,15 +49,14 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
-            if (TryLoadRoms("Robotron Blue Label", new RobotronBlueLabelRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
+            if (TryLoadRoms(RomSetNames.BlueLabel, new RobotronBlueLabelRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
             {
-                _palette = new RobotronPalette().GetPalette();
             }
         }
         
         private void mnuFileLoadRobotronTieDieWDPU_Click(object sender, EventArgs e)
         {
-            if (TryLoadRoms("Robotron Tie Die (WDPU)", new RobotronWDPUTieDieRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
+            if (TryLoadRoms(RomSetNames.TieDieWDPU, new RobotronWDPUTieDieRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
             {
             }
         }
@@ -77,35 +77,39 @@ namespace WmsGfxSpriteEditor
             var directory = folderDialog.SelectedPath;
             var missingFiles = loader.GetMissingRomFiles(directory);
 
-            if (!missingFiles.Any())
+            if (missingFiles.Any())
             {
-                _romService = loader;
-                _romData = loader.LoadRomFiles(directory);
-                _spriteRepository = spriteRepository;
-                _palette = palette.GetPalette();
-                pnlPalette.Palette = _palette;
 
-                _spriteRenderer = new SpriteRenderer();
-                spriteDisplay.SpriteRenderer = _spriteRenderer;
-                spriteDisplay.Palette = _palette;
-                spriteDisplay.GridColor = _gridColor;
-                spriteDisplay.ZoomLevel = _zoomLevel;
-                spriteDisplay.RomData = _romData;
+                StringBuilder sb = new("MISSING FILES:");
+                sb.Append(Environment.NewLine);
+                sb.Append(Environment.NewLine);
+                sb.AppendJoin(Environment.NewLine, missingFiles);
 
-                UpdateSpriteDropdown();
+                MessageBox.Show(sb.ToString(), $"Could not load {heading} ROM files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                MessageBox.Show($"Loaded {heading} ROM files successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return true;
+                return false;
             }
 
-            StringBuilder sb = new("MISSING FILES:");
-            sb.Append(Environment.NewLine);
-            sb.Append(Environment.NewLine);
-            sb.AppendJoin(Environment.NewLine, missingFiles);
+            // Free previous ROM data
+            _romData?.Dispose();
+            _romData = loader.LoadRomFiles(directory);
 
-            MessageBox.Show(sb.ToString(), $"Could not load {heading} ROM files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            _romService = loader;
+            _spriteRepository = spriteRepository;
+            _palette = palette.GetPalette();
+            pnlPalette.Palette = _palette;
 
-            return false;
+            _spriteRenderer = new SpriteRenderer();
+            spriteDisplay.SpriteRenderer = _spriteRenderer;
+            spriteDisplay.Palette = _palette;
+            spriteDisplay.GridColor = _gridColor;
+            spriteDisplay.ZoomLevel = _zoomLevel;
+            spriteDisplay.RomData = _romData;
+
+            UpdateSpriteDropdown();
+
+            MessageBox.Show($"Loaded {heading} ROM files successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
         }
 
         private void RefreshSpriteDisplay()
