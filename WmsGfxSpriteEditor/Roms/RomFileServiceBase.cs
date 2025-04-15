@@ -1,8 +1,29 @@
-﻿namespace WmsGfxSpriteEditor.ROMs
+﻿using System.IO;
+
+namespace WmsGfxSpriteEditor.ROMs
 {
     public abstract class RomFileServiceBase: IRomService
     {
         protected abstract RomInfo[] RequiredRoms { get; }
+
+        public string[] GetMissingRomFiles(string directory)
+        {
+            List<string> missingRomFiles = new();
+
+            foreach (var romInfo in RequiredRoms)
+            {
+                string filePath = Path.Combine(directory, romInfo.FileName);
+
+                if (!File.Exists(filePath))
+                {
+                    missingRomFiles.Add(romInfo.FileName);
+                }
+            }
+
+            return missingRomFiles.ToArray();
+        }
+
+
 
         /// <summary>
         /// Loads ROM files from the specified directory

@@ -2,7 +2,8 @@
 
 namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared
 {
-    public class RobotronSpriteRepository : ISpriteRepository
+    // Robotron Blue Label and Tie-Die sprite repository
+    public class RobotronBlueLabelSpriteRepository : ISpriteRepository
     {
         private readonly List<SpriteInfo> _sprites = new();
 
@@ -14,7 +15,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared
         /// <summary>
         /// Initializes a new instance of the RobotronSpriteRepository class and populates it with Robotron sprite data
         /// </summary>
-        public RobotronSpriteRepository()
+        public RobotronBlueLabelSpriteRepository()
         {
             Load();
         }
