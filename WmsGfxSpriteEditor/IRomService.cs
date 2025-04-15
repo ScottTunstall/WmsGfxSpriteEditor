@@ -9,6 +9,8 @@ namespace WmsGfxSpriteEditor
 {
     public interface IRomService
     {
+        public string[] GetMissingRomFiles(string directory);
+
         /// <summary>
         /// Loads ROM files from the specified folder
         /// </summary>

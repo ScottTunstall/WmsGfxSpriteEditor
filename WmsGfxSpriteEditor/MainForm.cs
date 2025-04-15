@@ -1,4 +1,6 @@
-﻿using WmsGfxSpriteEditor.Controls;
+﻿using System.Text;
+using WmsGfxSpriteEditor.Controls;
+using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
 using WmsGfxSpriteEditor.ROMs.Robotron.Shared;
 using WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes;
 using WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader;
@@ -9,41 +11,22 @@ namespace WmsGfxSpriteEditor
     public partial class MainForm : Form
     {
         // Service dependencies
-        private readonly IRomService _romService;
-        private readonly ISpriteRenderer _spriteRenderer;
-        private readonly ISpriteRepository _spriteRepository;
+        private IRomService _romService;
+        private ISpriteRenderer _spriteRenderer;
+        private ISpriteRepository _spriteRepository;
 
         // State variables
         private int _zoomLevel = 1; // Default zoom for the normal view
         private MemoryStream? _romData;
-        private int _currentSpriteOffset = 0;
-        private int _currentSpriteWidthInBytes = 4;
-        private int _currentSpriteHeight = 8;
-        private bool _currentSpriteIsLinear = true;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
         private Color _selectedColor = Color.Black;
 
         // Palette
-        private readonly Color[] _palette;
+        private Color[] _palette;
 
         public MainForm()
         {
             InitializeComponent();
-
-            // Initialize services
-            _romService = new RobotronWDPUTieDieRomFileService();
-            _spriteRenderer = new SpriteRenderer();
-            _spriteRepository = new RobotronSpriteRepository(); // Use the Robotron sprite repository
-
-            // Create the Robotron palette
-            IPalette robotronPalette = new RobotronPalette();
-            _palette = robotronPalette.GetPalette();
-
-            spriteDisplay.SpriteRenderer = _spriteRenderer;
-            spriteDisplay.Palette = _palette;
-            spriteDisplay.GridColor = _gridColor;
-            spriteDisplay.ZoomLevel = _zoomLevel;
-            spriteDisplay.RomData = _romData;
             
             // Set the default zoom level
             nudZoom.Value = _zoomLevel;
@@ -51,11 +34,7 @@ namespace WmsGfxSpriteEditor
             splitContainer.SplitterDistance = (int)(splitContainer.Width * 0.2);
 
             // Set up the palette panel - This MUST be done after InitializeComponent
-            pnlPalette.Palette = _palette;
             pnlPalette.ColorSelected += PnlPalette_ColorSelected;
-
-            // Update the sprite dropdown with the Robotron sprites
-            UpdateSpriteDropdown();
         }
 
         private void PnlPalette_ColorSelected(object? sender, ColorSelectedEventArgs e)
@@ -64,6 +43,78 @@ namespace WmsGfxSpriteEditor
 
             // You could use this for sprite editing functionality
             StatusLabel.Text = $"Selected color: {e.ColorIndex:X} - RGB({e.SelectedColor.R},{e.SelectedColor.G},{e.SelectedColor.B})";
+        }
+
+
+        private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
+        {
+            if (TryLoadRoms("Robotron Blue Label", new RobotronBlueLabelRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
+            {
+                _palette = new RobotronPalette().GetPalette();
+            }
+        }
+        
+        private void mnuFileLoadRobotronTieDieWDPU_Click(object sender, EventArgs e)
+        {
+            if (TryLoadRoms("Robotron Tie Die (WDPU)", new RobotronWDPUTieDieRomFileService(), new RobotronBlueLabelSpriteRepository(), new RobotronPalette()))
+            {
+            }
+        }
+
+        private void mnuFileLoadRobotronTieDieMAME_Click(object sender, EventArgs e)
+        {
+            // Empty click handler for Tie Die (MAME) ROM
+        }
+
+        private bool TryLoadRoms(string heading, IRomService loader, ISpriteRepository spriteRepository, IPalette palette)
+        {
+            using FolderBrowserDialog folderDialog = new();
+            folderDialog.Description = $"Select the folder containing the {heading} ROM files";
+            folderDialog.UseDescriptionForTitle = true;
+
+            if (folderDialog.ShowDialog() != DialogResult.OK) return false;
+
+            var directory = folderDialog.SelectedPath;
+            var missingFiles = loader.GetMissingRomFiles(directory);
+
+            if (!missingFiles.Any())
+            {
+                _romService = loader;
+                _romData = loader.LoadRomFiles(directory);
+                _spriteRepository = spriteRepository;
+                _palette = palette.GetPalette();
+
+                _spriteRenderer = new SpriteRenderer();
+                spriteDisplay.SpriteRenderer = _spriteRenderer;
+                spriteDisplay.Palette = _palette;
+                spriteDisplay.GridColor = _gridColor;
+                spriteDisplay.ZoomLevel = _zoomLevel;
+                spriteDisplay.RomData = _romData;
+
+                UpdateSpriteDropdown();
+
+                MessageBox.Show($"Loaded {heading} ROM files successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return true;
+            }
+
+            StringBuilder sb = new("MISSING FILES:");
+            sb.Append(Environment.NewLine);
+            sb.Append(Environment.NewLine);
+            sb.AppendJoin(Environment.NewLine, missingFiles);
+
+            MessageBox.Show(sb.ToString(), $"Could not load {heading} ROM files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            return false;
+        }
+
+        private void RefreshSpriteDisplay()
+        {
+            // Update the sprite display
+            if (cboSprite.SelectedItem is SpriteInfo selectedSprite)
+            {
+                spriteDisplay.SetSpriteInfo(selectedSprite);
+                UpdateStatusWithSpriteInfo(selectedSprite);
+            }
         }
 
         private void UpdateSpriteDropdown()
@@ -80,7 +131,6 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-
         /// <summary>
         /// Updates the status bar with complete sprite information
         /// </summary>
@@ -88,53 +138,10 @@ namespace WmsGfxSpriteEditor
         {
             // Include the sprite offset in both hex and decimal format
             StatusLabel.Text = $"Sprite: {sprite.Name} | Offset: 0x{sprite.Offset:X4} ({sprite.Offset}) | " +
-                              $"Size: {sprite.WidthInPixels}x{sprite.Height} pixels " +
-                              $"({sprite.WidthInBytes} bytes x {sprite.Height} rows) | " +
-                              $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")} | " +
-                              $"Zoom: {_zoomLevel}x";
-        }
-
-        private void RefreshSpriteDisplay()
-        {
-            // Update the sprite display
-            if (cboSprite.SelectedItem is SpriteInfo selectedSprite)
-            {
-                spriteDisplay.SetSpriteInfo(selectedSprite);
-                UpdateStatusWithSpriteInfo(selectedSprite);
-            }
-        }
-
-        private void mnuFileLoad_Click(object sender, EventArgs e)
-        {
-            using var folderDialog = new FolderBrowserDialog
-            {
-                Description = "Select the folder containing the ROM files",
-                UseDescriptionForTitle = true
-            };
-
-            if (folderDialog.ShowDialog() != DialogResult.OK) return;
-
-            string folderPath = folderDialog.SelectedPath;
-
-            try
-            {
-                _romData = _romService.LoadRomFiles(folderPath);
-                spriteDisplay.RomData = _romData;
-
-                UpdateSpriteDropdown();
-
-                RefreshSpriteDisplay();
-
-                StatusLabel.Text = $"ROM files loaded successfully. Total size: 0x{_romData.Length:X} bytes";
-            }
-            catch (FileNotFoundException ex)
-            {
-                MessageBox.Show($"Missing file: {ex.FileName}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading ROM files: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                               $"Size: {sprite.WidthInPixels}x{sprite.Height} pixels " +
+                               $"({sprite.WidthInBytes} bytes x {sprite.Height} rows) | " +
+                               $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")} | " +
+                               $"Zoom: {_zoomLevel}x";
         }
 
         private void mnuFileSave_Click(object sender, EventArgs e)

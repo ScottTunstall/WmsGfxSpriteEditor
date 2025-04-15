@@ -14,16 +14,23 @@ namespace WmsGfxSpriteEditor
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
-        void RenderSprite(
-            Graphics graphics,
-            MemoryStream? romData,
-            int spriteOffset,
+        public void RenderSprite(Graphics graphics,
+            ReadOnlySpan<byte> spriteData,
+            Color[] palette,
             int widthInBytes,
             int height,
             bool isLinear,
-            Color[] palette,
-            Color gridColor,
             int zoomLevel,
+            Rectangle renderArea);
+
+        public void RenderSpriteWithGrid(Graphics graphics,
+            ReadOnlySpan<byte> spriteData,
+            Color[] palette,
+            int widthInBytes,
+            int height,
+            bool isLinear,
+            int zoomLevel,
+            Color gridColor,
             Rectangle renderArea);
     }
 }

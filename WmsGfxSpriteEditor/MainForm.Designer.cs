@@ -22,6 +22,10 @@ namespace WmsGfxSpriteEditor
             menuStrip = new MenuStrip();
             mnuFile = new ToolStripMenuItem();
             mnuFileLoad = new ToolStripMenuItem();
+            mnuFileLoadRobotron = new ToolStripMenuItem();
+            mnuFileLoadRobotronBlueLabel = new ToolStripMenuItem();
+            mnuFileLoadRobotronTieDieWDPU = new ToolStripMenuItem();
+            mnuFileLoadRobotronTieDieMAME = new ToolStripMenuItem();
             mnuFileSave = new ToolStripMenuItem();
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
@@ -80,7 +84,35 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
             mnuFileLoad.Size = new Size(164, 24);
             mnuFileLoad.Text = "&Load";
-            mnuFileLoad.Click += mnuFileLoad_Click;
+            mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
+
+            mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
+            mnuFileLoadRobotron.Size = new Size(200, 24);
+            mnuFileLoadRobotron.Text = "Robotron: 2084";
+            mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] {
+                mnuFileLoadRobotronBlueLabel,
+                mnuFileLoadRobotronTieDieWDPU,
+                mnuFileLoadRobotronTieDieMAME
+            });
+
+            mnuFileLoadRobotronBlueLabel.Name = "mnuFileLoadRobotronBlueLabel";
+            mnuFileLoadRobotronBlueLabel.Size = new Size(200, 24);
+            mnuFileLoadRobotronBlueLabel.Text = "Blue Label";
+            mnuFileLoadRobotronBlueLabel.ShortcutKeys = Keys.Control | Keys.B;
+            mnuFileLoadRobotronBlueLabel.Click += mnuFileLoadRobotronBlueLabel_Click;
+
+            mnuFileLoadRobotronTieDieWDPU.Name = "mnuFileLoadRobotronTieDieWDPU";
+            mnuFileLoadRobotronTieDieWDPU.Size = new Size(200, 24);
+            mnuFileLoadRobotronTieDieWDPU.Text = "Tie Die (WDPU)";
+            mnuFileLoadRobotronTieDieWDPU.ShortcutKeys = Keys.Control | Keys.W;
+            mnuFileLoadRobotronTieDieWDPU.Click += mnuFileLoadRobotronTieDieWDPU_Click;
+
+            mnuFileLoadRobotronTieDieMAME.Name = "mnuFileLoadRobotronTieDieMAME";
+            mnuFileLoadRobotronTieDieMAME.Size = new Size(200, 24);
+            mnuFileLoadRobotronTieDieMAME.Text = "Tie Die (MAME)";
+            mnuFileLoadRobotronTieDieMAME.ShortcutKeys = Keys.Control | Keys.M;
+            mnuFileLoadRobotronTieDieMAME.Click += mnuFileLoadRobotronTieDieMAME_Click;
+
             // 
             // mnuFileSave
             // 
@@ -340,6 +372,10 @@ namespace WmsGfxSpriteEditor
         private MenuStrip menuStrip;
         private ToolStripMenuItem mnuFile;
         private ToolStripMenuItem mnuFileLoad;
+        private ToolStripMenuItem mnuFileLoadRobotron;
+        private ToolStripMenuItem mnuFileLoadRobotronBlueLabel;
+        private ToolStripMenuItem mnuFileLoadRobotronTieDieWDPU;
+        private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
         private ToolStripMenuItem mnuFileSave;
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
