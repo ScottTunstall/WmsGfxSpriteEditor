@@ -7,43 +7,6 @@ using WmsGfxSpriteEditor.Sprites;
 namespace WmsGfxSpriteEditor.Controls
 {
     /// <summary>
-    /// Event arguments for the GridCellClicked event
-    /// </summary>
-    public class GridCoordinateEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Gets the X coordinate in the sprite grid
-        /// </summary>
-        public int GridX { get; }
-
-        /// <summary>
-        /// Gets the Y coordinate in the sprite grid
-        /// </summary>
-        public int GridY { get; }
-
-        /// <summary>
-        /// Gets the byte index (X coordinate / 2) in the sprite data
-        /// </summary>
-        public int ByteX => GridX / 2;
-
-        /// <summary>
-        /// Gets whether this is the first (0) or second (1) pixel in the byte
-        /// </summary>
-        public int PixelInByte => GridX % 2;
-
-        /// <summary>
-        /// Initializes a new instance of the GridCoordinateEventArgs class
-        /// </summary>
-        /// <param name="gridX">X coordinate in the sprite grid</param>
-        /// <param name="gridY">Y coordinate in the sprite grid</param>
-        public GridCoordinateEventArgs(int gridX, int gridY)
-        {
-            GridX = gridX;
-            GridY = gridY;
-        }
-    }
-
-    /// <summary>
     /// Custom PictureBox control for displaying and interacting with sprites
     /// </summary>
     public class SpriteDisplayControl : PictureBox
@@ -52,12 +15,14 @@ namespace WmsGfxSpriteEditor.Controls
         private ISpriteRenderer? _spriteRenderer;
 
         // Sprite properties
-        private MemoryStream? _romData;
+        private MemoryStream? _romData = null;
+
         private int _spriteOffset;
         private int _spriteWidthInBytes;
         private int _spriteHeight;
         private bool _spriteIsLinear;
-        private Color[] _palette = Array.Empty<Color>();
+        private Color[] _palette = [];
+        private byte[] _spriteData = [];
         private Color _gridColor = Color.FromArgb(80, 80, 80);
         private int _zoomLevel = 1;
 
@@ -95,18 +60,6 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
-        /// <summary>
-        /// Sets the sprite information
-        /// </summary>
-        public void SetSpriteInfo(SpriteInfo sprite)
-        {
-            _spriteOffset = sprite.Offset;
-            _spriteWidthInBytes = sprite.WidthInBytes;
-            _spriteHeight = sprite.Height;
-            _spriteIsLinear = sprite.IsLinear;
-            UpdateSizeForZoom();
-            Invalidate();
-        }
 
         /// <summary>
         /// Sets the color palette to use for rendering
@@ -152,6 +105,35 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
+        /// Sets the sprite information
+        /// </summary>
+        public void SetSpriteInfo(SpriteInfo sprite)
+        {
+            _spriteOffset = sprite.Offset;
+            _spriteWidthInBytes = sprite.WidthInBytes;
+            _spriteHeight = sprite.Height;
+            _spriteIsLinear = sprite.IsLinear;
+
+            if (RomData == null)
+            {
+                throw new InvalidOperationException("Cannot set sprite info. No ROM data attached.");
+            }
+
+            RomData.Position = _spriteOffset;
+            _spriteData = new byte[_spriteWidthInBytes * _spriteHeight];
+            int bytesRead = RomData.Read(_spriteData, 0, _spriteData.Length);
+
+            if (bytesRead < _spriteData.Length)
+            {
+                throw new InvalidOperationException("Unexpected end of stream reached in ROM data.");
+            }
+
+            UpdateSizeForZoom();
+            Invalidate();
+        }
+
+
+        /// <summary>
         /// Updates the control size based on sprite dimensions and zoom level
         /// </summary>
         private void UpdateSizeForZoom()
@@ -178,18 +160,32 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            // Use the sprite renderer to render directly to the Graphics object
-            _spriteRenderer.RenderSprite(
-                e.Graphics,
-                _romData,
-                _spriteOffset,
-                _spriteWidthInBytes,
-                _spriteHeight,
-                _spriteIsLinear,
-                _palette,
-                _gridColor,
-                _zoomLevel,
-                new Rectangle(Point.Empty, Size));
+            if (_zoomLevel < 3)
+            {
+                _spriteRenderer.RenderSprite(
+                    e.Graphics,
+                    _spriteData,
+                    _palette,
+                    _spriteWidthInBytes,
+                    _spriteHeight,
+                    _spriteIsLinear,
+                    _zoomLevel,
+                    new Rectangle(Point.Empty, Size)
+                    );
+            }
+            else
+            {
+                _spriteRenderer.RenderSpriteWithGrid(
+                    e.Graphics,
+                    _spriteData,
+                    _palette,
+                    _spriteWidthInBytes,
+                    _spriteHeight,
+                    _spriteIsLinear,
+                    _zoomLevel,
+                    _gridColor,
+                    new Rectangle(Point.Empty, Size));
+            }
         }
 
         /// <summary>
