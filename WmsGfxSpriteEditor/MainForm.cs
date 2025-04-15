@@ -83,6 +83,7 @@ namespace WmsGfxSpriteEditor
                 _romData = loader.LoadRomFiles(directory);
                 _spriteRepository = spriteRepository;
                 _palette = palette.GetPalette();
+                pnlPalette.Palette = _palette;
 
                 _spriteRenderer = new SpriteRenderer();
                 spriteDisplay.SpriteRenderer = _spriteRenderer;
