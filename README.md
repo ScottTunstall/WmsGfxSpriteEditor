@@ -9,11 +9,13 @@ If you're only interested in viewing sprites, not editing, go to https://www.sea
 
 Here's how to use the current version of my app:
 
-1. Acquire the Robotron Tie Die Roms from WILLIAMS DEFENDER PLAYERS UNITE Facebook group
+1. Acquire the Robotron Tie Die Roms from WILLIAMS DEFENDER PLAYERS UNITE Facebook group (I will support MAME compatible versions soon)
 2. Extract the zip file with the roms to a directory
 3. Build and run my app in Visual Studio 2022 (don't worry, an installer is coming)
 4. In the app, select File/Load then select the folder you extracted the tie die ROMs to
 5. You can now use the dropdown menu and zoom to select the sprite and zoom in/out accordingly.
 
+
+I plan to support editing Robotron Blue Label and Tie-Die variants.
 
 ![image](https://github.com/user-attachments/assets/33317917-b070-45ed-b864-5614c13bb5fa)
