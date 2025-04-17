@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -15,7 +15,7 @@ namespace WmsGfxSpriteEditor.Controls
         private ISpriteRenderer? _spriteRenderer;
 
         // Sprite properties
-        private MemoryStream? _romData = null;
+        private MemoryStream? _romData;
 
         private int _spriteOffset;
         private int _spriteWidthInBytes;
@@ -25,6 +25,7 @@ namespace WmsGfxSpriteEditor.Controls
         private byte[] _spriteData = [];
         private Color _gridColor = Color.FromArgb(80, 80, 80);
         private int _zoomLevel = 1;
+        private int _showGridAfterZoomLevel = 3;
 
         /// <summary>
         /// Event fired when a grid cell is clicked
@@ -105,6 +106,16 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
+        /// Get or set the "Show grid when zoom level meets or exceeds the supplied value" threshold
+        /// </summary>
+        public int ShowGridAfterZoomLevel
+        {
+            get => _showGridAfterZoomLevel;
+            set => _showGridAfterZoomLevel = Math.Max(value,0);
+        }
+
+
+        /// <summary>
         /// Sets the sprite information
         /// </summary>
         public void SetSpriteInfo(SpriteInfo sprite)
@@ -149,21 +160,21 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Handles the Paint event
         /// </summary>
-        protected override void OnPaint(PaintEventArgs e)
+        protected override void OnPaint(PaintEventArgs pe)
         {
-            base.OnPaint(e);
+            base.OnPaint(pe);
 
             if (_romData == null || _romData.Length == 0 || _spriteRenderer == null)
             {
-                // Simply fill with a black rectangle if no ROM data is available
-                e.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
+                // Simply fill with a black rectangle if no sprite data is available
+                pe.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
                 return;
             }
 
-            if (_zoomLevel < 3)
+            if (_zoomLevel < _showGridAfterZoomLevel)
             {
                 _spriteRenderer.RenderSprite(
-                    e.Graphics,
+                    pe.Graphics,
                     _spriteData,
                     _palette,
                     _spriteWidthInBytes,
@@ -176,7 +187,7 @@ namespace WmsGfxSpriteEditor.Controls
             else
             {
                 _spriteRenderer.RenderSpriteWithGrid(
-                    e.Graphics,
+                    pe.Graphics,
                     _spriteData,
                     _palette,
                     _spriteWidthInBytes,

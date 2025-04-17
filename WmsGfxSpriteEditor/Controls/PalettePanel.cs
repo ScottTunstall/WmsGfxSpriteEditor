@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using WmsGfxSpriteEditor.Palettes;
 
 namespace WmsGfxSpriteEditor.Controls
@@ -45,7 +45,7 @@ namespace WmsGfxSpriteEditor.Controls
     {
         private IPaletteRenderer _paletteRenderer;
         private Color[] _palette = Array.Empty<Color>();
-        private int _selectedColorIndex = 0;
+        private int _selectedColorIndex;
 
         /// <summary>
         /// Event raised when a color in the palette is selected
@@ -138,7 +138,7 @@ namespace WmsGfxSpriteEditor.Controls
             if (_palette.Length > 0)
             {
                 // Ask the renderer which color index corresponds to the clicked position
-                var (colorIndex, isValid) = _paletteRenderer.GetColorIndexAt(e.X, e.Y, _palette, ClientRectangle);
+                (int colorIndex, bool isValid) = _paletteRenderer.GetColorIndexAt(e.X, e.Y, _palette, ClientRectangle);
 
                 if (isValid)
                 {
