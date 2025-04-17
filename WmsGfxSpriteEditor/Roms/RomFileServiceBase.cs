@@ -32,7 +32,7 @@ namespace WmsGfxSpriteEditor.ROMs
         /// <returns>A memory stream containing the combined ROM data</returns>
         /// <exception cref="FileNotFoundException">Thrown when a required ROM file is missing</exception>
         /// <exception cref="InvalidDataException">Thrown when a ROM file has an incorrect size</exception>
-        public MemoryStream LoadRomFiles(string folderPath)
+        public MemoryStream? LoadRomFiles(string folderPath)
         {
             // Validate directory
             if (!Directory.Exists(folderPath))
@@ -44,7 +44,7 @@ namespace WmsGfxSpriteEditor.ROMs
             int requiredSize = RequiredRoms.Select(rom => rom.Offset + rom.Size).Max();
 
             // Create a memory stream to hold all ROM data
-            MemoryStream memoryStream = new MemoryStream(requiredSize);
+            MemoryStream? memoryStream = new(requiredSize);
 
             // Initialize the memory stream with zeros
             byte[] emptyBuffer = new byte[requiredSize];
