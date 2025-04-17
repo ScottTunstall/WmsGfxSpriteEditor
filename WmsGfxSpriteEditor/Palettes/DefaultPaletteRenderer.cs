@@ -37,7 +37,7 @@ namespace WmsGfxSpriteEditor.Palettes
             {
                 int col = i % ColorsPerRow;
 
-                Rectangle colorRect = new Rectangle(
+                Rectangle colorRect = new(
                     renderArea.Left + col * blockWidth,
                     renderArea.Top,
                     blockWidth,
@@ -45,15 +45,15 @@ namespace WmsGfxSpriteEditor.Palettes
                 );
 
                 // Fill with the palette color
-                using SolidBrush brush = new SolidBrush(palette[i]);
+                using SolidBrush brush = new(palette[i]);
                 graphics.FillRectangle(brush, colorRect);
 
                 // Draw selection indicator for the currently selected color
                 if (i == selectedColorIndex)
                 {
                     // Draw a thicker highlight border
-                    using Pen highlightPen = new Pen(Color.White, 2);
-                    Rectangle highlightRect = new Rectangle(
+                    using Pen highlightPen = new(Color.White, 2);
+                    Rectangle highlightRect = new(
                         colorRect.Left + 2,
                         colorRect.Top + 2,
                         colorRect.Width - 4,
@@ -63,12 +63,12 @@ namespace WmsGfxSpriteEditor.Palettes
                 }
 
                 // Draw border
-                using Pen pen = new Pen(Color.DarkGray);
+                using Pen pen = new(Color.DarkGray);
                 graphics.DrawRectangle(pen, colorRect);
 
                 // Draw index number
-                using Font font = new Font("Arial", 8, FontStyle.Bold);
-                using SolidBrush indexBrush = new SolidBrush(GetContrastingColor(palette[i]));
+                using Font font = new("Arial", 8, FontStyle.Bold);
+                using SolidBrush indexBrush = new(GetContrastingColor(palette[i]));
 #pragma warning disable CA1305
                 string indexText = i.ToString("X");
 #pragma warning restore CA1305
