@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace WmsGfxSpriteEditor.ROMs
 {
@@ -6,13 +6,13 @@ namespace WmsGfxSpriteEditor.ROMs
     {
         protected abstract RomInfo[] RequiredRoms { get; }
 
-        public string[] GetMissingRomFiles(string directory)
+        public string[] GetMissingRomFiles(string folderPath)
         {
             List<string> missingRomFiles = new();
 
-            foreach (var romInfo in RequiredRoms)
+            foreach (RomInfo? romInfo in RequiredRoms)
             {
-                string filePath = Path.Combine(directory, romInfo.FileName);
+                string filePath = Path.Combine(folderPath, romInfo.FileName);
 
                 if (!File.Exists(filePath))
                 {
@@ -28,16 +28,16 @@ namespace WmsGfxSpriteEditor.ROMs
         /// <summary>
         /// Loads ROM files from the specified directory
         /// </summary>
-        /// <param name="directory">The directory containing the ROM files</param>
+        /// <param name="folderPath">The directory containing the ROM files</param>
         /// <returns>A memory stream containing the combined ROM data</returns>
         /// <exception cref="FileNotFoundException">Thrown when a required ROM file is missing</exception>
         /// <exception cref="InvalidDataException">Thrown when a ROM file has an incorrect size</exception>
-        public MemoryStream LoadRomFiles(string directory)
+        public MemoryStream LoadRomFiles(string folderPath)
         {
             // Validate directory
-            if (!Directory.Exists(directory))
+            if (!Directory.Exists(folderPath))
             {
-                throw new DirectoryNotFoundException($"Directory not found: {directory}");
+                throw new DirectoryNotFoundException($"Directory not found: {folderPath}");
             }
 
             // Calculate required memory stream size based on highest ROM offset + size
@@ -51,9 +51,9 @@ namespace WmsGfxSpriteEditor.ROMs
             memoryStream.Write(emptyBuffer, 0, emptyBuffer.Length);
 
             // Load each ROM file and place it at its specified offset
-            foreach (var romInfo in RequiredRoms)
+            foreach (RomInfo romInfo in RequiredRoms)
             {
-                string filePath = Path.Combine(directory, romInfo.FileName);
+                string filePath = Path.Combine(folderPath, romInfo.FileName);
 
                 if (!File.Exists(filePath))
                 {
