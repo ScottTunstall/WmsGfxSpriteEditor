@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace WmsGfxSpriteEditor
 {
     public interface IRomService
     {
-        public string[] GetMissingRomFiles(string directory);
+        public string[] GetMissingRomFiles(string folderPath);
 
         /// <summary>
         /// Loads ROM files from the specified folder
