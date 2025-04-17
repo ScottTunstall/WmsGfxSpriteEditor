@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,7 @@ namespace WmsGfxSpriteEditor.Palettes
             {
                 int col = i % ColorsPerRow;
 
-                var colorRect = new Rectangle(
+                Rectangle colorRect = new Rectangle(
                     renderArea.Left + col * blockWidth,
                     renderArea.Top,
                     blockWidth,
@@ -45,14 +45,14 @@ namespace WmsGfxSpriteEditor.Palettes
                 );
 
                 // Fill with the palette color
-                using var brush = new SolidBrush(palette[i]);
+                using SolidBrush brush = new SolidBrush(palette[i]);
                 graphics.FillRectangle(brush, colorRect);
 
                 // Draw selection indicator for the currently selected color
                 if (i == selectedColorIndex)
                 {
                     // Draw a thicker highlight border
-                    using var highlightPen = new Pen(Color.White, 2);
+                    using Pen highlightPen = new Pen(Color.White, 2);
                     Rectangle highlightRect = new Rectangle(
                         colorRect.Left + 2,
                         colorRect.Top + 2,
@@ -63,13 +63,15 @@ namespace WmsGfxSpriteEditor.Palettes
                 }
 
                 // Draw border
-                using var pen = new Pen(Color.DarkGray);
+                using Pen pen = new Pen(Color.DarkGray);
                 graphics.DrawRectangle(pen, colorRect);
 
                 // Draw index number
-                using var font = new Font("Arial", 8, FontStyle.Bold);
-                using var indexBrush = new SolidBrush(GetContrastingColor(palette[i]));
+                using Font font = new Font("Arial", 8, FontStyle.Bold);
+                using SolidBrush indexBrush = new SolidBrush(GetContrastingColor(palette[i]));
+#pragma warning disable CA1305
                 string indexText = i.ToString("X");
+#pragma warning restore CA1305
                 SizeF textSize = graphics.MeasureString(indexText, font);
                 graphics.DrawString(
                     indexText,
