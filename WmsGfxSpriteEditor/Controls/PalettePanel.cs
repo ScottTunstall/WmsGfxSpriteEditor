@@ -146,7 +146,7 @@ namespace WmsGfxSpriteEditor.Controls
                     _selectedColorIndex = colorIndex;
 
                     // Raise the color selected event
-                    OnColorSelected(new ColorSelectedEventArgs(_palette[colorIndex], colorIndex));
+                    OnColorSelected(new(_palette[colorIndex], colorIndex));
 
                     // Refresh the display
                     Invalidate();
