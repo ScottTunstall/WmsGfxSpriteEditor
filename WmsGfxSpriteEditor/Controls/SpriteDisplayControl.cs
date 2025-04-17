@@ -11,8 +11,10 @@ namespace WmsGfxSpriteEditor.Controls
     /// </summary>
     public class SpriteDisplayControl : PictureBox
     {
+        private const int CellSize = 8;
+
         // Required services
-        private ISpriteRenderer? _spriteRenderer;
+        private ISpriteGridRenderer? _spriteRenderer;
 
         // Sprite properties
         private MemoryStream? _romData;
@@ -25,7 +27,12 @@ namespace WmsGfxSpriteEditor.Controls
         private byte[] _spriteData = [];
         private Color _gridColor = Color.FromArgb(80, 80, 80);
         private int _zoomLevel = 1;
-        private int _showGridAfterZoomLevel = 3;
+        private int _zoomLevelGridThreshold = 3;
+
+        /// <summary>
+        /// Event fired when the mouse moves over a grid cell
+        /// </summary>
+        public event EventHandler<GridCoordinateEventArgs>? GridCellMouseMove;
 
         /// <summary>
         /// Event fired when a grid cell is clicked
@@ -42,7 +49,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Sets the sprite renderer to use for rendering
         /// </summary>
-        public ISpriteRenderer? SpriteRenderer
+        public ISpriteGridRenderer? SpriteGridRenderer
         {
             get => _spriteRenderer;
             set => _spriteRenderer = value;
@@ -108,10 +115,10 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Get or set the "Show grid when zoom level meets or exceeds the supplied value" threshold
         /// </summary>
-        public int ShowGridAfterZoomLevel
+        public int ZoomLevelThreshold
         {
-            get => _showGridAfterZoomLevel;
-            set => _showGridAfterZoomLevel = Math.Max(value,0);
+            get => _zoomLevelGridThreshold;
+            set => _zoomLevelGridThreshold = Math.Max(value,0);
         }
 
 
@@ -151,9 +158,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             if (_spriteWidthInBytes > 0 && _spriteHeight > 0)
             {
-                int spriteWidth = _spriteWidthInBytes * 2 * _zoomLevel; // 2 pixels per byte
-                int spriteHeight = _spriteHeight * _zoomLevel;
-                Size = new Size(spriteWidth, spriteHeight);
+                this.Size = _spriteRenderer!.CalculateSize(_spriteWidthInBytes, _spriteHeight, _zoomLevel * CellSize);
             }
         }
 
@@ -171,7 +176,7 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            if (_zoomLevel < _showGridAfterZoomLevel)
+            if (_zoomLevel < _zoomLevelGridThreshold)
             {
                 _spriteRenderer.RenderSprite(
                     pe.Graphics,
@@ -180,8 +185,8 @@ namespace WmsGfxSpriteEditor.Controls
                     _spriteWidthInBytes,
                     _spriteHeight,
                     _spriteIsLinear,
-                    _zoomLevel,
-                    new Rectangle(Point.Empty, Size)
+                    _zoomLevel * CellSize,
+                    new(Point.Empty, Size)
                     );
             }
             else
@@ -193,9 +198,30 @@ namespace WmsGfxSpriteEditor.Controls
                     _spriteWidthInBytes,
                     _spriteHeight,
                     _spriteIsLinear,
-                    _zoomLevel,
+                    _zoomLevel * CellSize,
                     _gridColor,
-                    new Rectangle(Point.Empty, Size));
+                    new(Point.Empty, Size));
+            }
+        }
+
+        /// <summary>
+        /// Handles the MouseMove event
+        /// </summary>
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            if (_zoomLevel <= 0 || _spriteRenderer == null)
+                return;
+
+            Point pt = _spriteRenderer.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
+
+            // Ensure the coordinates are within sprite bounds
+            if (pt.X >= 0 && pt.X < _spriteWidthInBytes * 2 && // 2 pixels per byte
+                pt.Y >= 0 && pt.Y < _spriteHeight)
+            {
+                // Raise the event with the grid coordinates - note: coords are zero-based
+                GridCellMouseMove?.Invoke(this,new(pt.X, pt.Y));
             }
         }
 
@@ -209,16 +235,13 @@ namespace WmsGfxSpriteEditor.Controls
             if (_zoomLevel <= 0)
                 return;
 
-            // Calculate grid coordinates based on mouse position and zoom level
-            int gridX = e.X / _zoomLevel;
-            int gridY = e.Y / _zoomLevel;
+            Point pt = _spriteRenderer!.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
 
             // Ensure the coordinates are within sprite bounds
-            if (gridX >= 0 && gridX < _spriteWidthInBytes * 2 && // 2 pixels per byte
-                gridY >= 0 && gridY < _spriteHeight)
+            if (pt.X >= 0 && pt.X < _spriteWidthInBytes * 2 && // 2 pixels per byte
+                pt.Y >= 0 && pt.Y < _spriteHeight)
             {
-                // Raise the event with the grid coordinates
-                OnGridCellClicked(new GridCoordinateEventArgs(gridX, gridY));
+                GridCellClicked?.Invoke(this, new(pt.X, pt.Y));
             }
         }
 

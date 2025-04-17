@@ -1,14 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace WmsGfxSpriteEditor.Sprites
 {
-    public class SpriteRenderer : ISpriteRenderer
+    public class SpriteGridRenderer : ISpriteGridRenderer
     {
+        public Size CalculateSize(int spriteWidthInBytes, int spriteHeight, int cellSize)
+        {
+            return new(spriteWidthInBytes * 2 * cellSize, spriteHeight * cellSize);
+        }
+
+        public Point GetGridCellFromXY(int x, int y, int cellSize)
+        {
+            // Calculate grid coordinates based on mouse position and zoom level
+            int gridX = x / cellSize;
+            int gridY = y / cellSize;
+            return new(gridX, gridY);
+        }
 
         public void RenderSprite(Graphics graphics,
             ReadOnlySpan<byte> spriteData,
@@ -16,7 +29,7 @@ namespace WmsGfxSpriteEditor.Sprites
             int widthInBytes,
             int height,
             bool isLinear,
-            int zoomLevel,
+            int cellSize,
             Rectangle renderArea)
         {
             // If we have no sprite data, exit without rendering anything
@@ -24,9 +37,6 @@ namespace WmsGfxSpriteEditor.Sprites
             {
                 return;
             }
-
-            // Calculate cell size based on zoom level
-            int cellSize = zoomLevel * 8;
 
             // Start rendering from the top-left corner (0,0)
             int startX = renderArea.X;
@@ -76,7 +86,7 @@ namespace WmsGfxSpriteEditor.Sprites
             int widthInBytes,
             int height,
             bool isLinear,
-            int zoomLevel,
+            int cellSize,
             Color gridColor,
             Rectangle renderArea)
         {
@@ -85,9 +95,6 @@ namespace WmsGfxSpriteEditor.Sprites
             {
                 return;
             }
-
-            // Calculate cell size based on zoom level
-            int cellSize = zoomLevel * 8;
 
             // Start rendering from the top-left corner (0,0)
             int startX = renderArea.X;
@@ -152,7 +159,7 @@ namespace WmsGfxSpriteEditor.Sprites
             int cellSize)
         {
             // Draw the pixel as a colored rectangle
-            using var brush = new SolidBrush(pixelColor);
+            using SolidBrush? brush = new(pixelColor);
             graphics.FillRectangle(
                 brush,
                 x,
@@ -169,7 +176,7 @@ namespace WmsGfxSpriteEditor.Sprites
             Color gridColor,
             int cellSize)
         {
-            using var pen = new Pen(gridColor);
+            using Pen? pen = new(gridColor);
             graphics.DrawRectangle(
                 pen,
                 x,
