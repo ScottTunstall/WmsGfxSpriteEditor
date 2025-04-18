@@ -32,12 +32,12 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Event fired when the mouse moves over a grid cell
         /// </summary>
-        public event EventHandler<GridCoordinateEventArgs>? GridCellMouseMove;
+        public event EventHandler<GridEventArgs>? GridCellMouseMove;
 
         /// <summary>
         /// Event fired when a grid cell is clicked
         /// </summary>
-        public event EventHandler<GridCoordinateEventArgs>? GridCellClicked;
+        public event EventHandler<GridEventArgs>? GridCellClicked;
 
         public SpriteDisplayControl()
         {
@@ -158,7 +158,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             if (_spriteWidthInBytes > 0 && _spriteHeight > 0)
             {
-                this.Size = _spriteRenderer!.CalculateSize(_spriteWidthInBytes, _spriteHeight, _zoomLevel * CellSize);
+                this.Size = _spriteRenderer!.GetExtent(_spriteWidthInBytes, _spriteHeight, _zoomLevel * CellSize);
             }
         }
 
@@ -217,10 +217,10 @@ namespace WmsGfxSpriteEditor.Controls
             Point pt = _spriteRenderer.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
 
             // Ensure the coordinates are within sprite bounds
-            if (pt.X >= 0 && pt.X < _spriteWidthInBytes * 2 && // 2 pixels per byte
-                pt.Y >= 0 && pt.Y < _spriteHeight)
+            if (pt.X >0 && pt.X <= _spriteWidthInBytes * 2 && // 2 pixels per byte
+                pt.Y > 0 && pt.Y <= _spriteHeight)
             {
-                // Raise the event with the grid coordinates - note: coords are zero-based
+                // Raise the event with the grid coordinates - note: coords are one-based
                 GridCellMouseMove?.Invoke(this,new(pt.X, pt.Y));
             }
         }
@@ -243,14 +243,6 @@ namespace WmsGfxSpriteEditor.Controls
             {
                 GridCellClicked?.Invoke(this, new(pt.X, pt.Y));
             }
-        }
-
-        /// <summary>
-        /// Raises the GridCellClicked event
-        /// </summary>
-        protected virtual void OnGridCellClicked(GridCoordinateEventArgs e)
-        {
-            GridCellClicked?.Invoke(this, e);
         }
     }
 }

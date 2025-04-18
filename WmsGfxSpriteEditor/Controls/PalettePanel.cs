@@ -6,33 +6,7 @@ namespace WmsGfxSpriteEditor.Controls
     /// <summary>
     /// Custom panel for displaying and selecting colors from a palette
     /// </summary>
-    /// <summary>
-    /// Event arguments for the ColorSelected event
-    /// </summary>
-    public class ColorSelectedEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Gets the selected color
-        /// </summary>
-        public Color SelectedColor { get; }
-
-        /// <summary>
-        /// Gets the index of the selected color in the palette
-        /// </summary>
-        public int ColorIndex { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the ColorSelectedEventArgs class
-        /// </summary>
-        /// <param name="selectedColor">The selected color</param>
-        /// <param name="colorIndex">The index of the selected color in the palette</param>
-        public ColorSelectedEventArgs(Color selectedColor, int colorIndex)
-        {
-            SelectedColor = selectedColor;
-            ColorIndex = colorIndex;
-        }
-    }
-
+ 
     /// <summary>
     /// Custom panel for displaying and selecting colors from a palette
     /// </summary>
@@ -52,7 +26,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [Category("Action")]
         [Description("Occurs when a color in the palette is selected")]
-        public event EventHandler<ColorSelectedEventArgs>? ColorSelected;
+        public event EventHandler<ColourSelectedEventArgs>? ColorSelected;
 
         /// <summary>
         /// Gets or sets the palette used by this control
@@ -157,7 +131,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Raises the ColorSelected event
         /// </summary>
-        protected virtual void OnColorSelected(ColorSelectedEventArgs e)
+        protected virtual void OnColorSelected(ColourSelectedEventArgs e)
         {
             ColorSelected?.Invoke(this, e);
         }
