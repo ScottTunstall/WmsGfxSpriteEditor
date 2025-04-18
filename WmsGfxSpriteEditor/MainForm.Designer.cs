@@ -32,6 +32,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
+            Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
@@ -150,7 +151,7 @@ namespace WmsGfxSpriteEditor
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, CoordinatesLabel });
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel });
             statusStrip.Location = new Point(0, 700);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 16, 0);
@@ -163,9 +164,16 @@ namespace WmsGfxSpriteEditor
             StatusLabel.Size = new Size(139, 24);
             StatusLabel.Text = "No ROMset loaded.";
             // 
+            // Spacer
+            // 
+            Spacer.Name = "Spacer";
+            Spacer.Size = new Size(792, 24);
+            Spacer.Spring = true;
+            // 
             // CoordinatesLabel
             // 
-            CoordinatesLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Right;
+            CoordinatesLabel.Alignment = ToolStripItemAlignment.Right;
+            CoordinatesLabel.BorderSides = ToolStripStatusLabelBorderSides.Left;
             CoordinatesLabel.Name = "CoordinatesLabel";
             CoordinatesLabel.Size = new Size(60, 24);
             CoordinatesLabel.Text = "X: - Y: -";
@@ -382,6 +390,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuViewZoomOut;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
+        private ToolStripStatusLabel Spacer;
         private ToolStripStatusLabel CoordinatesLabel;
         private Panel topPanel;
         private TableLayoutPanel tableLayoutPanel;

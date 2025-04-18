@@ -59,7 +59,7 @@ namespace WmsGfxSpriteEditor
         {
             RobotronBlueLabelRomFileService service = new();
 
-            MemoryStream? romData = LoadRomSetIntoMemoryStream(RomSetNames.TieDieWDPU, service);
+            var romData = LoadRomSetIntoMemoryStream(RomSetNames.TieDieWDPU, service);
             if (romData!=null)
             {
                 RobotronBlueLabelSpriteRepository repo = new();
@@ -205,8 +205,7 @@ namespace WmsGfxSpriteEditor
             StatusLabel.Text = $"Sprite: {sprite.Name} | Offset: 0x{sprite.Offset:X4} ({sprite.Offset}) | " +
                                $"Size: {sprite.WidthInPixels}x{sprite.Height} pixels " +
                                $"({sprite.WidthInBytes} bytes x {sprite.Height} rows) | " +
-                               $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")} | " +
-                               $"Zoom: {_zoomLevel}x";
+                               $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")}";
         }
 
 
