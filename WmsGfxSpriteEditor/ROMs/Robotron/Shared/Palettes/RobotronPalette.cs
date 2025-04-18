@@ -1,11 +1,13 @@
-﻿namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes
+// Credit to Sean Riddle for designing the algorithm which converts byte colour values to their RGB equivalent
+
+namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes
 {
     /// <summary>
     /// Provides the color palette from the Robotron arcade game
     /// </summary>
     public class RobotronPalette : IPalette
     {
-        // Original color values from Robotron hardware
+        // Original color values from Robotron ROM
         private static readonly byte[] _colorValues = new byte[]
         {
             0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
@@ -36,6 +38,7 @@
         public Color[] GetPalette() => _palette;
 
 
+        // This code which converts bytes to RGB was ported from Sean Riddle's Williams Graphics Ripper
         private static Color ConvertColorValue(byte value)
         {
             int red = (value & 0x7) << 1;
