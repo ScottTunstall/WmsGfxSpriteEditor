@@ -1,4 +1,4 @@
-﻿using WmsGfxSpriteEditor.Controls;
+using WmsGfxSpriteEditor.Controls;
 
 namespace WmsGfxSpriteEditor
 {
@@ -32,6 +32,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
+            CoordinatesLabel = new ToolStripStatusLabel();
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
             lblSprite = new Label();
@@ -42,9 +43,9 @@ namespace WmsGfxSpriteEditor
             pnlPalette = new PalettePanel();
             splitContainer = new SplitContainer();
             leftPanel = new Panel();
-            magnifierPanel = new Panel();
             rightPanel = new Panel();
             spriteDisplay = new SpriteDisplayControl();
+            magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
             topPanel.SuspendLayout();
@@ -54,7 +55,6 @@ namespace WmsGfxSpriteEditor
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
-            leftPanel.SuspendLayout();
             rightPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
             SuspendLayout();
@@ -82,7 +82,7 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(180, 24);
+            mnuFileLoad.Size = new Size(164, 24);
             mnuFileLoad.Text = "&Load";
             // 
             // mnuFileLoadRobotron
@@ -120,7 +120,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 24);
+            mnuFileSave.Size = new Size(164, 24);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -150,18 +150,25 @@ namespace WmsGfxSpriteEditor
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel });
-            statusStrip.Location = new Point(0, 704);
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, CoordinatesLabel });
+            statusStrip.Location = new Point(0, 700);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 16, 0);
-            statusStrip.Size = new Size(1008, 25);
+            statusStrip.Size = new Size(1008, 29);
             statusStrip.TabIndex = 1;
             // 
             // StatusLabel
             // 
             StatusLabel.Name = "StatusLabel";
-            StatusLabel.Size = new Size(50, 20);
-            StatusLabel.Text = "Ready";
+            StatusLabel.Size = new Size(139, 24);
+            StatusLabel.Text = "No ROMset loaded.";
+            // 
+            // CoordinatesLabel
+            // 
+            CoordinatesLabel.BorderSides = ToolStripStatusLabelBorderSides.Left | ToolStripStatusLabelBorderSides.Right;
+            CoordinatesLabel.Name = "CoordinatesLabel";
+            CoordinatesLabel.Size = new Size(60, 24);
+            CoordinatesLabel.Text = "X: - Y: -";
             // 
             // topPanel
             // 
@@ -280,55 +287,53 @@ namespace WmsGfxSpriteEditor
             // splitContainer.Panel2
             // 
             splitContainer.Panel2.Controls.Add(rightPanel);
-            splitContainer.Size = new Size(1008, 621);
+            splitContainer.Size = new Size(1008, 617);
             splitContainer.SplitterDistance = 145;
             splitContainer.SplitterWidth = 5;
             splitContainer.TabIndex = 3;
             // 
             // leftPanel
             // 
-            leftPanel.Controls.Add(magnifierPanel);
             leftPanel.Dock = DockStyle.Fill;
             leftPanel.Location = new Point(0, 0);
             leftPanel.Margin = new Padding(3, 4, 3, 4);
             leftPanel.Name = "leftPanel";
-            leftPanel.Size = new Size(145, 621);
+            leftPanel.Size = new Size(145, 617);
             leftPanel.TabIndex = 0;
-            // 
-            // magnifierPanel
-            // 
-            magnifierPanel.AutoScroll = true;
-            magnifierPanel.Dock = DockStyle.Fill;
-            magnifierPanel.Location = new Point(0, 0);
-            magnifierPanel.Margin = new Padding(3, 4, 3, 4);
-            magnifierPanel.Name = "magnifierPanel";
-            magnifierPanel.Size = new Size(145, 621);
-            magnifierPanel.TabIndex = 0;
             // 
             // rightPanel
             // 
+            rightPanel.AutoScroll = true;
             rightPanel.Controls.Add(spriteDisplay);
             rightPanel.Dock = DockStyle.Fill;
             rightPanel.Location = new Point(0, 0);
             rightPanel.Margin = new Padding(3, 4, 3, 4);
             rightPanel.Name = "rightPanel";
-            rightPanel.Size = new Size(858, 621);
+            rightPanel.Size = new Size(858, 617);
             rightPanel.TabIndex = 0;
             // 
             // spriteDisplay
             // 
             spriteDisplay.BackColor = Color.Black;
-            spriteDisplay.Dock = DockStyle.Fill;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);
             spriteDisplay.Margin = new Padding(3, 4, 3, 4);
             spriteDisplay.Name = "spriteDisplay";
             spriteDisplay.RomData = null;
             spriteDisplay.Size = new Size(858, 621);
-            spriteDisplay.SpriteRenderer = null;
+            spriteDisplay.SpriteGridRenderer = null;
             spriteDisplay.TabIndex = 0;
             spriteDisplay.TabStop = false;
             spriteDisplay.ZoomLevel = 1;
+            spriteDisplay.ZoomLevelThreshold = 3;
+            spriteDisplay.GridCellMouseMove += SpriteDisplay_GridCellMouseMove;
+            // 
+            // magnifierPanel
+            // 
+            magnifierPanel.Location = new Point(0, 0);
+            magnifierPanel.Name = "magnifierPanel";
+            magnifierPanel.Size = new Size(200, 100);
+            magnifierPanel.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -355,12 +360,12 @@ namespace WmsGfxSpriteEditor
             splitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
-            leftPanel.ResumeLayout(false);
             rightPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
+
 
         #endregion
 
@@ -377,6 +382,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuViewZoomOut;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
+        private ToolStripStatusLabel CoordinatesLabel;
         private Panel topPanel;
         private TableLayoutPanel tableLayoutPanel;
         private Label lblSprite;
