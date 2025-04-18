@@ -1,5 +1,5 @@
 # EditorConfig file for C# projects
-# Last updated: 2025-04-18 11:24:52 UTC
+# Last updated: 2025-04-18 11:40:29 UTC
 # Updated by: ScottTunstall
 root = true
 
@@ -108,6 +108,7 @@ dotnet_analyzer_diagnostic.severity = error
 # Disabled specific analyzer rules as requested
 dotnet_diagnostic.CA1859.severity = none
 dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1716.severity = none
 
 csharp_indent_labels = one_less_than_current
 csharp_using_directive_placement = outside_namespace:silent
