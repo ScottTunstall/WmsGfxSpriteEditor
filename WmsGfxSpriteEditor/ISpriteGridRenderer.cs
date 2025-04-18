@@ -14,7 +14,7 @@ namespace WmsGfxSpriteEditor
         /// <summary>
         /// Calculate area required to display sprite in full
         /// </summary>
-        Size CalculateSize(int spriteWidthInBytes, int spriteHeight, int cellSize);
+        Size GetExtent(int spriteWidthInBytes, int spriteHeight, int cellSize);
 
         /// <summary>
         /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account cell Size
