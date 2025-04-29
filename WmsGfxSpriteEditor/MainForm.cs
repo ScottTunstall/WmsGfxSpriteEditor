@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using WmsGfxSpriteEditor.Controls;
 using WmsGfxSpriteEditor.ROMs.Robotron;
@@ -12,7 +13,7 @@ namespace WmsGfxSpriteEditor
     {
         // Service dependencies
         private IRomService _romService = default!;
-        private ISpriteGridRenderer _spriteRenderer = default!;
+        private ISpriteRenderer _spriteRenderer = default!;
 
         // State variables
         private int _zoomLevel = 1; // Default zoom for the normal view
@@ -21,7 +22,7 @@ namespace WmsGfxSpriteEditor
         private Color _selectedColor = Color.Black;
 
         // Palette
-        private Color[] _palette;
+        private Color[] _palette = default!;
 
         public MainForm()
         {
@@ -38,6 +39,12 @@ namespace WmsGfxSpriteEditor
         }
 
 
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            pnlPalette.Invalidate();
+        }
+
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
             RobotronBlueLabelRomFileService service = new();
@@ -45,13 +52,11 @@ namespace WmsGfxSpriteEditor
             MemoryStream? romData = LoadRomSetIntoMemoryStream(RomSetNames.BlueLabel, service);
             if (romData != null)
             {
-                _romData?.Dispose();
-                _romData = romData;
-
                 RobotronBlueLabelSpriteRepository repo = new();
                 RobotronPalette palette = new();
+                SpriteRenderer4Bpp spriteRenderer = new();
 
-                OnBeginEdit(service, repo, palette);
+                OnBeginEdit(romData, service, repo, spriteRenderer, palette);
             }
         }
         
@@ -59,13 +64,14 @@ namespace WmsGfxSpriteEditor
         {
             RobotronBlueLabelRomFileService service = new();
 
-            var romData = LoadRomSetIntoMemoryStream(RomSetNames.TieDieWDPU, service);
+            MemoryStream? romData = LoadRomSetIntoMemoryStream(RomSetNames.TieDieWDPU, service);
             if (romData!=null)
             {
                 RobotronBlueLabelSpriteRepository repo = new();
                 RobotronPalette palette = new();
+                SpriteRenderer4Bpp spriteRenderer = new();
 
-                OnBeginEdit(service, repo, palette);
+                OnBeginEdit(romData, service, repo, spriteRenderer, palette);
             }
         }
 
@@ -131,30 +137,35 @@ namespace WmsGfxSpriteEditor
         }
 
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            RefreshSpriteDisplay();
-            pnlPalette.Invalidate();
-        }
 
 
-        private void OnBeginEdit(IRomService romService, ISpriteRepository spriteRepository, IPalette palette)
+
+        private void OnBeginEdit(MemoryStream romData, IRomService romService, ISpriteRepository spriteRepository, ISpriteRenderer spriteRenderer, IPalette palette)
         {
+            _romData?.Dispose();
+            _romData = romData;
+
             _romService = romService;
             _palette = palette.GetPalette();
             pnlPalette.Palette = _palette;
 
-            _spriteRenderer = new SpriteGridRenderer();
-            spriteDisplay.SpriteGridRenderer = _spriteRenderer;
-            spriteDisplay.Palette = _palette;
+            _spriteRenderer = spriteRenderer;
+
+            IReadOnlyCollection<SpriteInfo> allSprites = spriteRepository.GetAllSprites();
+            
+            SpriteInfo firstSprite = allSprites.First();
+            Sprite sprite = CreateSpriteFromSpriteInfo(firstSprite);
+
+            spriteDisplay.SpriteRenderer = _spriteRenderer;
+            spriteDisplay.Sprite = sprite;
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = _zoomLevel;
-            spriteDisplay.RomData = _romData;
 
-            UpdateSpriteDropdown(spriteRepository.GetAllSprites());
+            UpdateSpriteDropdown(allSprites);
             EnableEditingControls();
         }
+
+
 
         private void DisableEditingControls()
         {
@@ -178,7 +189,7 @@ namespace WmsGfxSpriteEditor
         {
             if (cboSprite.SelectedItem is SpriteInfo selectedSprite)
             {
-                spriteDisplay.SetSpriteInfo(selectedSprite);
+                spriteDisplay.Sprite = CreateSpriteFromSpriteInfo(selectedSprite);
                 UpdateStatusWithSpriteInfo(selectedSprite);
             }
         }
@@ -209,7 +220,14 @@ namespace WmsGfxSpriteEditor
         }
 
 
-
+        private Sprite CreateSpriteFromSpriteInfo(SpriteInfo spriteInfo)
+        {
+            int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
+            byte[] spriteData = new byte[bytesToRead];
+            _romData!.Position = spriteInfo.Offset;
+            _ = _romData!.Read(spriteData, 0, bytesToRead);
+            return new Sprite(spriteData, _palette, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
+        }
 
 #pragma warning disable CA1859
         private MemoryStream? LoadRomSetIntoMemoryStream(string romsetName, IRomService loader)
