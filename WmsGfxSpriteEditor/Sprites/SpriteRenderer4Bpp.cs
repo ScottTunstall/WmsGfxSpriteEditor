@@ -1,8 +1,11 @@
 namespace WmsGfxSpriteEditor.Sprites
 {
-    public class SpriteGridRenderer : ISpriteGridRenderer
+    /// <summary>
+    /// Sprite renderer, 4 bits per pixel
+    /// </summary>
+    public class SpriteRenderer4Bpp : ISpriteRenderer
     {
-        public Size GetExtent(int spriteWidthInBytes, int spriteHeight, int cellSize)
+        public Size GetSize(int spriteWidthInBytes, int spriteHeight, int cellSize)
         {
             return new Size(spriteWidthInBytes * 2 * cellSize, spriteHeight * cellSize);
         }
@@ -10,22 +13,18 @@ namespace WmsGfxSpriteEditor.Sprites
         public Point GetGridCellFromXY(int x, int y, int cellSize)
         {
             // Calculate grid coordinates based on mouse position and zoom level
-            int gridX = (x / cellSize)+1;
-            int gridY = (y / cellSize)+1;
+            int gridX = (x / cellSize) + 1;
+            int gridY = (y / cellSize) + 1;
             return new Point(gridX, gridY);
         }
 
         public void RenderSprite(Graphics graphics,
-            ReadOnlySpan<byte> spriteData,
-            Color[] palette,
-            int widthInBytes,
-            int height,
-            bool isLinear,
+            Sprite sprite,
             int cellSize,
             Rectangle renderArea)
         {
             // If we have no sprite data, exit without rendering anything
-            if (spriteData.Length == 0)
+            if (sprite.Data.Length == 0)
             {
                 return;
             }
@@ -33,28 +32,20 @@ namespace WmsGfxSpriteEditor.Sprites
             // Start rendering from the top-left corner (0,0)
             int startX = renderArea.X;
             int startY = renderArea.Y;
-
+            
             // Draw each pixel of the sprite
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < sprite.Height; y++)
             {
-                for (int byteX = 0; byteX < widthInBytes; byteX++)
+                for (int byteX = 0; byteX < sprite.WidthInBytes; byteX++)
                 {
                     // Calculate the index in the sprite data
-                    int dataIndex = y * widthInBytes + byteX;
+                    int dataIndex = y * sprite.WidthInBytes+ byteX;
 
-                    if (dataIndex >= spriteData.Length)
+                    if (dataIndex >= sprite.Data.Length)
                         continue;
 
-                    byte pixelByte = spriteData[dataIndex];
-
-                    // Extract the two pixels from the byte
-                    // Upper nibble (bits 7-4) is the first pixel
-                    // Lower nibble (bits 3-0) is the second pixel
-                    int colorIndex1 = (pixelByte >> 4) & 0x0F; // First pixel (upper nibble)
-                    int colorIndex2 = pixelByte & 0x0F; // Second pixel (lower nibble)
-
-                    Color pixelColor1 = palette[colorIndex1];
-                    Color pixelColor2 = palette[colorIndex2];
+                    Color pixelColor1 = sprite.GetFirstPixelColour(dataIndex);
+                    Color pixelColor2 = sprite.GetSecondPixelColour(dataIndex);
 
                     // Draw the first pixel
                     int pixelX = startX + ((byteX * 2) * cellSize);
@@ -66,68 +57,54 @@ namespace WmsGfxSpriteEditor.Sprites
                 }
             }
         }
-        
+
 
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
         public void RenderSpriteWithGrid(Graphics graphics,
-            ReadOnlySpan<byte> spriteData,
-            Color[] palette,
-            int widthInBytes,
-            int height,
-            bool isLinear,
+            Sprite sprite,
             int cellSize,
             Color gridColor,
             Rectangle renderArea)
         {
             // If we have no sprite data, exit without rendering anything
-            if (spriteData.Length == 0)
+            if (sprite.Data.Length == 0)
             {
                 return;
             }
 
-            // Start rendering from the top-left corner (0,0)
             int startX = renderArea.X;
             int startY = renderArea.Y;
 
             // Draw each pixel of the sprite
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < sprite.Height; y++)
             {
-                for (int byteX = 0; byteX < widthInBytes; byteX++)
+                for (int byteX = 0; byteX < sprite.WidthInBytes; byteX++)
                 {
                     // Calculate the index in the sprite data
-                    int dataIndex = y * widthInBytes + byteX;
+                    int dataIndex = y * sprite.WidthInBytes+ byteX;
 
-                    if (dataIndex >= spriteData.Length)
+                    if (dataIndex >= sprite.Data.Length)
                         continue;
 
-                    byte pixelByte = spriteData[dataIndex];
-
-                    // Extract the two pixels from the byte
-                    // Upper nibble (bits 7-4) is the first pixel
-                    // Lower nibble (bits 3-0) is the second pixel
-                    int colorIndex1 = (pixelByte >> 4) & 0x0F; // First pixel (upper nibble)
-                    int colorIndex2 = pixelByte & 0x0F; // Second pixel (lower nibble)
-
-                    Color pixelColor1 = palette[colorIndex1];
-                    Color pixelColor2 = palette[colorIndex2];
+                    Color pixelColor1 = sprite.GetFirstPixelColour(dataIndex);
+                    Color pixelColor2 = sprite.GetSecondPixelColour(dataIndex);
 
                     // Draw the first pixel
                     int pixelX = startX + ((byteX * 2) * cellSize);
                     int pixelY = startY + (y * cellSize);
                     DrawPixel(graphics, pixelX, pixelY, pixelColor1, cellSize);
-                    
+
                     // Draw the second pixel
                     DrawPixel(graphics, pixelX + cellSize, pixelY, pixelColor2, cellSize);
 
-                    // Draw grid
-                    DrawGrid(graphics, pixelX, pixelY, gridColor, cellSize);
-                    DrawGrid(graphics, pixelX + cellSize, pixelY, gridColor, cellSize);
+                    // Draw grid cells around the pixels
+                    DrawGridCell(graphics, pixelX, pixelY, gridColor, cellSize);
+                    DrawGridCell(graphics, pixelX + cellSize, pixelY, gridColor, cellSize);
                 }
             }
         }
-
 
         /// <summary>
         /// Helper method to draw a single pixel of the sprite
@@ -150,7 +127,7 @@ namespace WmsGfxSpriteEditor.Sprites
         }
 
 
-        private void DrawGrid(
+        private void DrawGridCell(
             Graphics graphics,
             int x,
             int y,
@@ -167,3 +144,4 @@ namespace WmsGfxSpriteEditor.Sprites
         }
     }
 }
+

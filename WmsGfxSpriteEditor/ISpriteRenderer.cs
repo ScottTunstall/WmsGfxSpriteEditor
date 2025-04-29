@@ -1,20 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
 {
     /// <summary>
     /// Interface for sprite rendering functionality
     /// </summary>
-    public interface ISpriteGridRenderer
+    public interface ISpriteRenderer
     {
         /// <summary>
         /// Calculate area required to display sprite in full
         /// </summary>
-        Size GetExtent(int spriteWidthInBytes, int spriteHeight, int cellSize);
+        Size GetSize(int spriteWidthInBytes, int spriteHeight, int cellSize);
 
         /// <summary>
         /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account cell Size
@@ -25,25 +21,14 @@ namespace WmsGfxSpriteEditor
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
         public void RenderSprite(Graphics graphics,
-            ReadOnlySpan<byte> spriteData,
-            Color[] palette,
-            int widthInBytes,
-            int height,
-            bool isLinear,
+            Sprite sprite,
             int cellSize,
             Rectangle renderArea);
 
         public void RenderSpriteWithGrid(Graphics graphics,
-            ReadOnlySpan<byte> spriteData,
-            Color[] palette,
-            int widthInBytes,
-            int height,
-            bool isLinear,
+            Sprite sprite,
             int cellSize,
             Color gridColor,
             Rectangle renderArea);
-
-
-
     }
 }
