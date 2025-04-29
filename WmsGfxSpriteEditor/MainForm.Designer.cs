@@ -27,6 +27,9 @@ namespace WmsGfxSpriteEditor
             mnuFileLoadRobotronTieDieWDPU = new ToolStripMenuItem();
             mnuFileLoadRobotronTieDieMAME = new ToolStripMenuItem();
             mnuFileSave = new ToolStripMenuItem();
+            mnuEdit = new ToolStripMenuItem();
+            mnuEditUndo = new ToolStripMenuItem();
+            mnuEditRedo = new ToolStripMenuItem();
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
@@ -62,7 +65,7 @@ namespace WmsGfxSpriteEditor
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuView });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(882, 24);
@@ -123,6 +126,30 @@ namespace WmsGfxSpriteEditor
             mnuFileSave.Size = new Size(143, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
+            // 
+            // mnuEdit
+            // 
+            mnuEdit.DropDownItems.AddRange(new ToolStripItem[] { mnuEditUndo, mnuEditRedo });
+            mnuEdit.Name = "mnuEdit";
+            mnuEdit.ShortcutKeys = Keys.Alt | Keys.E;
+            mnuEdit.Size = new Size(39, 20);
+            mnuEdit.Text = "&Edit";
+            // 
+            // mnuEditUndo
+            // 
+            mnuEditUndo.Name = "mnuEditUndo";
+            mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
+            mnuEditUndo.Size = new Size(144, 22);
+            mnuEditUndo.Text = "&Undo";
+            mnuEditUndo.Click += mnuEditUndo_Click;
+            // 
+            // mnuEditRedo
+            // 
+            mnuEditRedo.Name = "mnuEditRedo";
+            mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
+            mnuEditRedo.Size = new Size(144, 22);
+            mnuEditRedo.Text = "&Redo";
+            mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuView
             // 
@@ -319,12 +346,15 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.Location = new Point(0, 0);
             spriteDisplay.Name = "spriteDisplay";
             spriteDisplay.Size = new Size(751, 466);
+            spriteDisplay.Sprite = null;
             spriteDisplay.SpriteRenderer = null;
             spriteDisplay.TabIndex = 0;
             spriteDisplay.TabStop = false;
             spriteDisplay.ZoomLevel = 1;
             spriteDisplay.ZoomLevelThreshold = 3;
             spriteDisplay.GridCellMouseMove += SpriteDisplay_GridCellMouseMove;
+            spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
+            spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
             // 
             // magnifierPanel
             // 
@@ -374,6 +404,10 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuFileLoadRobotronTieDieWDPU;
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
         private ToolStripMenuItem mnuFileSave;
+        private ToolStripMenuItem mnuEdit;
+        private ToolStripMenuItem mnuEditUndo;
+        private ToolStripMenuItem mnuEditRedo;
+
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
