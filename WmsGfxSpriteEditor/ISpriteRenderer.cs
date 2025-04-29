@@ -10,7 +10,7 @@ namespace WmsGfxSpriteEditor
         /// <summary>
         /// Calculate area required to display sprite in full
         /// </summary>
-        Size GetSize(int spriteWidthInBytes, int spriteHeight, int cellSize);
+        Size GetSize(int spriteWidth, int spriteHeight, int cellSize);
 
         /// <summary>
         /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account cell Size
@@ -21,12 +21,12 @@ namespace WmsGfxSpriteEditor
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
         public void RenderSprite(Graphics graphics,
-            Sprite sprite,
+            ISprite sprite,
             int cellSize,
             Rectangle renderArea);
 
         public void RenderSpriteWithGrid(Graphics graphics,
-            Sprite sprite,
+            ISprite sprite,
             int cellSize,
             Color gridColor,
             Rectangle renderArea);
