@@ -16,15 +16,18 @@ namespace WmsGfxSpriteEditor
         private ISpriteRenderer? _spriteRenderer;
         private ISprite? _sprite;
 
-        // State variables
-        private int _zoomLevel = 1; // Default zoom for the normal view
-
         private MemoryStream? _romData;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
-        private Color _selectedColour = Color.Black;
-        private int _selectedColourIndex;
 
-        private bool _suspendEvents;
+        // User selections
+        private Color _selectedColour = Color.Black;
+
+        private int _selectedPaletteIndex;
+        private SpriteInfo? _selectedSpriteInfo;
+        private int _selectedSpriteIndex;
+        private int _zoomLevel = 1; // Default zoom for the normal view
+
+        private bool _suspendChangeEvents;
         private History _history = default!;
 
         // Palette
@@ -36,7 +39,7 @@ namespace WmsGfxSpriteEditor
         {
             InitializeComponent();
 
-            _suspendEvents = true;
+            _suspendChangeEvents = true;
 
             DisableEditingControls();
 
@@ -48,7 +51,7 @@ namespace WmsGfxSpriteEditor
             // Set up the palette panel - This MUST be done after InitializeComponent
             pnlPalette.ColorSelected += PnlPalette_ColorSelected;
 
-            _suspendEvents = false;
+            _suspendChangeEvents = false;
         }
 
         protected override void OnResize(EventArgs e)
@@ -56,6 +59,8 @@ namespace WmsGfxSpriteEditor
             base.OnResize(e);
             pnlPalette.Invalidate();
         }
+
+        #region FILE MENU
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
@@ -92,63 +97,84 @@ namespace WmsGfxSpriteEditor
             // Empty click handler for Tie Die (MAME) ROM
         }
 
-        private void mnuEditUndo_Click(object sender, EventArgs e)
-        {
-            // Implement Undo functionality here
-            MessageBox.Show("Undo action triggered.", "Undo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void mnuEditRedo_Click(object sender, EventArgs e)
-        {
-            // Implement Redo functionality here
-            MessageBox.Show("Redo action triggered.", "Redo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
             // Save functionality would be implemented here
             MessageBox.Show("Save functionality not implemented in this demo.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        #endregion
+
+
+        #region EDIT MENU
+
+        private void mnuEditUndo_Click(object sender, EventArgs e)
+        {
+            if (CanUndo)
+                Undo();
+
+            mnuEditUndo.Enabled = CanUndo;
+        }
+
+        private void mnuEditRedo_Click(object sender, EventArgs e)
+        {
+            //if (CanRedo)
+                Redo();
+
+            //mnuEditRedo.Enabled = CanRedo;
+        }
+
+        #endregion
+
+
+        #region VIEW MENU
+
         private void mnuViewZoomIn_Click(object sender, EventArgs e)
         {
-            SetZoom(_zoomLevel + 1, true);
+            if (_zoomLevel <= nudZoom.Maximum)
+            {
+                SetZoom(_zoomLevel + 1, true);
+            }
         }
 
         private void mnuViewZoomOut_Click(object sender, EventArgs e)
         {
-            SetZoom(_zoomLevel - 1, true);
+            if (_zoomLevel >= nudZoom.Minimum)
+            {
+                SetZoom(_zoomLevel - 1, true);
+            }
         }
 
         private void nudZoom_ValueChanged(object sender, EventArgs e)
         {
-            if (_suspendEvents)
+            if (_suspendChangeEvents)
                 return;
 
             SetZoom((int)nudZoom.Value, true);
         }
 
+
+        #endregion
+
         private void cboSprite_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_suspendEvents)
+            if (_suspendChangeEvents)
                 return;
 
-            if (cboSprite.SelectedItem is SpriteInfo selectedSprite)
-            {
-                SelectSprite(selectedSprite, true);
-            }
-
-            RefreshSpriteDisplay();
+            SelectSprite(cboSprite.SelectedItem as SpriteInfo, cboSprite.SelectedIndex, true);
         }
 
         private void PnlPalette_ColorSelected(object? sender, ColourSelectedEventArgs e)
         {
-            if (_suspendEvents)
+            if (_suspendChangeEvents)
                 return;
 
             _selectedColour = e.SelectedColour;
-            _selectedColourIndex = e.ColourIndex;
+            _selectedPaletteIndex = e.ColourIndex;
         }
+
+
+        #region SPRITE GRID
 
         private void spriteDisplay_GridCellMouseDown(object sender, GridCellMouseEventArgs e)
         {
@@ -156,21 +182,19 @@ namespace WmsGfxSpriteEditor
             {
                 _mouseDown = true;
 
-                // Save what sprite looked like before it was changed, to history
                 SaveSelectedSpriteStateToHistory();
-                
-                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedColourIndex);
+
+                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
 
                 spriteDisplay.Invalidate();
             }
         }
 
-
         private void SpriteDisplay_GridCellMouseMove(object sender, GridEventArgs e)
         {
             if (_mouseDown)
             {
-                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedColourIndex);
+                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
                 spriteDisplay.Invalidate();
             }
 
@@ -181,6 +205,8 @@ namespace WmsGfxSpriteEditor
         {
             _mouseDown = false;
         }
+
+        #endregion
 
         private void OnBeginEdit(MemoryStream romData, IRomService romService, ISpriteRepository spriteRepository, ISpriteRenderer spriteRenderer, IPalette palette)
         {
@@ -205,10 +231,10 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = _zoomLevel;
 
-            _suspendEvents = true;
+            _suspendChangeEvents = true;
             UpdateSpriteDropdown(allSpriteInfo);
             EnableEditingControls();
-            _suspendEvents = false;
+            _suspendChangeEvents = false;
         }
 
         private void DisableEditingControls()
@@ -227,65 +253,71 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Enabled = true;
         }
 
-        private void SetZoom(int newZoomLevel, bool saveState)
+        #region EDIT FUNCS
+
+
+        private bool CanUndo => _history.CanUndo;
+
+        private bool CanRedo => _history.CanRedo;
+
+        private void Undo()
         {
-            if (newZoomLevel < nudZoom.Minimum || newZoomLevel > nudZoom.Maximum)
-            {
-                return;
-            }
-
-            if (saveState)
-            {
-                SaveZoomState();
-            }
-
-            _zoomLevel = newZoomLevel;
-            nudZoom.Value = newZoomLevel;
-            spriteDisplay.ZoomLevel = newZoomLevel;
+            HistoryItem item = _history.Undo()!;
+            SetStateFromHistory(item!);
         }
 
-        private void SaveZoomState()
+        private void Redo()
+        {
+            HistoryItem item = _history.Redo()!;
+            SetStateFromHistory(item!);
+        }
+
+        private void SetStateFromHistory(HistoryItem item)
+        {
+            switch (item.OperationType)
+            {
+                case OperationType.Zoom:
+                    SetZoom((int)item.ZoomValue, false);
+                    break;
+
+                case OperationType.SpriteSelectionChanging:
+                    SelectSprite(item.SpriteInfo!, item.SpriteIndex, false);
+                    break;
+
+                case OperationType.SpriteDataChanging:
+                    //RestoreSprite(item.SpriteInfo!, item.SpriteData!, item.Palette!);
+                    break;
+            }
+        }
+
+
+        #endregion 
+
+        #region VIEW FUNCS
+
+        private void SetZoom(int newZoomLevel, bool saveStateToHistory)
+        {
+            _zoomLevel = newZoomLevel;
+            _suspendChangeEvents = true;
+            nudZoom.Value = newZoomLevel;
+            spriteDisplay.ZoomLevel = newZoomLevel;
+            _suspendChangeEvents = false;
+
+            if (saveStateToHistory)
+            {
+                SaveZoomStateToHistory();
+            }
+        }
+
+
+        private void SaveZoomStateToHistory()
         {
             _history.Add(HistoryItem.CreateZoomHistoryItem(_zoomLevel));
         }
 
-        
-        private void SelectSprite(SpriteInfo spriteInfo, bool saveState)
-        {
-            if (saveState)
-            {
-                SaveSelectedSpriteIndexToHistory();
-            }
+        #endregion 
 
-            SetSprite(CreateSpriteFromSpriteInfo(spriteInfo));
-            UpdateStatusWithSpriteInfo(spriteInfo);
-        }
-
-        private void SaveSelectedSpriteIndexToHistory()
-        {
-            _history.Add(HistoryItem.CreateSpriteSelectionChangingHistoryItem(cboSprite.SelectedIndex));
-        }
-
-
-        private void SetSprite(ISprite sprite)
-        {
-            _sprite = sprite;
-            spriteDisplay.Sprite = sprite;
-            spriteDisplay.Invalidate();
-        }
-
-        private void SaveSelectedSpriteStateToHistory()
-        {
-            _history.Add(HistoryItem.CreateSpriteDataChangingHistoryItem(cboSprite.SelectedIndex, _sprite.Clone()));
-        }
-
-        private void RefreshSpriteDisplay()
-        {
-            if (cboSprite.SelectedItem is SpriteInfo selectedSprite)
-            {
-                UpdateStatusWithSpriteInfo(selectedSprite);
-            }
-        }
+        #region SPRITE FUNCS
 
         private void UpdateSpriteDropdown(IReadOnlyCollection<SpriteInfo> sprites)
         {
@@ -297,19 +329,69 @@ namespace WmsGfxSpriteEditor
             if (cboSprite.Items.Count > 0)
             {
                 cboSprite.SelectedIndex = 0;
+                _selectedSpriteIndex = 0;
+                _selectedSpriteInfo = (SpriteInfo)cboSprite.Items[0]!;
             }
+        }
+
+        #endregion 
+
+        private void SelectSprite(SpriteInfo? spriteInfo, int spriteIndex, bool saveStateToHistory)
+        {
+            _selectedSpriteInfo = spriteInfo;
+            _selectedSpriteIndex = spriteIndex;
+
+            if (saveStateToHistory)
+            {
+                SaveSelectedSpriteIndexToHistory();
+            }
+
+            if (spriteInfo != null)
+            {
+                SetSpriteDisplay(CreateSpriteFromSpriteInfo(spriteInfo));
+                UpdateStatusWithSpriteInfo(spriteInfo);
+            }
+            else
+            {
+                SetSpriteDisplay(null);
+                UpdateStatusWithSpriteInfo(null);
+            }
+        }
+
+        private void SaveSelectedSpriteIndexToHistory()
+        {
+            _history.Add(HistoryItem.CreateSpriteSelectionChangingHistoryItem(_selectedSpriteIndex));
+        }
+
+        private void SetSpriteDisplay(ISprite? sprite)
+        {
+            _sprite = sprite;
+            spriteDisplay.Sprite = sprite;
+            spriteDisplay.Invalidate();
+        }
+
+        private void SaveSelectedSpriteStateToHistory()
+        {
+            _history.Add(HistoryItem.CreateSpriteDataChangingHistoryItem(_selectedSpriteInfo!, _sprite!, _selectedSpriteIndex));
         }
 
         /// <summary>
         /// Updates the status bar with complete sprite information
         /// </summary>
-        private void UpdateStatusWithSpriteInfo(SpriteInfo sprite)
+        private void UpdateStatusWithSpriteInfo(SpriteInfo? sprite)
         {
-            // Include the sprite offset in both hex and decimal format
-            StatusLabel.Text = $"Sprite: {sprite.Name} | Offset: 0x{sprite.Offset:X4} ({sprite.Offset}) | " +
-                               $"Size: {sprite.WidthInPixels}x{sprite.Height} pixels " +
-                               $"({sprite.WidthInBytes} bytes x {sprite.Height} rows) | " +
-                               $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")}";
+            if (sprite == null)
+            {
+                StatusLabel.Text = "No sprite selected.";
+            }
+            else
+            {
+                // Include the sprite offset in both hex and decimal format
+                StatusLabel.Text = $"Sprite: {sprite.Name} | Offset: 0x{sprite.Offset:X4} ({sprite.Offset}) | " +
+                                   $"Size: {sprite.WidthInPixels}x{sprite.Height} pixels " +
+                                   $"({sprite.WidthInBytes} bytes x {sprite.Height} rows) | " +
+                                   $"Format: {(sprite.IsLinear ? "Linear" : "Non-linear")}";
+            }
         }
 
         /// <summary>
@@ -325,6 +407,16 @@ namespace WmsGfxSpriteEditor
             // TODO: Move into factory method in Sprite4Bpp class
             return new Sprite4Bpp(spriteData, _palette, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
         }
+
+        private void RestoreSprite(SpriteInfo spriteInfo, byte[] spriteData, Color[] palette)
+        {
+            _romData!.Position = spriteInfo.Offset;
+            _romData!.Write(spriteData, 0, spriteData.Length);
+            _palette = palette;
+        }
+
+
+
 
 #pragma warning disable CA1859
 
