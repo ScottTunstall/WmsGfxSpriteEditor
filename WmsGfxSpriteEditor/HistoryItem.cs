@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
 {
@@ -19,11 +20,10 @@ namespace WmsGfxSpriteEditor
     {
         public OperationType OperationType { get; set; }
         public int SpriteIndex { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int PaletteIndex { get; set; }
-        public ISprite Sprite { get; set; } = default!;
+        public SpriteInfo? SpriteInfo { get; set; }
         public decimal ZoomValue { get; set; }
+        public byte[]? SpriteData { get; set; }
+        public Color[]? Palette { get; set; }
 
         public static HistoryItem CreateZoomHistoryItem(decimal zoomValue)
         {
@@ -42,16 +42,15 @@ namespace WmsGfxSpriteEditor
             };
         }
 
-        public static HistoryItem CreateSpriteDataChangingHistoryItem(int selectedSpriteIndex, ISprite spriteDataBeforeChange)
+        public static HistoryItem CreateSpriteDataChangingHistoryItem(SpriteInfo currentSpriteInfo, ISprite sprite, int selectedSpriteIndex)
         {
             return new HistoryItem()
             {
                 OperationType = OperationType.SpriteDataChanging,
                 SpriteIndex = selectedSpriteIndex,
-                Sprite = spriteDataBeforeChange.Clone()
+                SpriteData = sprite.CloneData(),
+                Palette = sprite.ClonePalette(),
             };
         }
-
-
     }
 }

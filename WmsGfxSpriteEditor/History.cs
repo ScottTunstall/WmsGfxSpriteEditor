@@ -24,19 +24,23 @@ namespace WmsGfxSpriteEditor
             Index++;
         }
 
-        public HistoryItem? Previous()
+        public bool CanUndo => Index > 0;
+
+        public bool CanRedo => Index < _historyItems.Count - 1;
+
+        public HistoryItem? Undo()
         {
-            if (Index < 0)
+            if (Index < 1)
             {
                 return null;
             }
 
-            HistoryItem item = _historyItems[Index];
             Index--;
+            HistoryItem item = _historyItems[Index];
             return item;
         }
 
-        public HistoryItem? Next()
+        public HistoryItem? Redo()
         {
             if (Index >= _historyItems.Count)
             {
@@ -46,7 +50,13 @@ namespace WmsGfxSpriteEditor
             Index++;
             HistoryItem item = _historyItems[Index];
             return item;
+        }
 
+
+        public void Clear()
+        {
+            _historyItems.Clear();
+            Index = -1;
         }
 
     }
