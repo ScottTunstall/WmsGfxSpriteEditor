@@ -28,7 +28,7 @@ namespace WmsGfxSpriteEditor
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
             int cellSize,
-            Color gridColor,
+            Color gridColour,
             Rectangle renderArea);
     }
 }

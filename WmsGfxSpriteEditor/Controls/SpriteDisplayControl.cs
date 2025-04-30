@@ -127,7 +127,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnPaint(pe);
 
-            if (_sprite == null || _spriteRenderer == null || _sprite.Data.Length == 0)
+            if (_sprite == null || _spriteRenderer == null || _sprite.PixelData.Length == 0)
             {
                 // Cannot render sprite, so just draw black
                 pe.Graphics.FillRectangle(Brushes.Black, ClientRectangle);

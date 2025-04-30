@@ -27,7 +27,7 @@ namespace WmsGfxSpriteEditor.Sprites
             Rectangle renderArea)
         {
             // If we have no sprite data, exit without rendering anything
-            if (sprite.Data.Length == 0)
+            if (sprite.PixelData.Length == 0)
             {
                 return;
             }
@@ -58,11 +58,11 @@ namespace WmsGfxSpriteEditor.Sprites
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
             int cellSize,
-            Color gridColor,
+            Color gridColour,
             Rectangle renderArea)
         {
             // If we have no sprite data, exit without rendering anything
-            if (sprite.Data.Length == 0)
+            if (sprite.PixelData.Length == 0)
             {
                 return;
             }
@@ -75,15 +75,15 @@ namespace WmsGfxSpriteEditor.Sprites
             {
                 for (int x = 0; x < sprite.Width; x++)
                 {
-                    Color pixelColor = sprite.GetPixel(x, y);
+                    Color pixelColour = sprite.GetPixel(x, y);
 
                     // Draw the first pixel
                     int pixelX = startX + x * cellSize;
                     int pixelY = startY + (y * cellSize);
-                    DrawPixel(graphics, pixelX, pixelY, pixelColor, cellSize);
+                    DrawPixel(graphics, pixelX, pixelY, pixelColour, cellSize);
 
                     // Draw grid cells around the pixels
-                    DrawGridCell(graphics, pixelX, pixelY, gridColor, cellSize);
+                    DrawGridCell(graphics, pixelX, pixelY, gridColour, cellSize);
                 }
             }
         }
