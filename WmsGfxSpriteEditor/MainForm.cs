@@ -1,5 +1,6 @@
 using System.Text;
 using WmsGfxSpriteEditor.Controls;
+using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.ROMs.Robotron;
 using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
 using WmsGfxSpriteEditor.ROMs.Robotron.Shared;
@@ -22,6 +23,7 @@ namespace WmsGfxSpriteEditor
         // User selections
         private Color _selectedColour = Color.Black;
 
+        private IReadOnlyList<SpriteInfo> _allSprites;
         private bool _haveSpritesToSelect;
         private int _selectedPaletteIndex;
         private SpriteInfo? _selectedSpriteInfo;
@@ -29,13 +31,13 @@ namespace WmsGfxSpriteEditor
         private int _zoomLevel = 1; // Default zoom for the normal view
 
         private bool _suspendChangeEvents;
-        private History.History _history = new();
+        private readonly History.History _history = new();
 
         // Palette
         private Color[] _palette = default!;
 
         private bool _mouseDown;
-        
+
 
         public MainForm()
         {
@@ -160,7 +162,7 @@ namespace WmsGfxSpriteEditor
             if (_suspendChangeEvents)
                 return;
 
-            SelectSprite(cboSprite.SelectedItem as SpriteInfo, cboSprite.SelectedIndex, true);
+            SelectSpriteByIndex(cboSprite.SelectedIndex, true);
         }
 
         #endregion
@@ -228,15 +230,11 @@ namespace WmsGfxSpriteEditor
 
             _spriteRenderer = spriteRenderer;
 
-            IReadOnlyCollection<SpriteInfo> allSpriteInfo = spriteRepository.GetAllSprites();
-            _haveSpritesToSelect = allSpriteInfo.Any();
-
             _suspendChangeEvents = true;
-            UpdateSpriteDropdown(allSpriteInfo);
+            _selectedSpriteInfo = SetSpriteSelectDropdown(spriteRepository.GetAllSprites().ToList());
             _suspendChangeEvents = false;
             
-            SpriteInfo firstSprite = allSpriteInfo.First();
-            _sprite = CreateSpriteFromSpriteInfo(firstSprite);
+            _sprite = CreateSpriteFromRomData(_selectedSpriteInfo);
 
             spriteDisplay.SpriteRenderer = _spriteRenderer;
             spriteDisplay.Sprite = _sprite;
@@ -255,12 +253,6 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Enabled = false;
         }
 
-        private void EnableEditingControls()
-        {
-            cboSprite.Enabled = true;
-            nudZoom.Enabled = true;
-            pnlPalette.Enabled = true;
-        }
 
         #region PALETTE FUNCS
 
@@ -300,6 +292,11 @@ namespace WmsGfxSpriteEditor
 
         private void SetZoom(int newZoomLevel, bool saveStateToHistory)
         {
+            if (saveStateToHistory)
+            {
+                SaveZoomStateToHistory();
+            }
+
             _zoomLevel = newZoomLevel;
             _suspendChangeEvents = true;
             nudZoom.Value = newZoomLevel;
@@ -319,46 +316,47 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE FUNCS
 
-        private void UpdateSpriteDropdown(IReadOnlyCollection<SpriteInfo> sprites)
+        private SpriteInfo SetSpriteSelectDropdown(List<SpriteInfo> spriteInfos, int index = 0)
         {
+            _allSprites = spriteInfos;
+            _haveSpritesToSelect = spriteInfos.Count>0;
+
             cboSprite.DataSource = null;
             cboSprite.DisplayMember = "ToString";
             cboSprite.ValueMember = "Offset";
-            cboSprite.DataSource = sprites;
+            cboSprite.DataSource = spriteInfos;
 
-            _haveSpritesToSelect = sprites.Count > 0;
-            if (_haveSpritesToSelect)
-            {
-                cboSprite.SelectedIndex = 0;
-                _selectedSpriteIndex = 0;
-                _selectedSpriteInfo = (SpriteInfo)cboSprite.Items[0]!;
-            }
-
-            OnDisplayStateChanged();
+            cboSprite.SelectedIndex = index;
+            _selectedSpriteIndex = index;
+            SpriteInfo spriteInfo = spriteInfos[index]!;
+            return spriteInfo;
         }
 
-        #endregion 
-
-        private void SelectSprite(SpriteInfo? spriteInfo, int spriteIndex, bool saveStateToHistory)
+        private void SelectSpriteByIndex(int spriteIndex, bool saveStateToHistory)
         {
-            _selectedSpriteInfo = spriteInfo;
+            if (saveStateToHistory)
+            {
+                SaveSelectedSpriteIndexToHistory();
+            }
+
             _selectedSpriteIndex = spriteIndex;
+            _selectedSpriteInfo = _allSprites[spriteIndex]!;
 
             if (saveStateToHistory)
             {
                 SaveSelectedSpriteIndexToHistory();
             }
 
-            if (spriteInfo != null)
+            if (_selectedSpriteInfo != null)
             {
-                SetSpriteDisplay(CreateSpriteFromSpriteInfo(spriteInfo));
+                SetSpriteDisplay(CreateSpriteFromRomData(_selectedSpriteInfo));
             }
             else
             {
                 SetSpriteDisplay(null);
             }
-
-            UpdateStatusBarWithSpriteInfo(spriteInfo);
+            
+            UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
             OnDisplayStateChanged();
         }
 
@@ -371,6 +369,7 @@ namespace WmsGfxSpriteEditor
             OnDisplayStateChanged();
         }
 
+        #endregion
 
         /// <summary>
         /// Updates the status bar with complete sprite information
@@ -407,28 +406,6 @@ namespace WmsGfxSpriteEditor
         
         
 
-        /// <summary>
-        /// Create a Sprite to render from the sprite info
-        /// </summary>
-        private ISprite CreateSpriteFromSpriteInfo(SpriteInfo spriteInfo)
-        {
-            int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
-            byte[] spriteData = new byte[bytesToRead];
-            _romData!.Position = spriteInfo.Offset;
-            _ = _romData!.Read(spriteData, 0, bytesToRead);
-
-            // TODO: Move into factory method in Sprite4Bpp class
-            return new Sprite4Bpp(spriteData, _palette, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
-        }
-
-        private void RestoreSprite(SpriteInfo spriteInfo, byte[] spriteData, Color[] palette)
-        {
-            _romData!.Position = spriteInfo.Offset;
-            _romData!.Write(spriteData, 0, spriteData.Length);
-            _palette = palette;
-        }
-
-
         #region HISTORY
 
         private void SaveZoomStateToHistory()
@@ -443,7 +420,7 @@ namespace WmsGfxSpriteEditor
 
         private void SaveSelectedSpriteStateToHistory()
         {
-            _history.Add(HistoryItem.CreateSpriteDataChangingHistoryItem(_selectedSpriteInfo!, _sprite!, _selectedSpriteIndex));
+            _history.Add(HistoryItem.CreateSpriteDataChangingHistoryItem(_sprite!, _selectedSpriteIndex, _selectedSpriteInfo!.Offset));
         }
 
         private void SetStateFromHistory(HistoryItem item)
@@ -451,22 +428,51 @@ namespace WmsGfxSpriteEditor
             switch (item.OperationType)
             {
                 case OperationType.Zoom:
-                    SetZoom((int)item.ZoomValue, false);
+                    SetZoom((int)item.ZoomLevel, false);
                     break;
 
                 case OperationType.SpriteSelectionChanging:
-                    SelectSprite(item.SpriteInfo!, item.SpriteIndex, false);
+                    SelectSpriteByIndex(item.SpriteIndex, false);
                     break;
 
                 case OperationType.SpriteDataChanging:
-                    //RestoreSprite(item.SpriteInfo!, item.SpriteData!, item.Palette!);
+                    RestoreSprite(item.SpriteIndex, item.SpriteData);
                     break;
             }
         }
 
+        private void RestoreSprite(int itemSpriteIndex, byte[] itemSpriteData)
+        {
+            WriteSpriteDataToRomData(itemSpriteIndex, itemSpriteData!);
+            SelectSpriteByIndex(itemSpriteIndex, false);
+        }
+
         #endregion
 
+        #region ROM
 
+        /// <summary>
+        /// Create a Sprite to render from the sprite info
+        /// </summary>
+        private ISprite CreateSpriteFromRomData(SpriteInfo spriteInfo)
+        {
+            int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
+            byte[] spriteData = new byte[bytesToRead];
+            _romData!.Position = spriteInfo.Offset;
+            _ = _romData!.Read(spriteData, 0, bytesToRead);
+
+            // TODO: Move into factory method in Sprite4Bpp class
+            return new Sprite4Bpp(spriteData, _palette, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
+        }
+
+        private void WriteSpriteDataToRomData(int spriteIndex, byte[] spriteData)
+        {
+            _romData!.Position = _allSprites[spriteIndex].Offset;
+            _romData!.Write(spriteData, 0, spriteData.Length);
+        }
+
+
+        #endregion
 
 
 #pragma warning disable CA1859

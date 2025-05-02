@@ -16,7 +16,7 @@ namespace WmsGfxSpriteEditor
         void SetPixelByPaletteIndex(int x, int y, int paletteIndex);
         ISprite Clone();
 
-        byte[] CloneData();
+        byte[] ClonePixelData();
         Color[] ClonePalette();
     }
 
