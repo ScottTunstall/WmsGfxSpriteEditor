@@ -70,13 +70,13 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public ISprite Clone()
         {
-            byte[] dataCopy = CloneData();
+            byte[] dataCopy = ClonePixelData();
             Color[] paletteCopy = ClonePalette();
 
             return new Sprite4Bpp(dataCopy, paletteCopy, WidthInBytes, Height, IsLinear);
         }
 
-        public byte[] CloneData()
+        public byte[] ClonePixelData()
         {
             byte[] dataCopy = new byte[PixelData.Length];
             Array.Copy(PixelData, dataCopy, PixelData.Length);
