@@ -121,9 +121,10 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFileSave
             // 
+            mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(143, 22);
+            mnuFileSave.Size = new Size(180, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -137,17 +138,19 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuEditUndo
             // 
+            mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(144, 22);
+            mnuEditUndo.Size = new Size(180, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
             // mnuEditRedo
             // 
+            mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(144, 22);
+            mnuEditRedo.Size = new Size(180, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
@@ -161,6 +164,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuViewZoomIn
             // 
+            mnuViewZoomIn.Enabled = false;
             mnuViewZoomIn.Name = "mnuViewZoomIn";
             mnuViewZoomIn.ShortcutKeys = Keys.Control | Keys.Add;
             mnuViewZoomIn.Size = new Size(207, 22);
@@ -169,6 +173,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuViewZoomOut
             // 
+            mnuViewZoomOut.Enabled = false;
             mnuViewZoomOut.Name = "mnuViewZoomOut";
             mnuViewZoomOut.ShortcutKeys = Keys.Control | Keys.Subtract;
             mnuViewZoomOut.Size = new Size(207, 22);
@@ -250,6 +255,7 @@ namespace WmsGfxSpriteEditor
             // 
             cboSprite.Dock = DockStyle.Fill;
             cboSprite.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboSprite.Enabled = false;
             cboSprite.FormattingEnabled = true;
             cboSprite.Location = new Point(49, 8);
             cboSprite.Margin = new Padding(3, 8, 3, 3);
@@ -272,6 +278,7 @@ namespace WmsGfxSpriteEditor
             // nudZoom
             // 
             nudZoom.Dock = DockStyle.Fill;
+            nudZoom.Enabled = false;
             nudZoom.Location = new Point(391, 8);
             nudZoom.Margin = new Padding(3, 8, 3, 3);
             nudZoom.Maximum = new decimal(new int[] { 256, 0, 0, 0 });
@@ -345,7 +352,7 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);
             spriteDisplay.Name = "spriteDisplay";
-            spriteDisplay.Size = new Size(751, 466);
+            spriteDisplay.Size = new Size(0, 0);
             spriteDisplay.Sprite = null;
             spriteDisplay.SpriteRenderer = null;
             spriteDisplay.TabIndex = 0;
