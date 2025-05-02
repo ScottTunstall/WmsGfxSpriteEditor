@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WmsGfxSpriteEditor
+namespace WmsGfxSpriteEditor.History
 {
     public class History
     {
-        private List<HistoryItem> _historyItems = new();
+        public EventHandler<HistoryChangedEventArgs>? HistoryChanged;
+
+        private readonly List<HistoryItem> _historyItems = new();
 
         public int Index { get; set; } = -1;
 
@@ -22,13 +24,16 @@ namespace WmsGfxSpriteEditor
 
             _historyItems.Add(item);
             Index++;
+
+            HistoryChanged?.Invoke(this, new HistoryChangedEventArgs(item, _historyItems.Count) { });
         }
 
-        public bool CanUndo => Index > 0;
 
-        public bool CanRedo => Index < _historyItems.Count - 1;
+        public bool CanGoBack => Index > 0;
 
-        public HistoryItem? Undo()
+        public bool CanGoForward => Index < _historyItems.Count - 1;
+
+        public HistoryItem? Back()
         {
             if (Index < 1)
             {
@@ -37,10 +42,12 @@ namespace WmsGfxSpriteEditor
 
             Index--;
             HistoryItem item = _historyItems[Index];
+
+
             return item;
         }
 
-        public HistoryItem? Redo()
+        public HistoryItem? Forward()
         {
             if (Index >= _historyItems.Count)
             {
@@ -58,6 +65,5 @@ namespace WmsGfxSpriteEditor
             _historyItems.Clear();
             Index = -1;
         }
-
     }
 }
