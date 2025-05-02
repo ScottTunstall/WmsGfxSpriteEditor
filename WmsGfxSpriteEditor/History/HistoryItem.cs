@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WmsGfxSpriteEditor.Sprites;
 
-namespace WmsGfxSpriteEditor
+namespace WmsGfxSpriteEditor.History
 {
     public enum OperationType
     {
@@ -20,36 +20,34 @@ namespace WmsGfxSpriteEditor
     {
         public OperationType OperationType { get; set; }
         public int SpriteIndex { get; set; }
-        public SpriteInfo? SpriteInfo { get; set; }
-        public decimal ZoomValue { get; set; }
+        public int ZoomLevel { get; set; }
         public byte[]? SpriteData { get; set; }
-        public Color[]? Palette { get; set; }
+        
 
-        public static HistoryItem CreateZoomHistoryItem(decimal zoomValue)
+        public static HistoryItem CreateZoomHistoryItem( int zoomLevel)
         {
             return new HistoryItem()
             {
                 OperationType = OperationType.Zoom,
-                ZoomValue = zoomValue
+                ZoomLevel = zoomLevel
             };
         }
-        public static HistoryItem CreateSpriteSelectionChangingHistoryItem(int cboSpriteSelectedIndex)
+        public static HistoryItem CreateSpriteSelectionChangingHistoryItem(int selectedSpriteIndex)
         {
             return new HistoryItem()
             {
                 OperationType = OperationType.SpriteSelectionChanging,
-                SpriteIndex = cboSpriteSelectedIndex
+                SpriteIndex = selectedSpriteIndex
             };
         }
 
-        public static HistoryItem CreateSpriteDataChangingHistoryItem(SpriteInfo currentSpriteInfo, ISprite sprite, int selectedSpriteIndex)
+        public static HistoryItem CreateSpriteDataChangingHistoryItem(ISprite sprite, int selectedSpriteIndex, int spriteOffset)
         {
             return new HistoryItem()
             {
                 OperationType = OperationType.SpriteDataChanging,
                 SpriteIndex = selectedSpriteIndex,
-                SpriteData = sprite.CloneData(),
-                Palette = sprite.ClonePalette(),
+                SpriteData = sprite.ClonePixelData(),
             };
         }
     }

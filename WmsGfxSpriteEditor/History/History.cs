@@ -8,8 +8,6 @@ namespace WmsGfxSpriteEditor.History
 {
     public class History
     {
-        public EventHandler<HistoryChangedEventArgs>? HistoryChanged;
-
         private readonly List<HistoryItem> _historyItems = new();
 
         public int Index { get; set; } = -1;
@@ -19,31 +17,28 @@ namespace WmsGfxSpriteEditor.History
             if (Index < _historyItems.Count - 1)
             {
                 // Remove all items after the current index
-                _historyItems.RemoveRange(Index + 1, _historyItems.Count - Index - 1);
+                _historyItems.RemoveRange(Index, _historyItems.Count - Index - 1);
             }
 
             _historyItems.Add(item);
             Index++;
-
-            HistoryChanged?.Invoke(this, new HistoryChangedEventArgs(item, _historyItems.Count) { });
         }
 
 
-        public bool CanGoBack => Index > 0;
+        public bool CanGoBack => Index >0;
 
-        public bool CanGoForward => Index < _historyItems.Count - 1;
+        public bool CanGoForward => Index < (_historyItems.Count-1);
 
         public HistoryItem? Back()
         {
-            if (Index < 1)
+            if (Index ==0)
             {
                 return null;
             }
 
-            Index--;
-            HistoryItem item = _historyItems[Index];
+            // The very last item saved on the history is the current state
 
-
+            HistoryItem item = _historyItems[--Index];
             return item;
         }
 
