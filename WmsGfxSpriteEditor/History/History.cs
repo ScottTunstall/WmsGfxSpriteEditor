@@ -3,7 +3,11 @@ namespace WmsGfxSpriteEditor.History
     public class History
     {
         private readonly List<HistoryItem> _historyItems = new();
+        
 
+        /// <summary>
+        /// Points to the current item in history
+        /// </summary>
         public int Index { get; set; } = -1;
 
         public void Add(HistoryItem item)
@@ -12,6 +16,15 @@ namespace WmsGfxSpriteEditor.History
             {
                 // Remove all items after the current index
                 _historyItems.RemoveRange(Index, _historyItems.Count - Index - 1);
+            }
+
+            // Check if the item is the same as the last one added. We don't want duplicates in our history - pointless
+            if (Index > 0)
+            {
+                if (item.Equals(_historyItems[Index]))
+                {
+                    return;
+                }
             }
 
             _historyItems.Add(item);
@@ -40,8 +53,7 @@ namespace WmsGfxSpriteEditor.History
                 return null;
             }
 
-            Index++;
-            HistoryItem item = _historyItems[Index];
+            HistoryItem item = _historyItems[++Index];
             return item;
         }
 
