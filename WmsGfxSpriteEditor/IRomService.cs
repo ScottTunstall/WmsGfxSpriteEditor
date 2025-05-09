@@ -9,14 +9,21 @@ namespace WmsGfxSpriteEditor
 {
     public interface IRomService
     {
-        public string[] GetMissingRomFiles(string folderPath);
+        public RomFileAuditInfo Audit(string folderPath);
 
         /// <summary>
-        /// Loads ROM files from the specified folder
+        /// Loads ROM files from the specified folder into a <see cref="RomData"/> object.
         /// </summary>
         /// <param name="folderPath">Path to the folder containing ROM files</param>
-        /// <returns>MemoryStream containing the loaded ROM data. null if ROMs could not be loaded.</returns>
+        /// <returns>MemoryStream containing the loaded ROM data.</returns>
         /// <exception cref="FileNotFoundException">Thrown when a required ROM file is missing</exception>
-        MemoryStream? LoadRomFiles(string folderPath);
+        RomData LoadRomData(string folderPath);
+
+        /// <summary>
+        /// Saves the <see cref="RomData"/> object into ROM files in the specified directory
+        /// </summary>
+        /// <param name="romData">ROM data</param>
+        /// <param name="directory">Path to the folder where ROM files should be generated</param>
+        void SaveRomData(RomData romData, string directory);
     }
 }

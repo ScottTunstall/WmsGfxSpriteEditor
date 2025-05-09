@@ -6,21 +6,31 @@ namespace WmsGfxSpriteEditor.ROMs
     {
         protected abstract RomInfo[] RequiredRoms { get; }
 
-        public string[] GetMissingRomFiles(string folderPath)
-        {
-            List<string> missingRomFiles = new();
 
-            foreach (RomInfo? romInfo in RequiredRoms)
+        public RomFileAuditInfo Audit(string folderPath)
+        {
+            List<string> presentRomFiles = [];
+            List<string> missingRomFiles = [];
+
+            foreach (RomInfo romInfo in RequiredRoms)
             {
                 string filePath = Path.Combine(folderPath, romInfo.FileName);
 
-                if (!File.Exists(filePath))
+                if (File.Exists(filePath))
+                {
+                    presentRomFiles.Add(romInfo.FileName);
+                }
+                else
                 {
                     missingRomFiles.Add(romInfo.FileName);
                 }
             }
 
-            return missingRomFiles.ToArray();
+            return new RomFileAuditInfo()
+            {
+                PresentRomFiles = presentRomFiles.ToArray(),
+                MissingRomFiles = missingRomFiles.ToArray()
+            };
         }
 
 
@@ -32,7 +42,7 @@ namespace WmsGfxSpriteEditor.ROMs
         /// <returns>A memory stream containing the combined ROM data</returns>
         /// <exception cref="FileNotFoundException">Thrown when a required ROM file is missing</exception>
         /// <exception cref="InvalidDataException">Thrown when a ROM file has an incorrect size</exception>
-        public MemoryStream? LoadRomFiles(string folderPath)
+        public RomData LoadRomData(string folderPath)
         {
             // Validate directory
             if (!Directory.Exists(folderPath))
@@ -41,10 +51,10 @@ namespace WmsGfxSpriteEditor.ROMs
             }
 
             // Calculate required memory stream size based on highest ROM offset + size
-            int requiredSize = RequiredRoms.Select(rom => rom.Offset + rom.Size).Max();
+            int requiredSize = GetMemoryStreamSize(); 
 
             // Create a memory stream to hold all ROM data
-            MemoryStream? memoryStream = new(requiredSize);
+            MemoryStream memoryStream = new(requiredSize);
 
             // Initialize the memory stream with zeros
             byte[] emptyBuffer = new byte[requiredSize];
@@ -66,8 +76,7 @@ namespace WmsGfxSpriteEditor.ROMs
                 // Validate ROM size
                 if (romData.Length != romInfo.Size)
                 {
-                    throw new InvalidDataException(
-                        $"ROM file {romInfo.FileName} has incorrect size. Expected: {romInfo.Size} bytes, Actual: {romData.Length} bytes");
+                    throw new InvalidDataException($"ROM file {romInfo.FileName} has incorrect size. Expected: {romInfo.Size} bytes, Actual: {romData.Length} bytes");
                 }
 
                 // Validate that the ROM offset + size doesn't exceed the memory stream capacity
@@ -87,7 +96,20 @@ namespace WmsGfxSpriteEditor.ROMs
             // Reset the position to the beginning of the stream
             memoryStream.Position = 0;
 
-            return memoryStream;
+            return new RomData(memoryStream);
         }
+
+        
+        public void SaveRomData(RomData romData, string directory)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private int GetMemoryStreamSize()
+        {
+            return RequiredRoms.Max(rom => rom.Offset + rom.Size);
+        }
+
     }
 }
