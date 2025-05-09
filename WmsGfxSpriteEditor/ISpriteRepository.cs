@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +23,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         /// <param name="index">The zero-based index of the sprite</param>
         /// <returns>The sprite information or null if the index is out of range</returns>
-        SpriteInfo? GetSpriteByIndex(int index);
+        SpriteInfo? GetSpriteInfoByIndex(int index);
 
         /// <summary>
         /// Gets the number of sprites in the repository

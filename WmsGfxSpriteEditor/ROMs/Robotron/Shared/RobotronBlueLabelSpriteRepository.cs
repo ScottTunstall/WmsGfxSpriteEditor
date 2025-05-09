@@ -2,18 +2,22 @@ using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared
 {
-    // Robotron Blue Label and Tie-Die sprite repository
+    /// <summary>
+    /// Repository for Robotron Blue Label and Tie-Die sprite data.
+    /// Provides access to sprite information from the ROM files.
+    /// </summary>
     public class RobotronBlueLabelSpriteRepository : ISpriteRepository
     {
         private readonly List<SpriteInfo> _sprites = new();
 
         /// <summary>
-        /// Gets the number of sprites in the repository
+        /// Gets the total number of sprites available in the repository.
         /// </summary>
         public int Count => _sprites.Count;
 
         /// <summary>
-        /// Initializes a new instance of the RobotronSpriteRepository class and populates it with Robotron sprite data
+        /// Initializes a new instance of the <see cref="RobotronBlueLabelSpriteRepository"/> class.
+        /// Automatically loads the predefined Robotron sprite data upon construction.
         /// </summary>
         public RobotronBlueLabelSpriteRepository()
         {
@@ -21,26 +25,40 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared
         }
 
         /// <summary>
-        /// Gets all available sprites
+        /// Gets all available sprites in the repository.
         /// </summary>
-        /// <returns>A collection of sprite information</returns>
+        /// <returns>An immutable collection of all sprite information.</returns>
         public IReadOnlyCollection<SpriteInfo> GetAllSprites() => _sprites.AsReadOnly();
 
         /// <summary>
-        /// Gets a sprite by its index
+        /// Retrieves sprite information for a specific index in the repository.
         /// </summary>
-        /// <param name="index">The zero-based index of the sprite</param>
-        /// <returns>The sprite information or null if the index is out of range</returns>
-        public SpriteInfo? GetSpriteByIndex(int index) => index >= 0 && index < _sprites.Count ? _sprites[index] : null;
+        /// <param name="index">The zero-based index of the sprite to retrieve.</param>
+        /// <returns>
+        /// The <see cref="SpriteInfo"/> object if the index is valid; otherwise, <c>null</c>.
+        /// </returns>
+        public SpriteInfo? GetSpriteInfoByIndex(int index) => index >= 0 && index < _sprites.Count ? _sprites[index] : null;
 
         /// <summary>
-        /// Populates the repository with Robotron sprite data
+        /// Populates the repository with predefined Robotron sprite data.
+        /// Clears any existing sprites and adds all Robotron sprites with their ROM offsets and dimensions.
         /// </summary>
+        /// <remarks>
+        /// Sprite data is sourced from https://www.seanriddle.com/robotronsprites.txt
+        /// Each sprite entry contains:
+        /// - Descriptive name
+        /// - Memory offset in the ROM
+        /// - Width in bytes (each byte contains 2 pixels)
+        /// - Height in pixels
+        /// All sprites default to linear storage format.
+        /// </remarks>
         public void Load()
         {
             _sprites.Clear();
 
-            // Taken from https://www.seanriddle.com/robotronsprites.txt
+            // Data sourced from https://www.seanriddle.com/robotronsprites.txt
+            // Format: new SpriteInfo(name, offset, widthInBytes, height)
+            // All sprites use default linear format (isLinear = true)
             _sprites.Add(new("familydeath", 1083, 6, 11));
             _sprites.Add(new("1000", 1177, 6, 5));
             _sprites.Add(new("2000", 1207, 6, 5));
