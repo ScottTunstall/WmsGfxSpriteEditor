@@ -1,10 +1,9 @@
-using WmsGfxSpriteEditor.Sprites;
-
 namespace WmsGfxSpriteEditor
 {
     public interface ISprite
     {
-        byte[] PixelData { get; set; }
+        // We use Memory<byte> so that we can share memory between the Sprite being edited and the MemoryStream it originates from
+        Memory<byte> PixelData { get; set; }
         Color[] Palette { get; set; }
         int Width { get; set; }
         int WidthInBytes { get; set; }

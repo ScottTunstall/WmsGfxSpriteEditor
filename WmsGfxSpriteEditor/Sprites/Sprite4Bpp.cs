@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace WmsGfxSpriteEditor.Sprites
 {
     public class Sprite4Bpp : ISprite
     {
-        public Sprite4Bpp(byte[] pixelData, Color[] palette, int widthInBytes, int height, bool isLinear = true)
+        public Sprite4Bpp(Memory<byte> pixelData, Color[] palette, int widthInBytes, int height, bool isLinear = true)
         {
             PixelData = pixelData;
             Palette = palette;
@@ -19,19 +12,18 @@ namespace WmsGfxSpriteEditor.Sprites
             IsLinear = isLinear;
         }
 
-        public byte[] PixelData { get; set; } = default!;
+        public Memory<byte> PixelData { get; set; } = default!;
         public Color[] Palette { get; set; } = default!;
 
-        public int Width { get; set; } 
+        public int Width { get; set; }
         public int WidthInBytes { get; set; }
         public int Height { get; set; }
         public bool IsLinear { get; set; }
 
-
         public int GetPaletteIndexFromPixel(int x, int y)
         {
             int offset = y * WidthInBytes + (x / 2);
-            byte pixelByte = PixelData[offset];
+            byte pixelByte = PixelData.Span[offset];
             if (x % 2 == 0)
             {
                 // Get the upper nibble (first pixel)
@@ -50,22 +42,22 @@ namespace WmsGfxSpriteEditor.Sprites
             return Palette[paletteIndex];
         }
 
-
         public void SetPixelByPaletteIndex(int x, int y, int paletteIndex)
         {
-            int offset = y * WidthInBytes + (x/ 2);
+            int offset = y * WidthInBytes + (x / 2);
             paletteIndex &= 0x0F; // Ensure palette index is within bounds (0-15)
+            Span<byte> span = PixelData.Span;
+
             if (x % 2 == 0)
             {
                 // Set the upper nibble (first pixel)
-                PixelData[offset] = (byte)((PixelData[offset] & 0x0F) | paletteIndex << 4);
+                span[offset] = (byte)((span[offset] & 0x0F) | paletteIndex << 4);
             }
             else
             {
                 // Set the lower nibble (second pixel)
-                PixelData[offset] = (byte)((PixelData[offset] & 0xF0) | paletteIndex);
+                span[offset] = (byte)((PixelData.Span[offset] & 0xF0) | paletteIndex);
             }
-
         }
 
         public ISprite Clone()
@@ -78,8 +70,8 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public byte[] ClonePixelData()
         {
-            byte[] dataCopy = new byte[PixelData.Length];
-            Array.Copy(PixelData, dataCopy, PixelData.Length);
+            byte[] dataCopy = new byte[PixelData.Span.Length];
+            Array.Copy(PixelData.Span.ToArray(), dataCopy, PixelData.Span.Length);
             return dataCopy;
         }
 
