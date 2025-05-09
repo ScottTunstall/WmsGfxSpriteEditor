@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace WmsGfxSpriteEditor.History
 {
     public class History
@@ -24,19 +18,16 @@ namespace WmsGfxSpriteEditor.History
             Index++;
         }
 
+        public bool CanGoBack => Index > 0;
 
-        public bool CanGoBack => Index >0;
-
-        public bool CanGoForward => Index < (_historyItems.Count-1);
+        public bool CanGoForward => Index < (_historyItems.Count - 1);
 
         public HistoryItem? Back()
         {
-            if (Index ==0)
+            if (Index == 0)
             {
                 return null;
             }
-
-            // The very last item saved on the history is the current state
 
             HistoryItem item = _historyItems[--Index];
             return item;
@@ -53,7 +44,6 @@ namespace WmsGfxSpriteEditor.History
             HistoryItem item = _historyItems[Index];
             return item;
         }
-
 
         public void Clear()
         {
