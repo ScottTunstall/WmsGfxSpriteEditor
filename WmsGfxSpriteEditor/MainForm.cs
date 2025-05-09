@@ -28,7 +28,7 @@ namespace WmsGfxSpriteEditor
         private int _selectedPaletteIndex;
         private SpriteInfo? _selectedSpriteInfo;
         private int _selectedSpriteIndex;
-        private int _zoomLevel = 1; // Default zoom for the normal view
+        private int _zoomLevel = 3; // Default zoom for the normal view
 
         private bool _suspendChangeEvents;
         private readonly History.History _history = new();
@@ -47,7 +47,6 @@ namespace WmsGfxSpriteEditor
 
             DisableEditingControls();
 
-            // Set the default zoom level
             nudZoom.Value = _zoomLevel;
 
             splitContainer.SplitterDistance = (int)(splitContainer.Width * 0.2);
@@ -424,7 +423,7 @@ namespace WmsGfxSpriteEditor
                     break;
 
                 case OperationType.SpriteDataChanging:
-                    RestoreSprite(item.SpriteIndex, item.SpriteData!);
+                    RestoreSprite(item.SpriteIndex, item.PixelData!);
                     break;
             }
         }
