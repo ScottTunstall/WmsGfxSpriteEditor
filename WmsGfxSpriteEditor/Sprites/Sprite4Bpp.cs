@@ -2,10 +2,9 @@ namespace WmsGfxSpriteEditor.Sprites
 {
     public class Sprite4Bpp : ISprite
     {
-        public Sprite4Bpp(Memory<byte> pixelData, Color[] palette, int widthInBytes, int height, bool isLinear = true)
+        public Sprite4Bpp(Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
         {
             PixelData = pixelData;
-            Palette = palette;
             WidthInBytes = widthInBytes;
             Width = widthInBytes * 2; // Each byte contains 2 pixels
             Height = height;
@@ -13,7 +12,6 @@ namespace WmsGfxSpriteEditor.Sprites
         }
 
         public Memory<byte> PixelData { get; set; } = default!;
-        public Color[] Palette { get; set; } = default!;
 
         public int Width { get; set; }
         public int WidthInBytes { get; set; }
@@ -36,12 +34,6 @@ namespace WmsGfxSpriteEditor.Sprites
             }
         }
 
-        public Color GetPixel(int x, int y)
-        {
-            int paletteIndex = GetPaletteIndexFromPixel(x, y);
-            return Palette[paletteIndex];
-        }
-
         public void SetPixelByPaletteIndex(int x, int y, int paletteIndex)
         {
             int offset = y * WidthInBytes + (x / 2);
@@ -60,26 +52,11 @@ namespace WmsGfxSpriteEditor.Sprites
             }
         }
 
-        public ISprite Clone()
-        {
-            byte[] dataCopy = ClonePixelData();
-            Color[] paletteCopy = ClonePalette();
-
-            return new Sprite4Bpp(dataCopy, paletteCopy, WidthInBytes, Height, IsLinear);
-        }
-
         public byte[] ClonePixelData()
         {
             byte[] dataCopy = new byte[PixelData.Span.Length];
             Array.Copy(PixelData.Span.ToArray(), dataCopy, PixelData.Span.Length);
             return dataCopy;
-        }
-
-        public Color[] ClonePalette()
-        {
-            Color[] paletteCopy = new Color[Palette.Length];
-            Array.Copy(Palette, paletteCopy, Palette.Length);
-            return paletteCopy;
         }
     }
 }
