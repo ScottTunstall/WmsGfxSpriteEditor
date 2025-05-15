@@ -22,11 +22,13 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         public void RenderSprite(Graphics graphics,
             ISprite sprite,
+            Color[] palette,
             int cellSize,
             Rectangle renderArea);
 
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
+            Color[] palette,
             int cellSize,
             Color gridColour,
             Rectangle renderArea);
