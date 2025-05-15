@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace WmsGfxSpriteEditor.Sprites
 {
     public class SpriteFactory: ISpriteFactory
@@ -27,6 +21,7 @@ namespace WmsGfxSpriteEditor.Sprites
             Memory<byte> spriteData = romData!.ReadBytes(spriteInfo.Offset, bytesToRead);
 
             return new Sprite4Bpp(spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
+
         }
     }
 }

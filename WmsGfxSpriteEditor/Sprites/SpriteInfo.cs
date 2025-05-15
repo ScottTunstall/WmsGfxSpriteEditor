@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -36,12 +36,15 @@ namespace WmsGfxSpriteEditor.Sprites
         /// </summary>
         public int Height { get; init; }
 
+        public int BitsPerPixel { get; init; }
+
         /// <summary>
         /// Gets whether the sprite data is stored in a linear format
         /// When true, data is stored row by row
         /// When false, data may be stored in a different format (e.g., planar)
         /// </summary>
         public bool IsLinear { get; init; } = true;
+
 
         /// <summary>
         /// Initializes a new instance of the SpriteInfo record
@@ -50,13 +53,15 @@ namespace WmsGfxSpriteEditor.Sprites
         /// <param name="offset">The offset of the sprite in the memory stream</param>
         /// <param name="widthInBytes">The width of the sprite in bytes (each byte contains 2 pixels)</param>
         /// <param name="height">The height of the sprite in pixels</param>
+        /// <param name="bitsPerPixel">Bits per pixel in the sprite.</param>
         /// <param name="isLinear">Whether the sprite data is stored linearly</param>
-        public SpriteInfo(string name, int offset, int widthInBytes = 4, int height = 8, bool isLinear = true)
+        public SpriteInfo(string name, int offset, int widthInBytes, int height, int bitsPerPixel, bool isLinear = true)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Offset = offset;
             WidthInBytes = widthInBytes > 0 ? widthInBytes : throw new ArgumentOutOfRangeException(nameof(widthInBytes), "Width in bytes must be greater than 0");
             Height = height > 0 ? height : throw new ArgumentOutOfRangeException(nameof(height), "Height must be greater than 0");
+            BitsPerPixel = bitsPerPixel > 0 ? bitsPerPixel : throw new ArgumentOutOfRangeException(nameof(bitsPerPixel), "Bits per pixel must be greater than 0");
             IsLinear = isLinear;
         }
 

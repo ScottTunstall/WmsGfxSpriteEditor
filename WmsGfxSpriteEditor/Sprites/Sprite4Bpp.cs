@@ -1,7 +1,12 @@
+using System.Diagnostics;
+using System.Security.Cryptography;
+
 namespace WmsGfxSpriteEditor.Sprites
 {
     public class Sprite4Bpp : ISprite
     {
+        private Sprite4Bpp() {}
+        
         public Sprite4Bpp(Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
         {
             PixelData = pixelData;
@@ -11,12 +16,19 @@ namespace WmsGfxSpriteEditor.Sprites
             IsLinear = isLinear;
         }
 
-        public Memory<byte> PixelData { get; set; } = default!;
+        public Memory<byte> PixelData { get; set; }
 
         public int Width { get; set; }
         public int WidthInBytes { get; set; }
         public int Height { get; set; }
         public bool IsLinear { get; set; }
+
+        public bool IsPixelDataDirty { get; private set; }
+
+        public void ClearPixelDataDirtyFlag()
+        {
+            IsPixelDataDirty = false;
+        }
 
         public int GetPaletteIndexFromPixel(int x, int y)
         {
@@ -40,15 +52,28 @@ namespace WmsGfxSpriteEditor.Sprites
             paletteIndex &= 0x0F; // Ensure palette index is within bounds (0-15)
             Span<byte> span = PixelData.Span;
 
+            byte currentValue = span[offset];
+            byte newValue;
+
             if (x % 2 == 0)
             {
                 // Set the upper nibble (first pixel)
-                span[offset] = (byte)((span[offset] & 0x0F) | paletteIndex << 4);
+                newValue = (byte)((span[offset] & 0x0F) | paletteIndex << 4);
             }
             else
             {
                 // Set the lower nibble (second pixel)
-                span[offset] = (byte)((PixelData.Span[offset] & 0xF0) | paletteIndex);
+                newValue = (byte)((PixelData.Span[offset] & 0xF0) | paletteIndex);
+            }
+
+            // Will the pixel pair change? If so, set the dirty flag and store the pixel data about to be changed
+            // so that it can be saved for "undo" purposes
+            if (currentValue != newValue)
+            {
+                IsPixelDataDirty = true;
+
+                span[offset] = newValue;
+                Debug.WriteLine("New pixel hash is {0}", GetPixelDataHash());
             }
         }
 
@@ -57,6 +82,16 @@ namespace WmsGfxSpriteEditor.Sprites
             byte[] dataCopy = new byte[PixelData.Span.Length];
             Array.Copy(PixelData.Span.ToArray(), dataCopy, PixelData.Span.Length);
             return dataCopy;
+        }
+
+        public UInt128 GetPixelDataHash()
+        {
+            byte[] data = PixelData.ToArray();
+            byte[] hash = SHA256.HashData(data); // 16 bytes
+
+            ulong lo = BitConverter.ToUInt64(hash, 0);
+            ulong hi = BitConverter.ToUInt64(hash, 8);
+            return ((UInt128)hi << 64) | lo;
         }
     }
 }
