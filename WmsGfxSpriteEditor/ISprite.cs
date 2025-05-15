@@ -9,10 +9,17 @@ namespace WmsGfxSpriteEditor
         int Height { get; set; }
         bool IsLinear { get; set; }
 
+        bool IsPixelDataDirty { get; }
+
+        void ClearPixelDataDirtyFlag();
+
         int GetPaletteIndexFromPixel(int x, int y);
         void SetPixelByPaletteIndex(int x, int y, int paletteIndex);
 
         byte[] ClonePixelData();
+
+        UInt128 GetPixelDataHash();
+
     }
 
 }

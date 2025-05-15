@@ -58,12 +58,12 @@ namespace WmsGfxSpriteEditor.Sprites
             if (x % 2 == 0)
             {
                 // Set the upper nibble (first pixel)
-                newValue = (byte)((span[offset] & 0x0F) | paletteIndex << 4);
+                newValue = (byte)((currentValue & 0x0F) | paletteIndex << 4);
             }
             else
             {
                 // Set the lower nibble (second pixel)
-                newValue = (byte)((PixelData.Span[offset] & 0xF0) | paletteIndex);
+                newValue = (byte)((currentValue & 0xF0) | paletteIndex);
             }
 
             // Will the pixel pair change? If so, set the dirty flag and store the pixel data about to be changed
@@ -73,7 +73,6 @@ namespace WmsGfxSpriteEditor.Sprites
                 IsPixelDataDirty = true;
 
                 span[offset] = newValue;
-                Debug.WriteLine("New pixel hash is {0}", GetPixelDataHash());
             }
         }
 
