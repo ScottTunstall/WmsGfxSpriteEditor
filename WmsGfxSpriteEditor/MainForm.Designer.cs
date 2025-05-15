@@ -124,7 +124,7 @@ namespace WmsGfxSpriteEditor
             mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 22);
+            mnuFileSave.Size = new Size(143, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -141,7 +141,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(180, 22);
+            mnuEditUndo.Size = new Size(144, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -150,7 +150,7 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(180, 22);
+            mnuEditRedo.Size = new Size(144, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
