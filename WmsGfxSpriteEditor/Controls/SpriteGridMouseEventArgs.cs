@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WmsGfxSpriteEditor.Controls
 {
-    public class GridCellMouseEventArgs: GridEventArgs
+    public class SpriteGridMouseEventArgs: SpriteGridEventArgs
     {
         /// <summary>
         ///  Gets which mouse button was pressed.
@@ -18,7 +18,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         public int Clicks { get; }
 
-        public GridCellMouseEventArgs(MouseButtons button, int clicks, int gridX, int gridY) : base(gridX, gridY)
+        public SpriteGridMouseEventArgs(MouseButtons button, int clicks, int gridX, int gridY) : base(gridX, gridY)
         {
             Button = button;
             Clicks = clicks;

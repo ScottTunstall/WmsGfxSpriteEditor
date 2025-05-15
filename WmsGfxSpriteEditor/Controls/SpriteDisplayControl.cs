@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor.Controls
@@ -10,9 +11,9 @@ namespace WmsGfxSpriteEditor.Controls
         private const int CellSize = 8;
 
         // Required services
-        private ISpriteRenderer? _spriteRenderer;
-
+        private ISpriteRenderer _spriteRenderer = new SpriteRenderer();
         private ISprite? _sprite;
+        private Color[] _palette = Array.Empty<Color>();
 
         private Color _gridColor = Color.FromArgb(80, 80, 80);
         private int _zoomLevel = 1;
@@ -21,19 +22,22 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Event fired when the mouse moves over a grid cell
         /// </summary>
-        public event EventHandler<GridEventArgs>? GridCellMouseMove;
+        public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseMove;
 
         /// <summary>
         /// Event fired when the mouse button is held down over a grid cell
         /// </summary>
-        public event EventHandler<GridCellMouseEventArgs>? GridCellMouseDown;
+        public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseDown;
 
-        public event EventHandler<GridCellMouseEventArgs>? GridCellMouseUp;
+        /// <summary>
+        /// Event fired when the mouse button is released over a grid cell
+        /// </summary>
+        public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseUp;
 
         /// <summary>
         /// Event fired when a grid cell is clicked
         /// </summary>
-        public event EventHandler<GridCellMouseEventArgs>? GridCellClicked;
+        public event EventHandler<SpriteGridMouseEventArgs>? GridCellClicked;
 
         public SpriteDisplayControl()
         {
@@ -45,7 +49,8 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Sets the sprite renderer to use for rendering
         /// </summary>
-        public ISpriteRenderer? SpriteRenderer
+        [Browsable(false)]
+        public ISpriteRenderer SpriteRenderer
         {
             get => _spriteRenderer;
             set => _spriteRenderer = value;
@@ -54,6 +59,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Sprite to render
         /// </summary>
+        [Browsable(false)]
         public ISprite? Sprite
         {
             get => _sprite;
@@ -64,6 +70,23 @@ namespace WmsGfxSpriteEditor.Controls
                 Invalidate();
             }
         }
+
+
+        public Color[] Palette
+        {
+            get => _palette;
+            set
+            {
+                if (value.Length<2)
+                {
+                    throw new ArgumentException("Palette must contain at least 2 colours.");
+                }
+
+                _palette = value;
+                Invalidate();
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets the grid color
@@ -109,7 +132,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         private void UpdateSizeForZoom()
         {
-            if (_sprite == null || _spriteRenderer == null)
+            if (_sprite == null)
             {
                 return;
             }
@@ -127,7 +150,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnPaint(pe);
 
-            if (_sprite == null || _spriteRenderer == null || _sprite.PixelData.Length == 0)
+            if ( _palette.Length == 0 || _sprite == null || _sprite.PixelData.Length == 0)
             {
                 // Cannot render sprite, so just draw black
                 pe.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
@@ -139,6 +162,7 @@ namespace WmsGfxSpriteEditor.Controls
                 _spriteRenderer.RenderSprite(
                     pe.Graphics,
                     _sprite,
+                    _palette,
                     _zoomLevel * CellSize,
                     new(Point.Empty, Size)
                     );
@@ -148,6 +172,7 @@ namespace WmsGfxSpriteEditor.Controls
                 _spriteRenderer.RenderSpriteWithGrid(
                     pe.Graphics,
                     _sprite,
+                    _palette,
                     _zoomLevel * CellSize,
                     _gridColor,
                     new(Point.Empty, Size));
@@ -160,7 +185,7 @@ namespace WmsGfxSpriteEditor.Controls
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-
+            
             if (GridCellMouseMove == null || _zoomLevel <= 0 || _spriteRenderer == null || _sprite == null)
                 return;
 
@@ -171,7 +196,7 @@ namespace WmsGfxSpriteEditor.Controls
                 pt.Y > 0 && pt.Y <= _sprite.Height)
             {
                 // Raise the event with the grid coordinates - note: coords are one-based
-                GridCellMouseMove.Invoke(this, new(pt.X, pt.Y));
+                GridCellMouseMove.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
             }
         }
 
