@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WmsGfxSpriteEditor.Sprites;
-
 namespace WmsGfxSpriteEditor
 {
     public record RomData: IDisposable
@@ -18,10 +11,18 @@ namespace WmsGfxSpriteEditor
             _romData = romData;
         }
 
-        public Memory<byte> ReadBytes(int offset, int length)
+        public Memory<byte> ReadAsMemory(int offset, int length)
         {
             byte[] buffer = _romData!.GetBuffer();
             Memory<byte> spriteData = new(buffer, offset, length);
+            return spriteData;
+        }
+
+        public byte[] ReadAsBytes(int offset, int length)
+        {
+            byte[] buffer = _romData!.GetBuffer();
+            byte[] spriteData = new byte[length];
+            Array.Copy(buffer, offset, spriteData, 0, length);
             return spriteData;
         }
 

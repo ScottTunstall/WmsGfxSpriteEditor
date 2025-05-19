@@ -42,7 +42,7 @@ namespace WmsGfxSpriteEditor.ROMs
         /// <returns>A memory stream containing the combined ROM data</returns>
         /// <exception cref="FileNotFoundException">Thrown when a required ROM file is missing</exception>
         /// <exception cref="InvalidDataException">Thrown when a ROM file has an incorrect size</exception>
-        public RomData LoadRomData(string folderPath)
+        public virtual RomData LoadRomData(string folderPath)
         {
             // Validate directory
             if (!Directory.Exists(folderPath))
@@ -86,10 +86,7 @@ namespace WmsGfxSpriteEditor.ROMs
                         $"ROM {romInfo.FileName} (offset: 0x{romInfo.Offset:X}, size: 0x{romInfo.Size:X}) exceeds allocated memory size (0x{requiredSize:X})");
                 }
 
-                // Position the stream at the ROM's specified offset
                 memoryStream.Position = romInfo.Offset;
-
-                // Write the ROM data to the memory stream at the specified offset
                 memoryStream.Write(romData, 0, romData.Length);
             }
 
@@ -100,9 +97,16 @@ namespace WmsGfxSpriteEditor.ROMs
         }
 
         
-        public void SaveRomData(RomData romData, string directory)
+        public virtual void SaveRomData(RomData romData, string folderPath)
         {
-            throw new NotImplementedException();
+            foreach (RomInfo romInfo in RequiredRoms)
+            {
+                string filePath = Path.Combine(folderPath, romInfo.FileName);
+
+                byte[] bytes = romData.ReadAsBytes(romInfo.Offset, romInfo.Size);
+
+                File.WriteAllBytes(filePath, bytes);
+            }
         }
 
 
