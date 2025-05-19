@@ -8,14 +8,14 @@ namespace WmsGfxSpriteEditor
     public interface ISpriteRenderer
     {
         /// <summary>
-        /// Calculate area required to display sprite in full
+        /// Calculate area required to render sprite in full
         /// </summary>
-        Size GetSize(int spriteWidth, int spriteHeight, int cellSize);
+        Size CalculateMinimumClientSize(int spriteWidth, int spriteHeight, int cellSize);
 
         /// <summary>
-        /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account cell Size
+        /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account grid cell Size and render area size
         /// </summary>
-        Point GetGridCellFromXY(int x, int y, int cellSize);
+        Point GridCellFromClient(int x, int y, int cellSize, Size size);
 
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
@@ -24,13 +24,16 @@ namespace WmsGfxSpriteEditor
             ISprite sprite,
             Color[] palette,
             int cellSize,
-            Rectangle renderArea);
+            Rectangle clientArea);
 
+        /// <summary>
+        /// Renders a sprite with grid to the specified graphics surface, starting from the top-left corner
+        /// </summary>
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
             Color[] palette,
             int cellSize,
             Color gridColour,
-            Rectangle renderArea);
+            Rectangle clientArea);
     }
 }
