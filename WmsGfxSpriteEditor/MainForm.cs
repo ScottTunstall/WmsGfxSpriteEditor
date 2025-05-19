@@ -49,8 +49,6 @@ namespace WmsGfxSpriteEditor
 
             nudZoom.Value = _zoomLevel;
 
-            splitContainer.SplitterDistance = (int)(splitContainer.Width * 0.2);
-
             // Set up the palette panel - This MUST be done after InitializeComponent
             pnlPalette.ColorSelected += PnlPalette_ColorSelected;
 
@@ -67,31 +65,31 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
-            RobotronBlueLabelRomFileService service = new();
+            RobotronBlueLabelRomFileService romService = new();
 
-            RomData? romData = LoadRomSetIntoMemoryStream(RomSetNames.BlueLabel, service);
+            RomData? romData = LoadRomData(RomSetNames.BlueLabel, romService);
             if (romData != null)
             {
-                RobotronBlueLabelSpriteRepository repo = new();
+                RobotronBlueLabelSpriteRepository spriteRepo = new();
                 RobotronPalette palette = new();
-                SpriteRenderer spriteRenderer = new();
+                DefaultSpriteRenderer spriteRenderer = new();
 
-                OnBeginEdit(RomSetNames.BlueLabel, romData, service, repo, spriteRenderer, palette);
+                OnBeginEdit(RomSetNames.BlueLabel, romData, romService, spriteRepo, spriteRenderer, palette);
             }
         }
 
         private void mnuFileLoadRobotronTieDieWDPU_Click(object sender, EventArgs e)
         {
-            RobotronBlueLabelRomFileService service = new();
+            RobotronBlueLabelRomFileService romService = new();
 
-            RomData? romData = LoadRomSetIntoMemoryStream(RomSetNames.TieDieWDPU, service);
+            RomData? romData = LoadRomData(RomSetNames.TieDieWDPU, romService);
             if (romData != null)
             {
-                RobotronBlueLabelSpriteRepository repo = new();
+                RobotronBlueLabelSpriteRepository spriteRepo = new();
                 RobotronPalette palette = new();
-                SpriteRenderer spriteRenderer = new();
+                DefaultSpriteRenderer spriteRenderer = new();
 
-                OnBeginEdit(RomSetNames.TieDieWDPU, romData, service, repo, spriteRenderer, palette);
+                OnBeginEdit(RomSetNames.TieDieWDPU, romData, romService, spriteRepo, spriteRenderer, palette);
             }
         }
 
@@ -102,8 +100,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
-            // Save functionality would be implemented here
-            MessageBox.Show("Save functionality not implemented in this demo.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            SaveRomData();
         }
 
         #endregion FILE MENU EVENT HANDLERS
@@ -189,28 +186,30 @@ namespace WmsGfxSpriteEditor
 
         private void spriteDisplay_GridCellMouseDown(object sender, SpriteGridMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button != MouseButtons.Left)
             {
-                UInt128 spriteHash = _sprite!.GetPixelDataHash();
-                if (_spriteHash != spriteHash)
-                {
-                    SaveBeforeSpritePixelDataChangedToHistory();
-                    _spriteHash = _sprite.GetPixelDataHash();
-                }
-
-                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
-
-                spriteDisplay.Invalidate();
-                OnDisplayStateChanged();
+                return;
             }
+
+            UInt128 spriteHash = _sprite!.GetPixelDataHash();
+            if (_spriteHash != spriteHash)
+            {
+                SaveBeforeSpritePixelDataChangedHistory();
+                _spriteHash = _sprite.GetPixelDataHash();
+            }
+
+            _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
+
+            spriteDisplay.Invalidate();
+            OnDisplayStateChanged();
         }
 
-        private void spriteDisplay_GridCellMouseUp(object sender, SpriteGridEventArgs e)
+        private void spriteDisplay_GridCellMouseUp(object sender, SpriteGridMouseEventArgs e)
         {
             UInt128 spriteHash = _sprite!.GetPixelDataHash();
             if (_spriteHash != spriteHash)
             {
-                SaveAfterSpritePixelDataChangedToHistory();
+                SaveAfterSpritePixelDataChangeToHistory();
                 _spriteHash = spriteHash;
             }
 
@@ -236,6 +235,7 @@ namespace WmsGfxSpriteEditor
 
             _suspendChangeEvents = true;
             SpriteInfo spriteInfo = SetSpriteSelectDropdown(spriteRepository.GetAllSprites().ToList());
+            
             _selectedSpriteInfo = spriteInfo;
             _suspendChangeEvents = false;
 
@@ -247,6 +247,7 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = _zoomLevel;
 
+            UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
             OnDisplayStateChanged();
         }
 
@@ -274,14 +275,34 @@ namespace WmsGfxSpriteEditor
 
         private void Undo()
         {
-            HistoryItem item = _history.Back()!;
-            SetStateFromHistory(item!);
-            OnDisplayStateChanged();
+            HistoryItem? item = _history.Back();
+            if (item == null)
+            {
+                throw new InvalidOperationException("No history item to undo.");
+            }
+
+            // Skip over "SelectedSpriteChanged" history items when we already have the relevant sprite selected
+            while (item!=null && item.OperationType == OperationType.SelectedSpriteChanged && item.SpriteIndex == _selectedSpriteIndex)
+            {
+                item = _history.Back();
+            }
+
+            if (item != null)
+            {
+                SetStateFromHistory(item);
+                OnDisplayStateChanged();
+            }
         }
 
+        
         private void Redo()
         {
             HistoryItem item = _history.Forward()!;
+            if (item == null)
+            {
+                throw new InvalidOperationException("No history item to redo.");
+            }
+
             SetStateFromHistory(item!);
             OnDisplayStateChanged();
         }
@@ -399,12 +420,12 @@ namespace WmsGfxSpriteEditor
             _history.Add(HistoryItem.CreateSpriteSelectionChangedHistoryItem(_selectedSpriteIndex));
         }
 
-        private void SaveBeforeSpritePixelDataChangedToHistory()
+        private void SaveBeforeSpritePixelDataChangedHistory()
         {
             _history.Add(HistoryItem.CreateBeforeSpritePixelDataChangedHistoryItem(_sprite!, _selectedSpriteIndex));
         }
 
-        private void SaveAfterSpritePixelDataChangedToHistory()
+        private void SaveAfterSpritePixelDataChangeToHistory()
         {
             _history.Add(HistoryItem.CreateAfterSpritePixelDataChangedHistoryItem(_sprite!, _selectedSpriteIndex));
         }
@@ -442,7 +463,7 @@ namespace WmsGfxSpriteEditor
 
 #pragma warning disable CA1859
 
-        private RomData? LoadRomSetIntoMemoryStream(string romSetName, IRomService romService)
+        private RomData? LoadRomData(string romSetName, IRomService romService)
 #pragma warning restore CA1859
         {
             using FolderBrowserDialog folderDialog = new();
@@ -466,14 +487,13 @@ namespace WmsGfxSpriteEditor
                 return null;
             }
 
-            // Free previous ROM data
-            RomData romFiles = romService.LoadRomData(directory);
+            RomData romData = romService.LoadRomData(directory);
 
             MessageBox.Show($"Loaded {romSetName} ROM files successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return romFiles;
+            return romData;
         }
 
-        private void SaveMemoryStreamToRomSet()
+        private void SaveRomData()
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder to write the {_romSetName} ROM files.";
@@ -482,7 +502,7 @@ namespace WmsGfxSpriteEditor
 
             string directory = folderDialog.SelectedPath;
 
-            _romService.SaveRomData(_romData!, directory);
+            _romService!.SaveRomData(_romData!, directory);
         }
     }
 }

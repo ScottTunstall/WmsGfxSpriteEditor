@@ -45,9 +45,6 @@ namespace WmsGfxSpriteEditor
             nudZoom = new NumericUpDown();
             lblPalette = new Label();
             pnlPalette = new PalettePanel();
-            splitContainer = new SplitContainer();
-            leftPanel = new Panel();
-            rightPanel = new Panel();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
@@ -55,11 +52,6 @@ namespace WmsGfxSpriteEditor
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
-            splitContainer.Panel1.SuspendLayout();
-            splitContainer.Panel2.SuspendLayout();
-            splitContainer.SuspendLayout();
-            rightPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
             SuspendLayout();
             // 
@@ -197,7 +189,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(707, 19);
+            Spacer.Size = new Size(676, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -311,48 +303,14 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Size = new Size(326, 29);
             pnlPalette.TabIndex = 5;
             // 
-            // splitContainer
-            // 
-            splitContainer.Dock = DockStyle.Fill;
-            splitContainer.Location = new Point(0, 64);
-            splitContainer.Name = "splitContainer";
-            // 
-            // splitContainer.Panel1
-            // 
-            splitContainer.Panel1.Controls.Add(leftPanel);
-            // 
-            // splitContainer.Panel2
-            // 
-            splitContainer.Panel2.Controls.Add(rightPanel);
-            splitContainer.Size = new Size(882, 459);
-            splitContainer.SplitterDistance = 126;
-            splitContainer.TabIndex = 3;
-            // 
-            // leftPanel
-            // 
-            leftPanel.Dock = DockStyle.Fill;
-            leftPanel.Location = new Point(0, 0);
-            leftPanel.Name = "leftPanel";
-            leftPanel.Size = new Size(126, 459);
-            leftPanel.TabIndex = 0;
-            // 
-            // rightPanel
-            // 
-            rightPanel.AutoScroll = true;
-            rightPanel.Controls.Add(spriteDisplay);
-            rightPanel.Dock = DockStyle.Fill;
-            rightPanel.Location = new Point(0, 0);
-            rightPanel.Name = "rightPanel";
-            rightPanel.Size = new Size(752, 459);
-            rightPanel.TabIndex = 0;
-            // 
             // spriteDisplay
             // 
             spriteDisplay.BackColor = Color.Black;
+            spriteDisplay.Dock = DockStyle.Fill;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
-            spriteDisplay.Location = new Point(0, 0);
+            spriteDisplay.Location = new Point(0, 64);
             spriteDisplay.Name = "spriteDisplay";
-            spriteDisplay.Size = new Size(0, 0);
+            spriteDisplay.Size = new Size(882, 459);
             spriteDisplay.Sprite = null;
             spriteDisplay.SpriteRenderer = null;
             spriteDisplay.TabIndex = 0;
@@ -375,7 +333,7 @@ namespace WmsGfxSpriteEditor
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(882, 547);
-            Controls.Add(splitContainer);
+            Controls.Add(spriteDisplay);
             Controls.Add(topPanel);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
@@ -390,16 +348,10 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).EndInit();
-            splitContainer.Panel1.ResumeLayout(false);
-            splitContainer.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
-            splitContainer.ResumeLayout(false);
-            rightPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
-
 
         #endregion
 
@@ -414,7 +366,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuEdit;
         private ToolStripMenuItem mnuEditUndo;
         private ToolStripMenuItem mnuEditRedo;
-
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
@@ -430,9 +381,6 @@ namespace WmsGfxSpriteEditor
         private NumericUpDown nudZoom;
         private Label lblPalette;
         private PalettePanel pnlPalette;
-        private SplitContainer splitContainer;
-        private Panel leftPanel;
-        private Panel rightPanel;
         private Panel magnifierPanel;
         private SpriteDisplayControl spriteDisplay;
     }
