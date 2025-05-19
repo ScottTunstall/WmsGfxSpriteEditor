@@ -11,7 +11,7 @@ namespace WmsGfxSpriteEditor.Controls
         private const int CellSize = 8;
 
         // Required services
-        private ISpriteRenderer _spriteRenderer = new SpriteRenderer();
+        private ISpriteRenderer _spriteRenderer = new DefaultSpriteRenderer();
         private ISprite? _sprite;
         private Color[] _palette = Array.Empty<Color>();
 
@@ -43,12 +43,9 @@ namespace WmsGfxSpriteEditor.Controls
         {
             // Enable double buffering for smoother rendering
             DoubleBuffered = true;
-            BackColor = Color.Black;
         }
 
-        /// <summary>
-        /// Sets the sprite renderer to use for rendering
-        /// </summary>
+
         [Browsable(false)]
         public ISpriteRenderer SpriteRenderer
         {
@@ -139,7 +136,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             if (_sprite.Width > 0 && _sprite.Height > 0)
             {
-                this.Size = _spriteRenderer!.GetSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
+                this.Size = _spriteRenderer!.CalculateMinimumClientSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
             }
         }
 
@@ -152,8 +149,6 @@ namespace WmsGfxSpriteEditor.Controls
 
             if ( _palette.Length == 0 || _sprite == null || _sprite.PixelData.Length == 0)
             {
-                // Cannot render sprite, so just draw black
-                pe.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
                 return;
             }
 
@@ -186,16 +181,14 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnMouseMove(e);
             
-            if (GridCellMouseMove == null || _zoomLevel <= 0 || _spriteRenderer == null || _sprite == null)
+            if (GridCellMouseMove == null || _zoomLevel <= 0 || _sprite == null)
                 return;
 
-            Point pt = _spriteRenderer.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
+            Point pt = _spriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (pt.X > 0 && pt.X <= _sprite.Width ||
-                pt.Y > 0 && pt.Y <= _sprite.Height)
+            if (_sprite.IsInBounds(pt.X, pt.Y))
             {
-                // Raise the event with the grid coordinates - note: coords are one-based
                 GridCellMouseMove.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
             }
         }
@@ -204,16 +197,14 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnMouseDown(e);
 
-            if (GridCellMouseDown == null || _zoomLevel <= 0 || _spriteRenderer == null || _sprite == null)
+            if (GridCellMouseDown == null || _zoomLevel <= 0 || _sprite == null)
                 return;
 
-            Point pt = _spriteRenderer.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
+            Point pt = _spriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (pt.X > 0 && pt.X <= _sprite.Width ||
-                pt.Y > 0 && pt.Y <= _sprite.Height)
+            if (_sprite.IsInBounds(pt.X, pt.Y))
             {
-                // Raise the event with the grid coordinates - note: coords are one-based
                 GridCellMouseDown.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
             }
         }
@@ -222,16 +213,14 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnMouseUp(e);
 
-            if (GridCellMouseUp == null || _zoomLevel <= 0 || _spriteRenderer == null || _sprite == null)
+            if (GridCellMouseUp == null || _zoomLevel <= 0 || _sprite == null)
                 return;
 
-            Point pt = _spriteRenderer.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
+            Point pt = _spriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (pt.X > 0 && pt.X <= _sprite.Width ||
-                pt.Y > 0 && pt.Y <= _sprite.Height)
+            if (_sprite.IsInBounds(pt.X, pt.Y))
             {
-                // Raise the event with the grid coordinates - note: coords are one-based
                 GridCellMouseUp.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
             }
         }
@@ -243,14 +232,13 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnMouseClick(e);
 
-            if (GridCellClicked == null || _zoomLevel <= 0 || _spriteRenderer == null || _sprite == null)
+            if (GridCellClicked == null || _zoomLevel <= 0 || _sprite == null)
                 return;
 
-            Point pt = _spriteRenderer!.GetGridCellFromXY(e.X, e.Y, CellSize * _zoomLevel);
+            Point pt = _spriteRenderer!.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (pt.X >= 0 && pt.X < _sprite.Width && // 2 pixels per byte
-                pt.Y >= 0 && pt.Y < _sprite.Height)
+            if (_sprite.IsInBounds(pt.X, pt.Y))
             {
                 GridCellClicked.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
             }
