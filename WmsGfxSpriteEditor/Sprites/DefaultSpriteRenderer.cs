@@ -2,30 +2,34 @@ using System.Drawing;
 
 namespace WmsGfxSpriteEditor.Sprites
 {
-    /// <summary>
-    /// Sprite renderer, 4 bits per pixel
-    /// </summary>
-    public class SpriteRenderer : ISpriteRenderer
+    public class DefaultSpriteRenderer : ISpriteRenderer
     {
-        public Size GetSize(int spriteWidth, int spriteHeight, int cellSize)
+        public Size CalculateMinimumClientSize(int spriteWidth, int spriteHeight, int cellSize)
         {
             return new Size(spriteWidth * cellSize, spriteHeight * cellSize);
         }
 
-        public Point GetGridCellFromXY(int x, int y, int cellSize)
+        public Point GridCellFromClient(int x, int y, int cellSize, Size clientSize)
         {
+            if (x >= clientSize.Width || y >= clientSize.Height)
+            {
+                return new Point(-1, -1); // Out of bounds
+            }
+
             // Calculate grid coordinates based on mouse position and zoom level
             int gridX = (x / cellSize);
             int gridY = (y / cellSize);
             return new Point(gridX, gridY);
         }
 
-
+        /// <summary>
+        /// Renders a sprite to the specified graphics surface, starting from the top-left corner
+        /// </summary>
         public void RenderSprite(Graphics graphics,
             ISprite sprite,
             Color[] palette,
             int cellSize,
-            Rectangle renderArea)
+            Rectangle clientArea)
         {
             // If we have no sprite data, exit without rendering anything
             if (sprite.PixelData.Length == 0)
@@ -34,15 +38,15 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             // Start rendering from the top-left corner (0,0)
-            int startX = renderArea.X;
-            int startY = renderArea.Y;
-            
+            int startX = clientArea.X;
+            int startY = clientArea.Y;
+
             // Draw each pixel of the sprite
             for (int y = 0; y < sprite.Height; y++)
             {
-                for (int x= 0; x< sprite.Width; x++)
+                for (int x = 0; x < sprite.Width; x++)
                 {
-                    int paletteIndex = sprite.GetPaletteIndexFromPixel(x,y);
+                    int paletteIndex = sprite.GetPaletteIndexFromPixel(x, y);
 
                     // Draw the first pixel
                     int pixelX = startX + x * cellSize;
@@ -52,16 +56,15 @@ namespace WmsGfxSpriteEditor.Sprites
             }
         }
 
-
         /// <summary>
-        /// Renders a sprite to the specified graphics surface, starting from the top-left corner
+        /// Renders a sprite with grid to the specified graphics surface, starting from the top-left corner
         /// </summary>
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
             Color[] palette,
             int cellSize,
             Color gridColour,
-            Rectangle renderArea)
+            Rectangle clientArea)
         {
             // If we have no sprite data, exit without rendering anything
             if (sprite.PixelData.Length == 0)
@@ -69,15 +72,15 @@ namespace WmsGfxSpriteEditor.Sprites
                 return;
             }
 
-            int startX = renderArea.X;
-            int startY = renderArea.Y;
+            int startX = clientArea.X;
+            int startY = clientArea.Y;
 
             // Draw each pixel of the sprite
             for (int y = 0; y < sprite.Height; y++)
             {
                 for (int x = 0; x < sprite.Width; x++)
                 {
-                    int paletteIndex= sprite.GetPaletteIndexFromPixel(x, y);
+                    int paletteIndex = sprite.GetPaletteIndexFromPixel(x, y);
 
                     // Draw the first pixel
                     int pixelX = startX + x * cellSize;
@@ -128,4 +131,3 @@ namespace WmsGfxSpriteEditor.Sprites
         }
     }
 }
-

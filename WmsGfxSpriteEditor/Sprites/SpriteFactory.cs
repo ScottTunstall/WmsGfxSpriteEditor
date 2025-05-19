@@ -18,7 +18,7 @@ namespace WmsGfxSpriteEditor.Sprites
         private ISprite CreateSprite4Bpp(RomData romData, SpriteInfo spriteInfo)
         {
             int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
-            Memory<byte> spriteData = romData!.ReadBytes(spriteInfo.Offset, bytesToRead);
+            Memory<byte> spriteData = romData!.ReadAsMemory(spriteInfo.Offset, bytesToRead);
 
             return new Sprite4Bpp(spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
 

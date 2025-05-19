@@ -1,12 +1,15 @@
-using System.Diagnostics;
 using System.Security.Cryptography;
 
 namespace WmsGfxSpriteEditor.Sprites
 {
+    /// <summary>
+    /// Represents a sprite which has 4 bits per pixel (4BPP) colour depth.
+    /// </summary>
     public class Sprite4Bpp : ISprite
     {
-        private Sprite4Bpp() {}
-        
+        private Sprite4Bpp()
+        { }
+
         public Sprite4Bpp(Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
         {
             PixelData = pixelData;
@@ -23,11 +26,22 @@ namespace WmsGfxSpriteEditor.Sprites
         public int Height { get; set; }
         public bool IsLinear { get; set; }
 
+        /// <summary>
+        /// Flag to indicate if the pixel data has been modified.
+        /// </summary>
         public bool IsPixelDataDirty { get; private set; }
 
+        /// <summary>
+        /// Clears the pixel data dirty flag.
+        /// </summary>
         public void ClearPixelDataDirtyFlag()
         {
             IsPixelDataDirty = false;
+        }
+
+        public bool IsInBounds(int x, int y)
+        {
+            return (x > -1 && x < Width) && (y > -1 && y < Height);
         }
 
         public int GetPaletteIndexFromPixel(int x, int y)
@@ -52,27 +66,26 @@ namespace WmsGfxSpriteEditor.Sprites
             paletteIndex &= 0x0F; // Ensure palette index is within bounds (0-15)
             Span<byte> span = PixelData.Span;
 
-            byte currentValue = span[offset];
-            byte newValue;
+            byte currentPixelData = span[offset];
+            byte newPixelData;
 
             if (x % 2 == 0)
             {
                 // Set the upper nibble (first pixel)
-                newValue = (byte)((currentValue & 0x0F) | paletteIndex << 4);
+                newPixelData = (byte)((currentPixelData & 0x0F) | paletteIndex << 4);
             }
             else
             {
                 // Set the lower nibble (second pixel)
-                newValue = (byte)((currentValue & 0xF0) | paletteIndex);
+                newPixelData = (byte)((currentPixelData & 0xF0) | paletteIndex);
             }
 
-            // Will the pixel pair change? If so, set the dirty flag and store the pixel data about to be changed
-            // so that it can be saved for "undo" purposes
-            if (currentValue != newValue)
+            // Will the pixel pair change? If so, set the dirty flag
+            if (newPixelData != currentPixelData)
             {
                 IsPixelDataDirty = true;
 
-                span[offset] = newValue;
+                span[offset] = newPixelData;
             }
         }
 
