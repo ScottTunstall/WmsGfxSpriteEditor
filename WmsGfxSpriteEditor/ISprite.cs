@@ -2,15 +2,15 @@ namespace WmsGfxSpriteEditor
 {
     public interface ISprite
     {
-        int BitsPerPixel { get; }
-
         // We use Memory<byte> so that we can share memory between the Sprite being edited and the MemoryStream it originates from
-        Memory<byte> PixelData { get; set; }
+        Memory<byte> PixelData { get; }
+        int BitsPerPixel { get; }
+        int Width { get; }
+        int WidthInBytes { get; }
+        int Height { get; }
+        Size Size => new(Width, Height);
 
-        int Width { get; set; }
-        int WidthInBytes { get; set; }
-        int Height { get; set; }
-        bool IsLinear { get; set; }
+        bool IsLinear { get; }
 
         bool IsPixelDataDirty { get; }
 
