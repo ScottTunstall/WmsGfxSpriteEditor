@@ -24,6 +24,6 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         /// <param name="romData">ROM data</param>
         /// <param name="directory">Path to the folder where ROM files should be generated</param>
-        void SaveRomData(RomData romData, string directory);
+        void SaveRomData(RomData romData, string folderPath);
     }
 }
