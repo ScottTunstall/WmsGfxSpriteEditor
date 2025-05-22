@@ -5,7 +5,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes
     /// <summary>
     /// Provides the color palette from the Robotron arcade game
     /// </summary>
-    public class RobotronPalette : IPalette
+    public class RobotronPaletteService : IPaletteService
     {
         // Original color values from Robotron ROM
         private static readonly byte[] _colorValues = new byte[]
@@ -20,7 +20,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes
         /// <summary>
         /// Initializes a new instance of the RobotronPalette class
         /// </summary>
-        public RobotronPalette()
+        public RobotronPaletteService()
         {
             _palette = new Color[16];
 
