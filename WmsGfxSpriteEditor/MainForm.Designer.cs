@@ -79,14 +79,14 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(180, 22);
+            mnuFileLoad.Size = new Size(143, 22);
             mnuFileLoad.Text = "&Load";
             // 
             // mnuFileLoadRobotron
             // 
             mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(180, 22);
+            mnuFileLoadRobotron.Size = new Size(154, 22);
             mnuFileLoadRobotron.Text = "Robotron: 2084";
             // 
             // mnuFileLoadRobotronBlueLabel
@@ -110,7 +110,7 @@ namespace WmsGfxSpriteEditor
             mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 22);
+            mnuFileSave.Size = new Size(143, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 

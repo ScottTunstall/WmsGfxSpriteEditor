@@ -1,10 +1,8 @@
 using System.Text;
 using WmsGfxSpriteEditor.Controls;
 using WmsGfxSpriteEditor.History;
+using WmsGfxSpriteEditor.ROMs;
 using WmsGfxSpriteEditor.ROMs.Robotron;
-using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
-using WmsGfxSpriteEditor.ROMs.Robotron.Shared;
-using WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
