@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace WmsGfxSpriteEditor
 {
     /// <summary>
     /// Interface for palette providers
     /// </summary>
-    public interface IPalette
+    public interface IPaletteService
     {
         /// <summary>
         /// Gets the color palette
         /// </summary>
-        /// <returns>An array of 16 colors</returns>
+        /// <returns>An array of colors</returns>
         Color[] GetPalette();
     }
 }
