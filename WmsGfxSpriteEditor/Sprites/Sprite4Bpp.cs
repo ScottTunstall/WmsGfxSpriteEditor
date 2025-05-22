@@ -19,6 +19,8 @@ namespace WmsGfxSpriteEditor.Sprites
             IsLinear = isLinear;
         }
 
+        public int BitsPerPixel => 4;
+
         public Memory<byte> PixelData { get; set; }
 
         public int Width { get; set; }
@@ -30,6 +32,8 @@ namespace WmsGfxSpriteEditor.Sprites
         /// Flag to indicate if the pixel data has been modified.
         /// </summary>
         public bool IsPixelDataDirty { get; private set; }
+
+        
 
         /// <summary>
         /// Clears the pixel data dirty flag.
