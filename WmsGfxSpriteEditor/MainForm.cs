@@ -117,6 +117,12 @@ namespace WmsGfxSpriteEditor
             Redo();
         }
 
+        private void mnuEditCopy_Click(object sender, EventArgs e)
+        {
+            CopySpriteToClipboardAsBitmap();
+        }
+
+
         #endregion EDIT MENU EVENT HANDLERS
 
         #region VIEW MENU EVENT HANDLERS
@@ -306,6 +312,30 @@ namespace WmsGfxSpriteEditor
             SetStateFromHistory(item!);
             OnDisplayStateChanged();
         }
+
+        private void CopySpriteToClipboardAsBitmap()
+        {
+            if (_sprite == null || _palette.Length == 0)
+            {
+                throw new InvalidOperationException("No sprite to copy.");
+            }
+
+            // Create a Bitmap from the sprite and palette
+            using Bitmap bmp = new(_sprite.Width, _sprite.Height);
+
+            for (int y = 0; y < _sprite.Height; y++)
+            {
+                for (int x = 0; x < _sprite.Width; x++)
+                {
+                    int paletteIndex = _sprite.GetPaletteIndexFromPixel(x, y);
+                    Color color = _palette[paletteIndex % _palette.Length];
+                    bmp.SetPixel(x, y, color);
+                }
+            }
+
+            Clipboard.SetImage(bmp);
+        }
+
 
         #endregion EDIT FUNCS
 

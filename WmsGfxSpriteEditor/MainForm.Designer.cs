@@ -30,6 +30,9 @@ namespace WmsGfxSpriteEditor
             mnuEdit = new ToolStripMenuItem();
             mnuEditUndo = new ToolStripMenuItem();
             mnuEditRedo = new ToolStripMenuItem();
+            mnuEditSeparator = new ToolStripSeparator();
+            mnuEditCopy = new ToolStripMenuItem();
+            mnuEditPaste = new ToolStripMenuItem();
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
@@ -122,7 +125,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuEdit
             // 
-            mnuEdit.DropDownItems.AddRange(new ToolStripItem[] { mnuEditUndo, mnuEditRedo });
+            mnuEdit.DropDownItems.AddRange(new ToolStripItem[] { mnuEditUndo, mnuEditRedo, mnuEditSeparator, mnuEditCopy, mnuEditPaste });
             mnuEdit.Name = "mnuEdit";
             mnuEdit.ShortcutKeys = Keys.Alt | Keys.E;
             mnuEdit.Size = new Size(39, 20);
@@ -133,7 +136,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(144, 22);
+            mnuEditUndo.Size = new Size(180, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -142,9 +145,29 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(144, 22);
+            mnuEditRedo.Size = new Size(180, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
+            // 
+            // mnuEditSeparator
+            // 
+            mnuEditSeparator.Name = "mnuEditSeparator";
+            mnuEditSeparator.Size = new Size(177, 6);
+            // 
+            // mnuEditCopy
+            // 
+            mnuEditCopy.Name = "mnuEditCopy";
+            mnuEditCopy.ShortcutKeys = Keys.Control | Keys.C;
+            mnuEditCopy.Size = new Size(180, 22);
+            mnuEditCopy.Text = "&Copy";
+            mnuEditCopy.Click += mnuEditCopy_Click; 
+            // 
+            // mnuEditPaste
+            // 
+            mnuEditPaste.Name = "mnuEditPaste";
+            mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
+            mnuEditPaste.Size = new Size(180, 22);
+            mnuEditPaste.Text = "&Paste";
             // 
             // mnuView
             // 
@@ -189,7 +212,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(676, 19);
+            Spacer.Size = new Size(707, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -305,7 +328,7 @@ namespace WmsGfxSpriteEditor
             // 
             // spriteDisplay
             // 
-            spriteDisplay.BackColor = Color.Black;
+            spriteDisplay.BackColor = Color.Transparent;
             spriteDisplay.Dock = DockStyle.Fill;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 64);
@@ -353,6 +376,11 @@ namespace WmsGfxSpriteEditor
             PerformLayout();
         }
 
+        private void MnuEditCopy_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         private MenuStrip menuStrip;
@@ -366,6 +394,9 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuEdit;
         private ToolStripMenuItem mnuEditUndo;
         private ToolStripMenuItem mnuEditRedo;
+        private ToolStripSeparator mnuEditSeparator;
+        private ToolStripMenuItem mnuEditCopy;
+        private ToolStripMenuItem mnuEditPaste;
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
