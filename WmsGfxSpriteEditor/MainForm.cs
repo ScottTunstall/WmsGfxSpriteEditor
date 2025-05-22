@@ -15,7 +15,7 @@ namespace WmsGfxSpriteEditor
         private IRomService? _romService;
 
         private ISpriteRenderer? _spriteRenderer;
-        private ISpriteFactory _spriteFactory = new SpriteFactory();
+        private ISpriteFactory _spriteFactory = new ROMs.Robotron.SpriteFactory();
         private ISprite? _sprite;
 
         private string _romSetName;
@@ -65,42 +65,22 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
-            RobotronBlueLabelRomFileService romService = new();
-
-            RomData? romData = LoadRomData(RomSetNames.BlueLabel, romService);
-            if (romData != null)
-            {
-                RobotronBlueLabelSpriteRepository spriteRepo = new();
-                RobotronPalette palette = new();
-                DefaultSpriteRenderer spriteRenderer = new();
-
-                OnBeginEdit(RomSetNames.BlueLabel, romData, romService, spriteRepo, spriteRenderer, palette);
-            }
+            SpriteEditorDependencies dependencies = SpriteEditorDependenciesFactory.Create(RobotronRomSetType.BlueLabel);
+            OnBeginEdit(dependencies);
         }
+
 
         private void mnuFileLoadRobotronTieDieWDPU_Click(object sender, EventArgs e)
         {
-            RobotronBlueLabelRomFileService romService = new();
-
-            RomData? romData = LoadRomData(RomSetNames.TieDieWDPU, romService);
-            if (romData != null)
-            {
-                RobotronBlueLabelSpriteRepository spriteRepo = new();
-                RobotronPalette palette = new();
-                DefaultSpriteRenderer spriteRenderer = new();
-
-                OnBeginEdit(RomSetNames.TieDieWDPU, romData, romService, spriteRepo, spriteRenderer, palette);
-            }
+            SpriteEditorDependencies dependencies = SpriteEditorDependenciesFactory.Create(RobotronRomSetType.TieDieWDPU);
+            OnBeginEdit(dependencies);
         }
 
-        private void mnuFileLoadRobotronTieDieMAME_Click(object sender, EventArgs e)
-        {
-            // Empty click handler for Tie Die (MAME) ROM
-        }
+
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
-            SaveRomData();
+            SaveRomSet();
         }
 
         #endregion FILE MENU EVENT HANDLERS
@@ -119,7 +99,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuEditCopy_Click(object sender, EventArgs e)
         {
-            CopySpriteToClipboardAsBitmap();
+            CopySpriteToClipboard();
         }
 
 
@@ -160,7 +140,7 @@ namespace WmsGfxSpriteEditor
             if (_suspendChangeEvents)
                 return;
 
-            SelectSpriteByIndex(cboSprite.SelectedIndex, true);
+            SelectSpriteByIndex(cboSprite.SelectedIndex);
         }
 
         #endregion SPRITE COMBO BOX EVENT HANDLERS
@@ -224,47 +204,7 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE GRID EVENT HANDLERS
 
-        private void OnBeginEdit(string romSetName, RomData romData, IRomService romService, ISpriteRepository spriteRepository, ISpriteRenderer spriteRenderer, IPalette palette)
-        {
-            _history.Clear();
 
-            _romSetName = romSetName;
-
-            _romData?.Dispose();
-            _romData = romData;
-
-            _romService = romService;
-            _palette = palette.GetPalette();
-            pnlPalette.Palette = _palette;
-
-            _spriteRenderer = spriteRenderer;
-
-            _suspendChangeEvents = true;
-            SpriteInfo spriteInfo = SetSpriteSelectDropdown(spriteRepository.GetAllSprites().ToList());
-            
-            _selectedSpriteInfo = spriteInfo;
-            _suspendChangeEvents = false;
-
-            _sprite = CreateSpriteFromRomData(romData, spriteInfo);
-
-            spriteDisplay.SpriteRenderer = _spriteRenderer;
-            spriteDisplay.Sprite = _sprite;
-            spriteDisplay.Palette = _palette;
-            spriteDisplay.GridColor = _gridColor;
-            spriteDisplay.ZoomLevel = _zoomLevel;
-
-            UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
-            OnDisplayStateChanged();
-        }
-
-        private void DisableEditingControls()
-        {
-            cboSprite.Enabled = false;
-            cboSprite.DataSource = null;
-            cboSprite.SelectedIndex = -1;
-            nudZoom.Enabled = false;
-            pnlPalette.Enabled = false;
-        }
 
         #region PALETTE FUNCS
 
@@ -313,15 +253,28 @@ namespace WmsGfxSpriteEditor
             OnDisplayStateChanged();
         }
 
-        private void CopySpriteToClipboardAsBitmap()
+        private void CopySpriteToClipboard()
         {
             if (_sprite == null || _palette.Length == 0)
             {
                 throw new InvalidOperationException("No sprite to copy.");
             }
 
+            DataObject dataObject = new();
+            SpriteClipboardData clipboardData = SpriteClipboardData.FromSprite(_sprite);
+            dataObject.SetData("ClipboardData", clipboardData);
+
+            using Bitmap bmp = CreateBitmapFromSprite();
+            dataObject.SetImage(bmp);
+
+            Clipboard.SetDataObject(dataObject, true);
+        }
+
+
+        private Bitmap CreateBitmapFromSprite()
+        {
             // Create a Bitmap from the sprite and palette
-            using Bitmap bmp = new(_sprite.Width, _sprite.Height);
+            Bitmap bmp = new(_sprite!.Width, _sprite.Height);
 
             for (int y = 0; y < _sprite.Height; y++)
             {
@@ -333,9 +286,8 @@ namespace WmsGfxSpriteEditor
                 }
             }
 
-            Clipboard.SetImage(bmp);
+            return bmp;
         }
-
 
         #endregion EDIT FUNCS
 
@@ -372,20 +324,12 @@ namespace WmsGfxSpriteEditor
             return spriteInfo;
         }
 
-        private void SelectSpriteByIndex(int spriteIndex, bool saveStateToHistory)
+        private void SelectSpriteByIndex(int spriteIndex)
         {
-            if (saveStateToHistory)
-            {
-                SaveSelectedSpriteIndexToHistory();
-            }
 
             _selectedSpriteIndex = spriteIndex;
             _selectedSpriteInfo = _allSprites[spriteIndex]!;
 
-            if (saveStateToHistory)
-            {
-                SaveSelectedSpriteIndexToHistory();
-            }
 
             if (_selectedSpriteInfo != null)
             {
@@ -445,11 +389,6 @@ namespace WmsGfxSpriteEditor
 
         #region HISTORY
 
-        private void SaveSelectedSpriteIndexToHistory()
-        {
-            _history.Add(HistoryItem.CreateSpriteSelectionChangedHistoryItem(_selectedSpriteIndex));
-        }
-
         private void SaveBeforeSpritePixelDataChangedHistory()
         {
             _history.Add(HistoryItem.CreateBeforeSpritePixelDataChangedHistoryItem(_sprite!, _selectedSpriteIndex));
@@ -464,20 +403,66 @@ namespace WmsGfxSpriteEditor
         {
             switch (item.OperationType)
             {
-                case OperationType.SelectedSpriteChanged:
-                    SelectSpriteByIndex(item.SpriteIndex, false);
-                    break;
 
                 case OperationType.BeforeSpritePixelDataChanged:
                 case OperationType.AfterSpritePixelDataChanged:
                     int offset = _allSprites[item.SpriteIndex].Offset;
                     _romData!.WriteBytes(offset, item.PixelData!);
-                    SelectSpriteByIndex(item.SpriteIndex, false);
+                    SelectSpriteByIndex(item.SpriteIndex);
                     break;
             }
         }
 
         #endregion HISTORY
+
+        
+        private void OnBeginEdit(SpriteEditorDependencies editorDependencies)
+        {
+            RomData? romData = LoadRomSet(editorDependencies.RomSetName, editorDependencies.RomService);
+            if (romData == null)
+            {
+                return;
+            }
+            
+            _history.Clear();
+
+            _romSetName = editorDependencies.RomSetName;
+
+            _romData?.Dispose();
+            _romData = romData;
+
+            _romService = editorDependencies.RomService;
+            _spriteFactory = editorDependencies.SpriteFactory;
+            _palette = editorDependencies.PaletteService.GetPalette();
+            pnlPalette.Palette = _palette;
+            _spriteRenderer = editorDependencies.SpriteRenderer;
+
+            _suspendChangeEvents = true;
+            SpriteInfo spriteInfo = SetSpriteSelectDropdown(editorDependencies.SpriteRepository.GetAllSprites().ToList());
+
+            _selectedSpriteInfo = spriteInfo;
+            _suspendChangeEvents = false;
+
+            _sprite = CreateSpriteFromRomData(romData, spriteInfo);
+
+            spriteDisplay.SpriteRenderer = _spriteRenderer;
+            spriteDisplay.Sprite = _sprite;
+            spriteDisplay.Palette = _palette;
+            spriteDisplay.GridColor = _gridColor;
+            spriteDisplay.ZoomLevel = _zoomLevel;
+
+            UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
+            OnDisplayStateChanged();
+        }
+
+        private void DisableEditingControls()
+        {
+            cboSprite.Enabled = false;
+            cboSprite.DataSource = null;
+            cboSprite.SelectedIndex = -1;
+            nudZoom.Enabled = false;
+            pnlPalette.Enabled = false;
+        }
 
         #region ROM
 
@@ -489,11 +474,8 @@ namespace WmsGfxSpriteEditor
             return _spriteFactory.CreateSpriteFromSpriteInfo(romData, spriteInfo);
         }
 
-        #endregion ROM
-
 #pragma warning disable CA1859
-
-        private RomData? LoadRomData(string romSetName, IRomService romService)
+        private RomData? LoadRomSet(string romSetName, IRomService romService)
 #pragma warning restore CA1859
         {
             using FolderBrowserDialog folderDialog = new();
@@ -523,7 +505,7 @@ namespace WmsGfxSpriteEditor
             return romData;
         }
 
-        private void SaveRomData()
+        private void SaveRomSet()
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder to write the {_romSetName} ROM files.";
@@ -534,5 +516,7 @@ namespace WmsGfxSpriteEditor
 
             _romService!.SaveRomData(_romData!, directory);
         }
+
+        #endregion ROM
     }
 }
