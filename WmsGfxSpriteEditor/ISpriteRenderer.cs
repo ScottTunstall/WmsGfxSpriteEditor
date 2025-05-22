@@ -15,7 +15,7 @@ namespace WmsGfxSpriteEditor
         /// <summary>
         /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account grid cell Size and render area size
         /// </summary>
-        Point GridCellFromClient(int x, int y, int cellSize, Size size);
+        Point GridCellFromClient(int x, int y, int cellSize, Size clientSize);
 
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
