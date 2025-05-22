@@ -14,26 +14,24 @@ namespace WmsGfxSpriteEditor.Sprites
         {
             PixelData = pixelData;
             WidthInBytes = widthInBytes;
-            Width = widthInBytes * 2; // Each byte contains 2 pixels
             Height = height;
             IsLinear = isLinear;
         }
 
         public int BitsPerPixel => 4;
 
-        public Memory<byte> PixelData { get; set; }
+        public Memory<byte> PixelData { get; }
 
-        public int Width { get; set; }
-        public int WidthInBytes { get; set; }
-        public int Height { get; set; }
-        public bool IsLinear { get; set; }
+        public int Width => WidthInBytes * 2; // Each byte contains 2 pixels
+        public int WidthInBytes { get; }
+        public int Height { get; }
+        public Size Size => new(Width, Height);
+        public bool IsLinear { get; }
 
         /// <summary>
         /// Flag to indicate if the pixel data has been modified.
         /// </summary>
         public bool IsPixelDataDirty { get; private set; }
-
-        
 
         /// <summary>
         /// Clears the pixel data dirty flag.
