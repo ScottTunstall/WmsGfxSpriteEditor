@@ -1,6 +1,6 @@
 namespace WmsGfxSpriteEditor.ROMs.Robotron
 {
-    public enum RobotronRomSetType
+    public enum RomSetType
     {
         None = 0,
         BlueLabel,

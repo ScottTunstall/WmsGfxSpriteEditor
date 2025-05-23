@@ -9,7 +9,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron
 {
     public class SpriteFactory: ISpriteFactory
     {
-        public ISprite CreateSpriteFromSpriteInfo(RomData romData, SpriteInfo spriteInfo)
+        public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo)
         {
             return CreateSprite4Bpp(romData, spriteInfo);
         }
