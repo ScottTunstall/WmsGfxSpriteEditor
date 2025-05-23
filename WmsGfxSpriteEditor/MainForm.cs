@@ -1,5 +1,4 @@
 using System.Text;
-using WmsGfxSpriteEditor.Controls;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.ROMs;
 using WmsGfxSpriteEditor.ROMs.Robotron;
@@ -12,7 +11,7 @@ namespace WmsGfxSpriteEditor
         // Service dependencies
         private IRomService? _romService;
 
-        private ISpriteRenderer? _spriteRenderer;
+        private ISpriteGridRenderer? _spriteRenderer;
         private ISpriteFactory? _spriteFactory;
         private ISpriteClipboardService? _clipboardService = new DefaultSpriteClipboardService();
         private ISprite? _sprite;
@@ -37,8 +36,6 @@ namespace WmsGfxSpriteEditor
 
         // Palette
         private Color[] _palette = default!;
-
-        private bool _mouseMoved;
 
         public MainForm()
         {
@@ -158,12 +155,12 @@ namespace WmsGfxSpriteEditor
         {
             if (e.Button == MouseButtons.Left)
             {
-                _mouseMoved = true;
-                _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
+                _sprite!.SetPixelByPaletteIndex(e.GridCell.X, e.GridCell.Y, _selectedPaletteIndex);
                 spriteDisplay.Invalidate();
             }
 
-            CoordinatesLabel.Text = $"X: {e.GridX} Y: {e.GridY}";
+            // Convert zero based coordinates to 1 based
+            CoordinatesLabel.Text = $"X: {e.GridCell.X+1} Y: {e.GridCell.Y+1}";
         }
 
         private void spriteDisplay_GridCellMouseDown(object sender, SpriteGridMouseEventArgs e)
@@ -173,8 +170,6 @@ namespace WmsGfxSpriteEditor
                 return;
             }
 
-            _mouseMoved = false;
-
             UInt128 spriteHash = _sprite!.GetPixelDataHash();
             if (_spriteHash != spriteHash)
             {
@@ -182,7 +177,7 @@ namespace WmsGfxSpriteEditor
                 _spriteHash = _sprite.GetPixelDataHash();
             }
 
-            _sprite!.SetPixelByPaletteIndex(e.GridX, e.GridY, _selectedPaletteIndex);
+            _sprite!.SetPixelByPaletteIndex(e.GridCell.X, e.GridCell.Y, _selectedPaletteIndex);
 
             spriteDisplay.Invalidate();
             OnDisplayStateChanged();
@@ -296,6 +291,7 @@ namespace WmsGfxSpriteEditor
             UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
             OnDisplayStateChanged();
         }
+        
 
         private void SetSpriteDisplay(ISprite? sprite)
         {
