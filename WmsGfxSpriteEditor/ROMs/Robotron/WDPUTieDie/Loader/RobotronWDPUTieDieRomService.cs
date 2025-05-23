@@ -3,7 +3,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader
     /// <summary>
     /// Robotron Tie Die ROMS from Williams Defender Players Unite (WDPU)
     /// </summary>
-    public class RobotronWDPUTieDieRomFileService: RomFileServiceBase
+    public class RobotronWDPUTieDieRomService: RomServiceBase
     {
         protected override RomInfo[] RequiredRoms => new RomInfo[]
         {

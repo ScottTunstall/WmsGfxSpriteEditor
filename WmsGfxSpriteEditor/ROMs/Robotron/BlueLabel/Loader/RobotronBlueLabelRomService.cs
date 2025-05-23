@@ -1,6 +1,6 @@
-﻿namespace WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader
+namespace WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader
 {
-    public class RobotronBlueLabelRomFileService: RomFileServiceBase 
+    public class RobotronBlueLabelRomService: RomServiceBase 
     {
         /// <summary>
         /// Array of ROM file information in order
