@@ -12,6 +12,8 @@ namespace WmsGfxSpriteEditor
 
         bool IsLinear { get; }
 
+        bool WouldSetPixelMakePixelDataDirty(int x, int y, int paletteIndex);
+
         bool IsPixelDataDirty { get; }
 
         void ClearPixelDataDirtyFlag();
@@ -25,5 +27,6 @@ namespace WmsGfxSpriteEditor
         byte[] ClonePixelData();
 
         UInt128 GetPixelDataHash();
+
     }
 }
