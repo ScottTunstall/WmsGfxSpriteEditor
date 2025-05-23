@@ -10,6 +10,6 @@ namespace WmsGfxSpriteEditor
 {
     public interface ISpriteFactory
     {
-        public ISprite CreateSpriteFromSpriteInfo(RomData romData, SpriteInfo spriteInfo);
+        public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo);
     }
 }
