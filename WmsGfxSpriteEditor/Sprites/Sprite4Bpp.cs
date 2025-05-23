@@ -28,12 +28,6 @@ namespace WmsGfxSpriteEditor.Sprites
         public Size Size => new(Width, Height);
         public bool IsLinear { get; }
 
-        public bool WouldSetPixelMakePixelDataDirty(int x, int y, int paletteIndex)
-        {
-            int current = GetPaletteIndexFromPixel(x, y);
-            return current != paletteIndex;
-        }
-
         /// <summary>
         /// Flag to indicate if the pixel data has been modified.
         /// </summary>
