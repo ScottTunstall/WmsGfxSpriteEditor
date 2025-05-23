@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WmsGfxSpriteEditor.Sprites;
-
-namespace WmsGfxSpriteEditor.Services
+namespace WmsGfxSpriteEditor.Sprites
 {
-    public class SpriteClipboardService
+    public class DefaultSpriteClipboardService : ISpriteClipboardService
     {
         public void Copy(ISprite sprite, Color[] palette)
         {
@@ -26,6 +19,8 @@ namespace WmsGfxSpriteEditor.Services
             Clipboard.SetDataObject(dataObject, true);
         }
 
+
+        // TODO: Probably not the best place to have this, keep for now..
         private Bitmap CreateBitmapFromSprite(ISprite sprite, Color[] palette)
         {
             // Create a Bitmap from the sprite and palette
