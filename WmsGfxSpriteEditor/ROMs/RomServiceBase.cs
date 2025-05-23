@@ -2,7 +2,7 @@ using System.IO;
 
 namespace WmsGfxSpriteEditor.ROMs
 {
-    public abstract class RomFileServiceBase: IRomService
+    public abstract class RomServiceBase: IRomService
     {
         protected abstract RomInfo[] RequiredRoms { get; }
 
