@@ -14,6 +14,7 @@ namespace WmsGfxSpriteEditor
 
         private ISpriteRenderer? _spriteRenderer;
         private ISpriteFactory? _spriteFactory;
+        private ISpriteClipboardService? _clipboardService = new DefaultSpriteClipboardService();
         private ISprite? _sprite;
 
         private string _romSetName;
@@ -75,7 +76,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
-            SaveRomSet();
+            SaveRomData();
         }
 
         #endregion FILE MENU EVENT HANDLERS
@@ -222,17 +223,8 @@ namespace WmsGfxSpriteEditor
                 throw new InvalidOperationException("No history item to undo.");
             }
 
-            // Skip over "SelectedSpriteChanged" history items when we already have the relevant sprite selected
-            while (item != null && item.OperationType == OperationType.SelectedSpriteChanged && item.SpriteIndex == _selectedSpriteIndex)
-            {
-                item = _history.Back();
-            }
-
-            if (item != null)
-            {
-                SetStateFromHistory(item);
-                OnDisplayStateChanged();
-            }
+            SetStateFromHistory(item);
+            OnDisplayStateChanged();
         }
 
         private void Redo()
@@ -249,37 +241,7 @@ namespace WmsGfxSpriteEditor
 
         private void CopySpriteToClipboard()
         {
-            if (_sprite == null || _palette.Length == 0)
-            {
-                throw new InvalidOperationException("No sprite to copy.");
-            }
-
-            DataObject dataObject = new();
-            SpriteClipboardData clipboardData = SpriteClipboardData.FromSprite(_sprite);
-            dataObject.SetData("ClipboardData", clipboardData);
-
-            using Bitmap bmp = CreateBitmapFromSprite();
-            dataObject.SetImage(bmp);
-
-            Clipboard.SetDataObject(dataObject, true);
-        }
-
-        private Bitmap CreateBitmapFromSprite()
-        {
-            // Create a Bitmap from the sprite and palette
-            Bitmap bmp = new(_sprite!.Width, _sprite.Height);
-
-            for (int y = 0; y < _sprite.Height; y++)
-            {
-                for (int x = 0; x < _sprite.Width; x++)
-                {
-                    int paletteIndex = _sprite.GetPaletteIndexFromPixel(x, y);
-                    Color color = _palette[paletteIndex % _palette.Length];
-                    bmp.SetPixel(x, y, color);
-                }
-            }
-
-            return bmp;
+            _clipboardService!.Copy(_sprite!, _palette);
         }
 
         #endregion EDIT FUNCS
@@ -399,7 +361,7 @@ namespace WmsGfxSpriteEditor
         {
             IRomService service = RomServiceFactory.Create(romSetType);
 
-            RomData? romData = LoadRomSet(label, service);
+            RomData? romData = LoadRomData(label, service);
             if (romData == null)
             {
                 return;
@@ -462,10 +424,8 @@ namespace WmsGfxSpriteEditor
             return _spriteFactory!.CreateSpriteFromRomData(romData, spriteInfo);
         }
 
-#pragma warning disable CA1859
 
-        private RomData? LoadRomSet(string romSetName, IRomService romService)
-#pragma warning restore CA1859
+        private RomData? LoadRomData(string romSetName, IRomService romService)
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder containing the {romSetName} ROM files";
@@ -494,7 +454,7 @@ namespace WmsGfxSpriteEditor
             return romData;
         }
 
-        private void SaveRomSet()
+        private void SaveRomData()
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder to write the {_romSetName} ROM files.";
