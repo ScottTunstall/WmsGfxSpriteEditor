@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WmsGfxSpriteEditor.Controls
+namespace WmsGfxSpriteEditor
 {
     /// <summary>
     /// Event arguments for the ColorSelected event

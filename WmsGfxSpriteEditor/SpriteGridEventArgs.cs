@@ -4,19 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WmsGfxSpriteEditor.Controls
+namespace WmsGfxSpriteEditor
 {
     public class SpriteGridEventArgs : EventArgs
     {
-        /// <summary>
-        /// Gets the X coordinate in the sprite grid
-        /// </summary>
-        public int GridX { get; }
-
-        /// <summary>
-        /// Gets the Y coordinate in the sprite grid
-        /// </summary>
-        public int GridY { get; }
+        public GridCell GridCell { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the SpriteGridEventArgs class
@@ -25,8 +17,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// <param name="gridY">Y coordinate in the sprite grid</param>
         public SpriteGridEventArgs(int gridX, int gridY)
         {
-            GridX = gridX;
-            GridY = gridY;
+            GridCell = new GridCell(gridX, gridY);
         }
     }
 }
