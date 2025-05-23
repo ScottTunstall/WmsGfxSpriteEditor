@@ -1,31 +1,29 @@
-using System.Drawing;
-
 namespace WmsGfxSpriteEditor.Sprites
 {
-    public class DefaultSpriteRenderer : ISpriteRenderer
+    public class DefaultSpriteGridRenderer : ISpriteGridRenderer
     {
         public Size CalculateMinimumClientSize(int spriteWidth, int spriteHeight, int cellSize)
         {
             return new Size(spriteWidth * cellSize, spriteHeight * cellSize);
         }
 
-        public Point GridCellFromClient(int x, int y, int cellSize, Size clientSize)
+        public GridCell GridCellFromClient(int x, int y, int cellSize, Size clientSize)
         {
             if (x >= clientSize.Width || y >= clientSize.Height)
             {
-                return new Point(-1, -1); // Out of bounds
+                return new GridCell(); // Out of bounds
             }
 
             // Calculate grid coordinates based on mouse position and zoom level
             int gridX = (x / cellSize);
             int gridY = (y / cellSize);
-            return new Point(gridX, gridY);
+            return new GridCell(gridX, gridY);
         }
 
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
-        public void RenderSprite(Graphics graphics,
+        public void RenderSpriteWithoutGrid(Graphics graphics,
             ISprite sprite,
             Color[] palette,
             int cellSize,

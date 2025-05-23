@@ -1,11 +1,9 @@
-using WmsGfxSpriteEditor.Sprites;
-
 namespace WmsGfxSpriteEditor
 {
     /// <summary>
     /// Interface for sprite rendering functionality
     /// </summary>
-    public interface ISpriteRenderer
+    public interface ISpriteGridRenderer
     {
         /// <summary>
         /// Calculate area required to render sprite in full
@@ -15,12 +13,12 @@ namespace WmsGfxSpriteEditor
         /// <summary>
         /// Return the grid cell column and row referred to by pixel coordinates X,Y, taking into account grid cell Size and render area size
         /// </summary>
-        Point GridCellFromClient(int x, int y, int cellSize, Size clientSize);
+        GridCell GridCellFromClient(int x, int y, int cellSize, Size clientSize);
 
         /// <summary>
         /// Renders a sprite to the specified graphics surface, starting from the top-left corner
         /// </summary>
-        public void RenderSprite(Graphics graphics,
+        public void RenderSpriteWithoutGrid(Graphics graphics,
             ISprite sprite,
             Color[] palette,
             int cellSize,
