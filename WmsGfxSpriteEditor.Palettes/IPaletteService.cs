@@ -1,4 +1,6 @@
-namespace WmsGfxSpriteEditor
+using System.Drawing;
+
+namespace WmsGfxSpriteEditor.Palettes
 {
     /// <summary>
     /// Interface for palette providers

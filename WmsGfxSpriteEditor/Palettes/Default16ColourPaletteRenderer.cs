@@ -9,7 +9,7 @@ namespace WmsGfxSpriteEditor.Palettes
     /// <summary>
     /// Default implementation of the palette renderer that shows colors in a grid
     /// </summary>
-    public class DefaultPaletteRenderer : IPaletteRenderer
+    public class Default16ColourPaletteRenderer : IPaletteRenderer
     {
         private const int ColorsPerRow = 16;
         private const int TotalRows = 1;

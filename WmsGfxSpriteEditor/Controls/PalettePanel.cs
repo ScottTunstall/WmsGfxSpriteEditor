@@ -75,7 +75,7 @@ namespace WmsGfxSpriteEditor.Controls
             DoubleBuffered = true;
 
             // Create a default palette renderer
-            _paletteRenderer = new DefaultPaletteRenderer();
+            _paletteRenderer = new Default16ColourPaletteRenderer();
         }
 
         /// <summary>
