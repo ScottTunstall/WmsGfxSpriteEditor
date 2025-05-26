@@ -1,8 +1,7 @@
 namespace WmsGfxSpriteEditor.Roms
 {
-    public record RomData: IDisposable
+    public record RomData : IDisposable
     {
-
         private readonly MemoryStream _romData;
         private bool _disposedValue;
 
@@ -26,10 +25,23 @@ namespace WmsGfxSpriteEditor.Roms
             return spriteData;
         }
 
-        public void WriteBytes(int offset, byte[] data)
+        public void PokeByte(int offset, byte value)
+        {
+            byte[] buffer = _romData.GetBuffer();
+            buffer[offset] = value;
+        }
+
+        public void PokeBytes(int offset, byte[] data)
         {
             byte[] buffer = _romData!.GetBuffer();
             data.CopyTo(buffer.AsSpan(offset));
+        }
+
+        public void PokeWordBigEndian(int offset, ushort word)
+        {
+            byte[] buffer = _romData.GetBuffer();
+            buffer[offset] = (byte)((word & 0xff00) >> 8);     // write MSB
+            buffer[offset + 1] = (byte)(word & 0xff);           // write LSB
         }
 
         protected virtual void Dispose(bool disposing)
@@ -44,7 +56,6 @@ namespace WmsGfxSpriteEditor.Roms
                 _disposedValue = true;
             }
         }
-
 
         public void Dispose()
         {

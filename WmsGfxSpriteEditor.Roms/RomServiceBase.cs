@@ -1,9 +1,8 @@
 namespace WmsGfxSpriteEditor.Roms
 {
-    public abstract class RomServiceBase: IRomService
+    public abstract class RomServiceBase : IRomService
     {
         protected abstract RomFileInfo[] RequiredRoms { get; }
-
 
         public RomFileAuditInfo Audit(string folderPath)
         {
@@ -31,8 +30,6 @@ namespace WmsGfxSpriteEditor.Roms
             };
         }
 
-
-
         /// <summary>
         /// Loads ROM files from the specified directory
         /// </summary>
@@ -49,7 +46,7 @@ namespace WmsGfxSpriteEditor.Roms
             }
 
             // Calculate required memory stream size based on highest ROM offset + size
-            int requiredSize = GetMemoryStreamSize(); 
+            int requiredSize = GetMemoryStreamSize();
 
             // Create a memory stream to hold all ROM data
             MemoryStream memoryStream = new(requiredSize);
@@ -94,7 +91,6 @@ namespace WmsGfxSpriteEditor.Roms
             return new RomData(memoryStream);
         }
 
-        
         public virtual void SaveRomData(RomData romData, string folderPath)
         {
             foreach (RomFileInfo romInfo in RequiredRoms)
@@ -107,11 +103,9 @@ namespace WmsGfxSpriteEditor.Roms
             }
         }
 
-
         private int GetMemoryStreamSize()
         {
             return RequiredRoms.Max(rom => rom.Offset + rom.Size);
         }
-
     }
 }
