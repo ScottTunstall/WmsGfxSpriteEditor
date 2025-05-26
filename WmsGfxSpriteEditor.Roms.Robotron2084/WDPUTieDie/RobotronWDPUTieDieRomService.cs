@@ -1,4 +1,4 @@
-namespace WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie.Loader
+namespace WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie
 {
     /// <summary>
     /// Robotron Tie Die ROMS from Williams Defender Players Unite (WDPU)

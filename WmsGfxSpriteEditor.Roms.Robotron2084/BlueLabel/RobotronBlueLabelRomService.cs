@@ -1,4 +1,4 @@
-namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel.Loader
+namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel
 {
     public class RobotronBlueLabelRomService: RomServiceBase 
     {
@@ -21,5 +21,27 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel.Loader
             new RomFileInfo("2084_rom_11b_3005-23.c7", 0xE000, 0x1000),
             new RomFileInfo("2084_rom_12b_3005-24.e7", 0xF000, 0x1000)
         };
+
+
+        public override RomData LoadRomData(string folderPath)
+        {
+            RomData data = base.LoadRomData(folderPath);
+            DisableRomChecksum(data);
+            RemoveProtection(data);
+            return data;
+        }
+
+        private void DisableRomChecksum(RomData data)
+        {
+            data.PokeWordBigEndian(0xF473, 0xF47C);
+        }
+
+        private void RemoveProtection(RomData data)
+        {
+            data.PokeByte(0x1b15, 0x20);
+            data.PokeByte(0x5c8e, 0x20);
+            data.PokeByte(0x6165, 0x20);
+            data.PokeByte(0xde3d, 0x20);
+        }
     }
 }
