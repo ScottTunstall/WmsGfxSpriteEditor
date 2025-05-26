@@ -1,8 +1,7 @@
 using System.Text;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Roms;
-using WmsGfxSpriteEditor.ROMs;
-using WmsGfxSpriteEditor.ROMs.Robotron;
+using WmsGfxSpriteEditor.Roms.Robotron2084;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
@@ -17,14 +16,14 @@ namespace WmsGfxSpriteEditor
         private ISpriteClipboardService? _clipboardService = new DefaultSpriteClipboardService();
         private ISprite? _sprite;
 
-        private string _romSetName;
+        private string _romSetName = string.Empty;
         private RomData? _romData;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
         // User selections
         private Color _selectedColour = Color.Black;
 
-        private IReadOnlyList<SpriteInfo> _allSprites;
+        private IReadOnlyList<SpriteInfo> _allSprites = [];
         private bool _haveSpritesToSelect;
         private int _selectedPaletteIndex;
         private SpriteInfo? _selectedSpriteInfo;

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WmsGfxSpriteEditor.Roms.Robotron2084\WmsGfxSpriteEditor.Roms.Robotron2084.csproj" />
     <ProjectReference Include="..\WmsGfxSpriteEditor.Roms\WmsGfxSpriteEditor.Roms.csproj" />
     <ProjectReference Include="..\WmsGfxSpriteEditor.Sprites\WmsGfxSpriteEditor.Sprites.csproj" />
   </ItemGroup>

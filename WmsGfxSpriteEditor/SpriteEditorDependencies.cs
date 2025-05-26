@@ -1,3 +1,4 @@
+using WmsGfxSpriteEditor.Palettes;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
