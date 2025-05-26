@@ -1,4 +1,4 @@
-namespace WmsGfxSpriteEditor.ROMs
+namespace WmsGfxSpriteEditor.Roms
 {
     public record RomData: IDisposable
     {

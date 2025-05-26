@@ -1,6 +1,4 @@
-using System.IO;
-
-namespace WmsGfxSpriteEditor.ROMs
+namespace WmsGfxSpriteEditor.Roms
 {
     public abstract class RomServiceBase: IRomService
     {
