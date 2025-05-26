@@ -1,6 +1,6 @@
 using WmsGfxSpriteEditor.Sprites;
 
-namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared
+namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared
 {
     /// <summary>
     /// Repository for Robotron Blue Label and Tie-Die sprite data.

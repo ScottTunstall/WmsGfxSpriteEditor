@@ -1,6 +1,9 @@
 // Credit to Sean Riddle for designing the algorithm which converts byte colour values to their RGB equivalent
 
-namespace WmsGfxSpriteEditor.ROMs.Robotron.Shared.Palettes
+using System.Drawing;
+using WmsGfxSpriteEditor.Palettes;
+
+namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
 {
     /// <summary>
     /// Provides the color palette from the Robotron arcade game

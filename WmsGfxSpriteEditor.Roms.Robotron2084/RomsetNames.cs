@@ -1,4 +1,4 @@
-namespace WmsGfxSpriteEditor.ROMs.Robotron
+namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
     public enum RomSetType
     {

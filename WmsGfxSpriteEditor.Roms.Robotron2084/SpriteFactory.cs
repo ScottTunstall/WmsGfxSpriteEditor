@@ -1,9 +1,8 @@
-using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.Sprites;
 
-namespace WmsGfxSpriteEditor.ROMs.Robotron
+namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
-    public class SpriteFactory: ISpriteFactory
+    public class SpriteFactory : ISpriteFactory
     {
         public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo)
         {
@@ -16,7 +15,6 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron
             Memory<byte> spriteData = romData!.ReadAsMemory(spriteInfo.Offset, bytesToRead);
 
             return new Sprite4Bpp(spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
-
         }
     }
 }

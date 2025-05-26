@@ -1,8 +1,7 @@
-using WmsGfxSpriteEditor.Roms;
-using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
-using WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader;
+using WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel.Loader;
+using WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie.Loader;
 
-namespace WmsGfxSpriteEditor.ROMs.Robotron
+namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
     public class RomServiceFactory
     {
