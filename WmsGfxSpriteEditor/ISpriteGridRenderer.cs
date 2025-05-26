@@ -1,3 +1,5 @@
+using WmsGfxSpriteEditor.Sprites;
+
 namespace WmsGfxSpriteEditor
 {
     /// <summary>

@@ -1,5 +1,6 @@
 using System.Text;
 using WmsGfxSpriteEditor.History;
+using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.ROMs;
 using WmsGfxSpriteEditor.ROMs.Robotron;
 using WmsGfxSpriteEditor.Sprites;

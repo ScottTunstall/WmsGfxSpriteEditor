@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WmsGfxSpriteEditor.Roms\WmsGfxSpriteEditor.Roms.csproj" />
+    <ProjectReference Include="..\WmsGfxSpriteEditor.Sprites\WmsGfxSpriteEditor.Sprites.csproj" />
   </ItemGroup>
 
 </Project>
