@@ -4,7 +4,7 @@ namespace WmsGfxSpriteEditor.ROMs
 {
     public abstract class RomServiceBase: IRomService
     {
-        protected abstract RomInfo[] RequiredRoms { get; }
+        protected abstract RomFileInfo[] RequiredRoms { get; }
 
 
         public RomFileAuditInfo Audit(string folderPath)
@@ -12,7 +12,7 @@ namespace WmsGfxSpriteEditor.ROMs
             List<string> presentRomFiles = [];
             List<string> missingRomFiles = [];
 
-            foreach (RomInfo romInfo in RequiredRoms)
+            foreach (RomFileInfo romInfo in RequiredRoms)
             {
                 string filePath = Path.Combine(folderPath, romInfo.FileName);
 
@@ -61,7 +61,7 @@ namespace WmsGfxSpriteEditor.ROMs
             memoryStream.Write(emptyBuffer, 0, emptyBuffer.Length);
 
             // Load each ROM file and place it at its specified offset
-            foreach (RomInfo romInfo in RequiredRoms)
+            foreach (RomFileInfo romInfo in RequiredRoms)
             {
                 string filePath = Path.Combine(folderPath, romInfo.FileName);
 
@@ -99,7 +99,7 @@ namespace WmsGfxSpriteEditor.ROMs
         
         public virtual void SaveRomData(RomData romData, string folderPath)
         {
-            foreach (RomInfo romInfo in RequiredRoms)
+            foreach (RomFileInfo romInfo in RequiredRoms)
             {
                 string filePath = Path.Combine(folderPath, romInfo.FileName);
 

@@ -8,4 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WmsGfxSpriteEditor.Roms\WmsGfxSpriteEditor.Roms.csproj" />
+  </ItemGroup>
+
 </Project>

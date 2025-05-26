@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents information about a ROM file in the system
     /// </summary>
-    public record RomInfo
+    public record RomFileInfo
     {
         /// <summary>
         /// Gets the name of the ROM file
@@ -26,7 +26,7 @@
         /// <param name="fileName">The name of the ROM file</param>
         /// <param name="offset">The offset of the ROM data in the memory stream</param>
         /// <param name="size">The size of the ROM data in bytes</param>
-        public RomInfo(string fileName, int offset, int size)
+        public RomFileInfo(string fileName, int offset, int size)
         {
             FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
             Offset = offset;

@@ -5,7 +5,7 @@ namespace WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader
     /// </summary>
     public class RobotronWDPUTieDieRomService: RomServiceBase
     {
-        protected override RomInfo[] RequiredRoms => new RomInfo[]
+        protected override RomFileInfo[] RequiredRoms => new RomFileInfo[]
         {
             new("robotron.sb1", 0x0000, 0x1000),
             new("robotron.sb2", 0x1000, 0x1000),
