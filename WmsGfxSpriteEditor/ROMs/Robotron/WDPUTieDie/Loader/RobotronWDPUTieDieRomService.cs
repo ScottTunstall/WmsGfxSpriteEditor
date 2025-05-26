@@ -1,3 +1,5 @@
+using WmsGfxSpriteEditor.Roms;
+
 namespace WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader
 {
     /// <summary>

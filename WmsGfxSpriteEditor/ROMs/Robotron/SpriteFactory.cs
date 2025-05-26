@@ -1,3 +1,4 @@
+using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor.ROMs.Robotron

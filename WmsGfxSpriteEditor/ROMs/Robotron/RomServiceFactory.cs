@@ -1,3 +1,4 @@
+using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.ROMs.Robotron.BlueLabel.Loader;
 using WmsGfxSpriteEditor.ROMs.Robotron.WDPUTieDie.Loader;
 
