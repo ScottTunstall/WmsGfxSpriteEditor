@@ -1,7 +1,6 @@
-using WmsGfxSpriteEditor.ROMs;
-using WmsGfxSpriteEditor.Sprites;
+using WmsGfxSpriteEditor.Roms;
 
-namespace WmsGfxSpriteEditor
+namespace WmsGfxSpriteEditor.Sprites
 {
     public interface ISpriteFactory
     {

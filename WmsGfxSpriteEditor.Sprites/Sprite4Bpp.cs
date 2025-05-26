@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Security.Cryptography;
 
 namespace WmsGfxSpriteEditor.Sprites

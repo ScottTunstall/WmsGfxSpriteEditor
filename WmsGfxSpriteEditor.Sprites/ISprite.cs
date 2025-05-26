@@ -1,4 +1,6 @@
-namespace WmsGfxSpriteEditor
+using System.Drawing;
+
+namespace WmsGfxSpriteEditor.Sprites
 {
     public interface ISprite
     {
