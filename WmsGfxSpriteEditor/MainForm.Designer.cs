@@ -35,6 +35,14 @@ namespace WmsGfxSpriteEditor
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
+            mnuSprite = new ToolStripMenuItem();
+            mnuSpriteFlipHorizontal = new ToolStripMenuItem();
+            mnuSpriteFlipVertical = new ToolStripMenuItem();
+            mnuSpriteSeparator = new ToolStripSeparator();
+            mnuSpriteShiftLeft = new ToolStripMenuItem();
+            mnuSpriteShiftRight = new ToolStripMenuItem();
+            mnuSpriteShiftUp = new ToolStripMenuItem();
+            mnuSpriteShiftDown = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
             Spacer = new ToolStripStatusLabel();
@@ -59,7 +67,7 @@ namespace WmsGfxSpriteEditor
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(882, 24);
@@ -107,7 +115,6 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFileSave
             // 
-            mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
             mnuFileSave.Size = new Size(143, 22);
@@ -185,6 +192,75 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut.Size = new Size(207, 22);
             mnuViewZoomOut.Text = "Zoom &Out";
             mnuViewZoomOut.Click += mnuViewZoomOut_Click;
+            // 
+            // mnuSprite
+            // 
+            mnuSprite.DropDownItems.AddRange(new ToolStripItem[] {
+                mnuSpriteFlipHorizontal,
+                mnuSpriteFlipVertical,
+                mnuSpriteSeparator,
+                mnuSpriteShiftLeft,
+                mnuSpriteShiftRight,
+                mnuSpriteShiftUp,
+                mnuSpriteShiftDown
+            });
+            mnuSprite.Name = "mnuSprite";
+            mnuSprite.ShortcutKeys = Keys.Alt | Keys.S;
+            mnuSprite.Size = new Size(52, 20);
+            mnuSprite.Text = "&Sprite";
+            // 
+            // mnuSpriteFlipHorizontal
+            // 
+            mnuSpriteFlipHorizontal.Name = "mnuSpriteFlipHorizontal";
+            mnuSpriteFlipHorizontal.ShortcutKeys = Keys.Control | Keys.Shift | Keys.H;
+            mnuSpriteFlipHorizontal.Size = new Size(250, 22);
+            mnuSpriteFlipHorizontal.Text = "Flip &Horizontal";
+            mnuSpriteFlipHorizontal.Click += mnuSpriteFlipHorizontal_Click;
+            // 
+            // mnuSpriteFlipVertical
+            // 
+            mnuSpriteFlipVertical.Name = "mnuSpriteFlipVertical";
+            mnuSpriteFlipVertical.ShortcutKeys = Keys.Control | Keys.Shift | Keys.V;
+            mnuSpriteFlipVertical.Size = new Size(250, 22);
+            mnuSpriteFlipVertical.Text = "Flip &Vertical";
+            mnuSpriteFlipVertical.Click += mnuSpriteFlipVertical_Click;
+            // 
+            // mnuSpriteSeparator
+            // 
+            mnuSpriteSeparator.Name = "mnuSpriteSeparator";
+            mnuSpriteSeparator.Size = new Size(247, 6);
+            // 
+            // mnuSpriteShiftLeft
+            // 
+            mnuSpriteShiftLeft.Name = "mnuSpriteShiftLeft";
+            mnuSpriteShiftLeft.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Left;
+            mnuSpriteShiftLeft.Size = new Size(250, 22);
+            mnuSpriteShiftLeft.Text = "Shift all pixels &Left";
+            mnuSpriteShiftLeft.Click += mnuSpriteShiftLeft_Click;
+            // 
+            // mnuSpriteShiftRight
+            // 
+            mnuSpriteShiftRight.Name = "mnuSpriteShiftRight";
+            mnuSpriteShiftRight.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Right;
+            mnuSpriteShiftRight.Size = new Size(250, 22);
+            mnuSpriteShiftRight.Text = "Shift all pixels &Right";
+            mnuSpriteShiftRight.Click += mnuSpriteShiftRight_Click;
+            // 
+            // mnuSpriteShiftUp
+            // 
+            mnuSpriteShiftUp.Name = "mnuSpriteShiftUp";
+            mnuSpriteShiftUp.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Up;
+            mnuSpriteShiftUp.Size = new Size(250, 22);
+            mnuSpriteShiftUp.Text = "Shift all pixels &Up";
+            mnuSpriteShiftUp.Click += mnuSpriteShiftUp_Click;
+            // 
+            // mnuSpriteShiftDown
+            // 
+            mnuSpriteShiftDown.Name = "mnuSpriteShiftDown";
+            mnuSpriteShiftDown.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Down;
+            mnuSpriteShiftDown.Size = new Size(250, 22);
+            mnuSpriteShiftDown.Text = "Shift all pixels &Down";
+            mnuSpriteShiftDown.Click += mnuSpriteShiftDown_Click;
             // 
             // statusStrip
             // 
@@ -390,6 +466,14 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
+        private ToolStripMenuItem mnuSprite;
+        private ToolStripMenuItem mnuSpriteFlipHorizontal;
+        private ToolStripMenuItem mnuSpriteFlipVertical;
+        private ToolStripSeparator mnuSpriteSeparator;
+        private ToolStripMenuItem mnuSpriteShiftLeft;
+        private ToolStripMenuItem mnuSpriteShiftRight;
+        private ToolStripMenuItem mnuSpriteShiftUp;
+        private ToolStripMenuItem mnuSpriteShiftDown;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
         private ToolStripStatusLabel Spacer;

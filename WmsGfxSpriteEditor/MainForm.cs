@@ -125,6 +125,43 @@ namespace WmsGfxSpriteEditor
 
         #endregion VIEW MENU EVENT HANDLERS
 
+        #region SPRITE MENU EVENT HANDLERS
+
+        private void mnuSpriteFlipHorizontal_Click(object sender, EventArgs e)
+        {
+            FlipSpriteHorizontal();
+        }
+
+
+        private void mnuSpriteFlipVertical_Click(object sender, EventArgs e)
+        {
+            FlipSpriteVertical();
+        }
+
+
+        private void mnuSpriteShiftLeft_Click(object sender, EventArgs e)
+        {
+            ShiftSpriteLeft();
+        }
+
+        private void mnuSpriteShiftRight_Click(object sender, EventArgs e)
+        {
+            ShiftSpriteRight();
+        }
+
+        private void mnuSpriteShiftUp_Click(object sender, EventArgs e)
+        {
+            ShiftSpriteUp();
+        }
+
+        private void mnuSpriteShiftDown_Click(object sender, EventArgs e)
+        {
+            ShiftSpriteDown();
+        }
+
+
+        #endregion SPRITE MENU EVENT HANDLERS
+
         #region SPRITE COMBO BOX EVENT HANDLERS
 
         private void cboSprite_SelectedIndexChanged(object sender, EventArgs e)
@@ -291,7 +328,43 @@ namespace WmsGfxSpriteEditor
             UpdateStatusBarWithSpriteInfo(_selectedSpriteInfo);
             OnDisplayStateChanged();
         }
-        
+
+
+        private void FlipSpriteHorizontal()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void FlipSpriteVertical()
+        {
+            _sprite!.YFlip();
+            Invalidate();
+        }
+
+        private void ShiftSpriteLeft()
+        {
+            _sprite!.ShiftLeft();
+            Invalidate();
+        }
+
+        private void ShiftSpriteRight()
+        {
+            _sprite!.ShiftRight();
+            Invalidate();
+        }
+
+        private void ShiftSpriteUp()
+        {
+            _sprite!.ShiftUp();
+            Invalidate();
+        }
+
+        private void ShiftSpriteDown()
+        {
+            _sprite!.ShiftDown();
+            Invalidate();
+        }
+
 
         private void SetSpriteDisplay(ISprite? sprite)
         {
@@ -345,7 +418,7 @@ namespace WmsGfxSpriteEditor
                 case OperationType.BeforeSpritePixelDataChanged:
                 case OperationType.AfterSpritePixelDataChanged:
                     int offset = _allSprites[item.SpriteIndex].Offset;
-                    _romData!.WriteBytes(offset, item.PixelData!);
+                    _romData!.PokeBytes(offset, item.PixelData!);
                     SelectSpriteByIndex(item.SpriteIndex);
                     break;
             }
