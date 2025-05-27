@@ -97,7 +97,7 @@ namespace WmsGfxSpriteEditor.Roms
             {
                 string filePath = Path.Combine(folderPath, romInfo.FileName);
 
-                byte[] bytes = romData.ReadAsBytes(romInfo.Offset, romInfo.Size);
+                byte[] bytes = romData.PeekBytes(romInfo.Offset, romInfo.Size);
 
                 File.WriteAllBytes(filePath, bytes);
             }

@@ -1,5 +1,5 @@
-using WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel.Loader;
-using WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie.Loader;
+using WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel;
+using WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie;
 
 namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {

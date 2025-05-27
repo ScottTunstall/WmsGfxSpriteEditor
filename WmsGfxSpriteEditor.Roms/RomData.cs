@@ -10,14 +10,14 @@ namespace WmsGfxSpriteEditor.Roms
             _romData = romData;
         }
 
-        public Memory<byte> ReadAsMemory(int offset, int length)
+        public Memory<byte> AsMemory(int offset, int length)
         {
             byte[] buffer = _romData!.GetBuffer();
             Memory<byte> spriteData = new(buffer, offset, length);
             return spriteData;
         }
 
-        public byte[] ReadAsBytes(int offset, int length)
+        public byte[] PeekBytes(int offset, int length)
         {
             byte[] buffer = _romData!.GetBuffer();
             byte[] spriteData = new byte[length];
