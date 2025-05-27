@@ -92,6 +92,53 @@ namespace WmsGfxSpriteEditor.Sprites
             }
         }
 
+        public void XFlip()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void YFlip()
+        {
+            // No need to flip a single height sprite
+            if (Height == 1) 
+            {
+                return;
+            }
+
+            var newSpriteData = new byte[PixelData.Span.Length];
+            int sourceOffset = 0;
+            int destOffset = PixelData.Span.Length - WidthInBytes;
+            for (int y = 0; y < Height; y++)
+            {
+                PixelData.Span.Slice(sourceOffset, WidthInBytes).CopyTo(newSpriteData.AsSpan(destOffset, WidthInBytes));
+                sourceOffset += WidthInBytes;
+                destOffset -= WidthInBytes;
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
+        }
+
+        public void ShiftUp()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShiftDown()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShiftLeft()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShiftRight()
+        {
+            throw new NotImplementedException();
+        }
+
         public byte[] ClonePixelData()
         {
             byte[] dataCopy = new byte[PixelData.Span.Length];

@@ -25,6 +25,13 @@ namespace WmsGfxSpriteEditor.Sprites
 
         void SetPixelByPaletteIndex(int x, int y, int paletteIndex);
 
+        void XFlip();
+        void YFlip();
+        void ShiftUp();
+        void ShiftDown();
+        void ShiftLeft();
+        void ShiftRight();
+
         byte[] ClonePixelData();
 
         UInt128 GetPixelDataHash();
