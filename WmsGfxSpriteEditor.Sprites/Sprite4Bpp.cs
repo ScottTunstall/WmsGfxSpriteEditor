@@ -13,6 +13,14 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public Sprite4Bpp(Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
         {
+            if (pixelData.Length != widthInBytes * height)
+            {
+                throw new ArgumentException($"Pixel data length {pixelData.Length} does not match expected size {widthInBytes * height} for width {widthInBytes} and height {height}.");
+            }
+
+            ArgumentOutOfRangeException.ThrowIfLessThan(widthInBytes,1);
+            ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
+
             PixelData = pixelData;
             WidthInBytes = widthInBytes;
             Height = height;
@@ -100,7 +108,7 @@ namespace WmsGfxSpriteEditor.Sprites
         public void YFlip()
         {
             // No need to flip a single height sprite
-            if (Height == 1) 
+            if (Height <= 1) 
             {
                 return;
             }
@@ -119,24 +127,94 @@ namespace WmsGfxSpriteEditor.Sprites
             IsPixelDataDirty = true;
         }
 
-        public void ShiftUp()
+        public void ShiftPixelsUp()
         {
-            throw new NotImplementedException();
+            var newSpriteData = new byte[PixelData.Span.Length];
+            if (Height > 1)
+            {
+                var destination = newSpriteData.AsSpan(0, PixelData.Span.Length - WidthInBytes);
+                PixelData.Span.Slice(WidthInBytes).CopyTo(destination);
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
         }
 
-        public void ShiftDown()
+        public void ShiftPixelsDown()
         {
-            throw new NotImplementedException();
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
+            if (Height > 1)
+            {
+                Span<byte> destination = newSpriteData.AsSpan(WidthInBytes, PixelData.Span.Length - WidthInBytes);
+                PixelData.Span.Slice(0, PixelData.Span.Length - WidthInBytes).CopyTo(destination);
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
         }
 
-        public void ShiftLeft()
+        public void ShiftPixelsLeft()
         {
-            throw new NotImplementedException();
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
+
+            if (Width > 1)
+            {
+                int sourceOffset = 0;
+                for (int y = 0; y < Height; y++)
+                {
+                    int destOffset = sourceOffset;
+                    // Shift each byte left by one pixel (nibble)
+                    for (int x = 0; x < WidthInBytes - 1; x++)
+                    {
+                        byte leftByte = PixelData.Span[sourceOffset + x];
+                        byte rightByte = PixelData.Span[sourceOffset + x + 1];
+                        byte upperNibble = (byte)(leftByte << 4);
+                        byte lowerNibble = (byte)(rightByte >> 4);
+
+                        byte shifted = (byte)(upperNibble | lowerNibble);
+                        newSpriteData[destOffset++] = shifted;
+                    }
+                    // Handle the last byte in the row
+                    byte lastByte = PixelData.Span[sourceOffset + WidthInBytes - 1];
+                    newSpriteData[destOffset] = (byte)(lastByte << 4);
+                    sourceOffset += WidthInBytes;
+                }
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
         }
 
-        public void ShiftRight()
+        public void ShiftPixelsRight()
         {
-            throw new NotImplementedException();
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
+
+            if (Width > 1)
+            {
+                int sourceOffset = 0;
+                for (int y = 0; y < Height; y++)
+                {
+                    int destOffset = sourceOffset + WidthInBytes - 1;
+                    // Shift each byte right by one pixel (nibble)
+                    for (int x = WidthInBytes - 1; x > 0; x--)
+                    {
+                        byte leftByte = PixelData.Span[sourceOffset + x - 1];
+                        byte rightByte = PixelData.Span[sourceOffset + x];
+                        byte upperNibble = (byte)(leftByte << 4);
+                        byte lowerNibble = (byte)(rightByte >> 4);
+                        byte shifted = (byte)(upperNibble | lowerNibble);
+                        newSpriteData[destOffset--] = shifted;
+                    }
+
+                    // Handle the first byte in the row
+                    byte firstByte = PixelData.Span[sourceOffset];
+                    newSpriteData[destOffset] = (byte)(firstByte >> 4);
+                    sourceOffset += WidthInBytes;
+                }
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
         }
 
         public byte[] ClonePixelData()

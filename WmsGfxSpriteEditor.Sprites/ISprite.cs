@@ -27,10 +27,10 @@ namespace WmsGfxSpriteEditor.Sprites
 
         void XFlip();
         void YFlip();
-        void ShiftUp();
-        void ShiftDown();
-        void ShiftLeft();
-        void ShiftRight();
+        void ShiftPixelsUp();
+        void ShiftPixelsDown();
+        void ShiftPixelsLeft();
+        void ShiftPixelsRight();
 
         byte[] ClonePixelData();
 
