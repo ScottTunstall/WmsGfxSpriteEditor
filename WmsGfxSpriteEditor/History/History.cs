@@ -9,7 +9,7 @@ namespace WmsGfxSpriteEditor.History
         /// <summary>
         /// Points to the current item in history
         /// </summary>
-        public int Index { get; set; } = -1;
+        public int Index { get; private set; } = -1;
 
         public void Add(HistoryItem item)
         {
@@ -28,6 +28,19 @@ namespace WmsGfxSpriteEditor.History
             DumpHistory();
         }
 
+        public HistoryItem? Last(Func<HistoryItem, bool> predicate)
+        {
+            for (int i = _historyItems.Count - 1; i >= 0; i--)
+            {
+                HistoryItem item = _historyItems[i];
+                if (predicate(item))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
 
         public bool CanGoBack => Index > 0;
 
@@ -42,6 +55,7 @@ namespace WmsGfxSpriteEditor.History
 
             --Index;
             Debug.WriteLine("Back() - History index is now {0}", Index);
+            DumpHistory();
             HistoryItem item = _historyItems[Index];
             return item;
         }
@@ -55,6 +69,7 @@ namespace WmsGfxSpriteEditor.History
 
             Index++;
             Debug.WriteLine("Forward() - History index is now {0}", Index);
+            DumpHistory();
             HistoryItem item = _historyItems[Index];
             return item;
         }
@@ -65,6 +80,7 @@ namespace WmsGfxSpriteEditor.History
             Index = -1;
             DumpHistory();
         }
+
 
 
         [Conditional("DEBUG")]
