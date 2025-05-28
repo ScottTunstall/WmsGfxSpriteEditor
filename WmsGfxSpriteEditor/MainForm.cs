@@ -332,7 +332,8 @@ namespace WmsGfxSpriteEditor
 
         private void FlipSpriteHorizontal()
         {
-            throw new NotImplementedException();
+            _sprite!.XFlip();
+            Invalidate();
         }
 
         private void FlipSpriteVertical()
@@ -343,25 +344,25 @@ namespace WmsGfxSpriteEditor
 
         private void ShiftSpriteLeft()
         {
-            _sprite!.ShiftLeft();
+            _sprite!.ShiftPixelsLeft();
             Invalidate();
         }
 
         private void ShiftSpriteRight()
         {
-            _sprite!.ShiftRight();
+            _sprite!.ShiftPixelsRight();
             Invalidate();
         }
 
         private void ShiftSpriteUp()
         {
-            _sprite!.ShiftUp();
+            _sprite!.ShiftPixelsUp();
             Invalidate();
         }
 
         private void ShiftSpriteDown()
         {
-            _sprite!.ShiftDown();
+            _sprite!.ShiftPixelsDown();
             Invalidate();
         }
 
