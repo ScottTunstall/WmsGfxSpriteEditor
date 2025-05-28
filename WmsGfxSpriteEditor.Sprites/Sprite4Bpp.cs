@@ -102,23 +102,48 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void XFlip()
         {
-            throw new NotImplementedException();
+            // No need to flip a 1px wide sprite
+            if (Width <= 1)
+            {
+                return;
+            }
+
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
+            
+            int sourceOffset = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                int destOffset = sourceOffset + WidthInBytes - 1;
+                for (int x = 0; x < WidthInBytes; x++)
+                {
+                    byte leftByte = PixelData.Span[sourceOffset + x];
+                    byte swapped = leftByte.SwapNibbles();
+                    newSpriteData[destOffset--] = swapped;
+                }
+
+                sourceOffset += WidthInBytes;
+            }
+
+            newSpriteData.CopyTo(PixelData.Span);
+            IsPixelDataDirty = true;
         }
 
         public void YFlip()
         {
-            // No need to flip a single height sprite
+            // No need to flip a 1px high sprite
             if (Height <= 1) 
             {
                 return;
             }
 
-            var newSpriteData = new byte[PixelData.Span.Length];
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
             int sourceOffset = 0;
             int destOffset = PixelData.Span.Length - WidthInBytes;
             for (int y = 0; y < Height; y++)
             {
-                PixelData.Span.Slice(sourceOffset, WidthInBytes).CopyTo(newSpriteData.AsSpan(destOffset, WidthInBytes));
+                Span<byte> source = PixelData.Span.Slice(sourceOffset, WidthInBytes);
+                Span<byte> destination = newSpriteData.AsSpan(destOffset, WidthInBytes);
+                source.CopyTo(destination);
                 sourceOffset += WidthInBytes;
                 destOffset -= WidthInBytes;
             }
@@ -129,11 +154,12 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void ShiftPixelsUp()
         {
-            var newSpriteData = new byte[PixelData.Span.Length];
+            byte[] newSpriteData = new byte[PixelData.Span.Length];
             if (Height > 1)
             {
-                var destination = newSpriteData.AsSpan(0, PixelData.Span.Length - WidthInBytes);
-                PixelData.Span.Slice(WidthInBytes).CopyTo(destination);
+                Span<byte> source = PixelData.Span.Slice(WidthInBytes);
+                Span<byte> destination = newSpriteData.AsSpan(0, PixelData.Span.Length - WidthInBytes);
+                source.CopyTo(destination);
             }
 
             newSpriteData.CopyTo(PixelData.Span);
@@ -145,8 +171,9 @@ namespace WmsGfxSpriteEditor.Sprites
             byte[] newSpriteData = new byte[PixelData.Span.Length];
             if (Height > 1)
             {
+                Span<byte> source = PixelData.Span.Slice(0, PixelData.Span.Length - WidthInBytes);
                 Span<byte> destination = newSpriteData.AsSpan(WidthInBytes, PixelData.Span.Length - WidthInBytes);
-                PixelData.Span.Slice(0, PixelData.Span.Length - WidthInBytes).CopyTo(destination);
+                source.CopyTo(destination);
             }
 
             newSpriteData.CopyTo(PixelData.Span);
