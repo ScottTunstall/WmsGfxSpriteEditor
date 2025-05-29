@@ -323,23 +323,23 @@ namespace WmsGfxSpriteEditor
 
         protected void Undo()
         {
-            HistoryItem? item = _history.Back();
-            if (item == null)
+            if (!_history.CanGoBack)
             {
                 throw new InvalidOperationException("No history item to undo.");
             }
 
-            SetStateFromHistory(item);
+            HistoryItem? item = _history.Back();
+            SetStateFromHistory(item!);
         }
 
         protected void Redo()
         {
-            HistoryItem item = _history.Forward()!;
-            if (item == null)
+            if (!_history.CanGoForward)
             {
                 throw new InvalidOperationException("No history item to redo.");
             }
 
+            HistoryItem item = _history.Forward()!;
             SetStateFromHistory(item!);
         }
 
