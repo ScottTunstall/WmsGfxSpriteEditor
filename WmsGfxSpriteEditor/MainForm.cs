@@ -20,23 +20,23 @@ namespace WmsGfxSpriteEditor
         private RomData? _romData;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
-        // User selections
-        protected Color SelectedColour { get; private set; } = Color.Black;
 
-        protected IReadOnlyList<SpriteInfo> AllSprites { get; private set; } = [];
-        protected bool HaveSpritesToSelect => AllSprites.Count > 0;
-        protected int PaletteIndex { get; private set; }
-        protected SpriteInfo? SpriteInfo { get; private set; }
-        protected ISprite? Sprite { get; private set; }
-        protected UInt128 SpriteHash { get; private set; }
-        protected int SpriteIndex { get; private set; }
+        protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
+
+
+        // User selections
+        protected Color ActivePaletteColour { get; private set; } = Color.Black;
+        protected int ActivePaletteIndex { get; private set; }
+        protected int ActiveSpriteIndex { get; private set; }
+        protected SpriteInfo? ActiveSpriteInfo { get; private set; }
+        protected ISprite? ActiveSprite { get; private set; }
         protected int ZoomLevel { get; private set; } = 3;
 
         private bool _suppressControlChangeEvents;
         private readonly History.History _history = new();
 
         // Palette
-        private Color[] _palette = default!;
+        protected Color[] Palette { get; private set; } = default!;
 
         public MainForm()
         {
@@ -167,7 +167,7 @@ namespace WmsGfxSpriteEditor
             if (_suppressControlChangeEvents)
                 return;
 
-            SelectSpriteByIndex(cboSprite.SelectedIndex, false);
+            SelectActiveSpriteByIndex(cboSprite.SelectedIndex, false);
         }
 
         #endregion SPRITE COMBO BOX EVENT HANDLERS
@@ -186,18 +186,6 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE EDITOR EVENT HANDLERS
 
-        private void SpriteDisplay_GridCellMouseMove(object sender, SpriteGridMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ContinueDrawOp(e.GridCell.X, e.GridCell.Y, PaletteIndex);
-                // Don't need to fire OnSpriteChanged, wait until the MouseUp for that.
-            }
-
-            UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
-        }
-
-
         private void spriteDisplay_GridCellMouseDown(object sender, SpriteGridMouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
@@ -205,10 +193,20 @@ namespace WmsGfxSpriteEditor
                 return;
             }
 
-            BeginDrawOp(e.GridCell.X, e.GridCell.Y, PaletteIndex);
+            BeginDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
         }
 
+        private void SpriteDisplay_GridCellMouseMove(object sender, SpriteGridMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ContinueDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
+                // Don't need to fire OnSpriteChanged, wait until the MouseUp for that.
+            }
+
+            UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
+        }
 
         private void spriteDisplay_GridCellMouseUp(object sender, SpriteGridMouseEventArgs e)
         {
@@ -216,22 +214,21 @@ namespace WmsGfxSpriteEditor
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
         }
 
-
-        #endregion
+        #endregion SPRITE EDITOR EVENT HANDLERS
 
         #region PALETTE FUNCS
 
-        private void SelectPalette(Color selectedColour, int colourIndex)
+        protected void SelectPalette(Color selectedColour, int colourIndex)
         {
-            SelectedColour = selectedColour;
-            PaletteIndex = colourIndex;
+            ActivePaletteColour = selectedColour;
+            ActivePaletteIndex = colourIndex;
         }
 
         #endregion PALETTE FUNCS
 
         #region FILE MENU INVOKED FUNCS
 
-        private void BrowseForRobotronRom(string label, RomSetType romSetType)
+        protected void BrowseForRobotronRom(string label, RomSetType romSetType)
         {
             IRomService service = RomServiceFactory.Create(romSetType);
 
@@ -245,7 +242,7 @@ namespace WmsGfxSpriteEditor
             OnBeginEdit(label, romData, service, dependencies);
         }
 
-        private RomData? LoadRomData(string romSetName, IRomService romService)
+        protected virtual RomData? LoadRomData(string romSetName, IRomService romService)
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder containing the {romSetName} ROM files";
@@ -274,7 +271,7 @@ namespace WmsGfxSpriteEditor
             return romData;
         }
 
-        private void SaveRomData()
+        protected virtual void SaveRomData()
         {
             using FolderBrowserDialog folderDialog = new();
             folderDialog.Description = $"Select the folder to write the {_romSetName} ROM files.";
@@ -286,7 +283,7 @@ namespace WmsGfxSpriteEditor
             _romService!.SaveRomData(_romData!, directory);
         }
 
-        private void OnBeginEdit(string romSetName, RomData romData, IRomService romService, SpriteEditorDependencies editorDependencies)
+        protected virtual void OnBeginEdit(string romSetName, RomData romData, IRomService romService, SpriteEditorDependencies editorDependencies)
         {
             _suppressControlChangeEvents = true;
 
@@ -299,19 +296,19 @@ namespace WmsGfxSpriteEditor
 
             _romService = romService;
             _spriteFactory = editorDependencies.SpriteFactory;
-            _palette = editorDependencies.PaletteService.GetPalette();
-            pnlPalette.Palette = _palette;
+            Palette = editorDependencies.PaletteService.GetPalette();
+            pnlPalette.Palette = Palette;
             _spriteRenderer = editorDependencies.SpriteRenderer;
 
             List<SpriteInfo> allSprites = editorDependencies.SpriteRepository.GetAllSprites().ToList();
             SpriteInfo spriteInfo = SetSpriteSelectDropdown(allSprites);
-            SpriteInfo = spriteInfo;
+            ActiveSpriteInfo = spriteInfo;
 
-            Sprite = CreateSpriteFromRomData();
+            ActiveSprite = CreateSpriteFromRomData();
 
             spriteDisplay.SpriteRenderer = _spriteRenderer;
-            spriteDisplay.Sprite = Sprite;
-            spriteDisplay.Palette = _palette;
+            spriteDisplay.Sprite = ActiveSprite;
+            spriteDisplay.Palette = Palette;
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = ZoomLevel;
 
@@ -324,7 +321,7 @@ namespace WmsGfxSpriteEditor
 
         #region EDIT MENU INVOKED FUNCS
 
-        private void Undo()
+        protected void Undo()
         {
             HistoryItem? item = _history.Back();
             if (item == null)
@@ -335,7 +332,7 @@ namespace WmsGfxSpriteEditor
             SetStateFromHistory(item);
         }
 
-        private void Redo()
+        protected void Redo()
         {
             HistoryItem item = _history.Forward()!;
             if (item == null)
@@ -346,16 +343,16 @@ namespace WmsGfxSpriteEditor
             SetStateFromHistory(item!);
         }
 
-        private void CopySpriteToClipboard()
+        protected void CopySpriteToClipboard()
         {
-            _clipboardService!.Copy(Sprite!, _palette);
+            _clipboardService!.Copy(ActiveSprite!, Palette);
         }
 
         #endregion EDIT MENU INVOKED FUNCS
 
         #region VIEW MENU INVOKED FUNCS
 
-        private void SetZoom(int zoomLevel, bool syncZoomControl = true)
+        protected void SetZoom(int zoomLevel, bool syncZoomControl = true)
         {
             ZoomLevel = zoomLevel;
             if (syncZoomControl)
@@ -379,39 +376,57 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE MENU INVOKED FUNCS
 
-        private void FlipSpriteHorizontal()
+        protected void FlipSpriteHorizontal()
         {
-            Sprite!.XFlip();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.XFlip();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
-        private void FlipSpriteVertical()
+        protected void FlipSpriteVertical()
         {
-            Sprite!.YFlip();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.YFlip();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
-        private void ShiftSpriteLeft()
+        protected void ShiftSpriteLeft()
         {
-            Sprite!.ShiftPixelsLeft();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.ShiftPixelsLeft();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
-        private void ShiftSpriteRight()
+        protected void ShiftSpriteRight()
         {
-            Sprite!.ShiftPixelsRight();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.ShiftPixelsRight();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
-        private void ShiftSpriteUp()
+        protected void ShiftSpriteUp()
         {
-            Sprite!.ShiftPixelsUp();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.ShiftPixelsUp();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
-        private void ShiftSpriteDown()
+        protected void ShiftSpriteDown()
         {
-            Sprite!.ShiftPixelsDown();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            ActiveSprite!.ShiftPixelsDown();
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
             OnSpritePixelDataChanged();
         }
 
@@ -419,9 +434,9 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
 
-        private SpriteInfo SetSpriteSelectDropdown(List<SpriteInfo> spriteInfos, int index = 0)
+        protected SpriteInfo SetSpriteSelectDropdown(List<SpriteInfo> spriteInfos, int index = 0)
         {
-            AllSprites = spriteInfos;
+            AvailableSprites = spriteInfos;
 
             cboSprite.DataSource = null;
             cboSprite.DisplayMember = "ToString";
@@ -430,28 +445,28 @@ namespace WmsGfxSpriteEditor
 
             SetSpriteSelectComboBox(index);
 
-            SpriteIndex = index;
+            ActiveSpriteIndex = index;
             SpriteInfo spriteInfo = spriteInfos[index]!;
             return spriteInfo;
         }
 
-        private void SelectSpriteByIndex(int index, bool syncControls = true)
+        protected void SelectActiveSpriteByIndex(int index, bool syncControls = true)
         {
-            SpriteIndex = index;
-            SpriteInfo = AllSprites[index]!;
+            ActiveSpriteIndex = index;
+            ActiveSpriteInfo = AvailableSprites[index]!;
 
             if (syncControls)
             {
                 SetSpriteSelectComboBox(index);
             }
 
-            if (SpriteInfo != null)
+            if (ActiveSpriteInfo != null)
             {
-                SetSpriteDisplay(CreateSpriteFromRomData());
+                SetActiveSpriteDisplay(CreateSpriteFromRomData());
             }
             else
             {
-                SetSpriteDisplay(null);
+                SetActiveSpriteDisplay(null);
             }
 
             OnSpriteSelectionChanged();
@@ -465,81 +480,108 @@ namespace WmsGfxSpriteEditor
             _suppressControlChangeEvents = oldValue;
         }
 
-        private void SetSpriteDisplay(ISprite? sprite)
+        private void SetActiveSpriteDisplay(ISprite? sprite)
         {
-            Sprite = sprite;
-            SpriteHash = 0;
+            ActiveSprite = sprite;
             spriteDisplay.Sprite = sprite;
             OnSpritePixelDataChanged();
-        }
-
-        /// <summary>
-        /// Updates the status bar with complete sprite information
-        /// </summary>
-        private void UpdateStatusBarSpriteInfo()
-        {
-            if (SpriteInfo == null)
-            {
-                StatusLabel.Text = "No sprite selected.";
-            }
-            else
-            {
-                // Include the sprite offset in both hex and decimal format
-                StatusLabel.Text = $"Sprite: {SpriteInfo.Name} | Offset: 0x{SpriteInfo.Offset:X4} ({SpriteInfo.Offset}) | " +
-                                   $"Size: {SpriteInfo.WidthInPixels}x{SpriteInfo.Height} pixels " +
-                                   $"({SpriteInfo.WidthInBytes} bytes x {SpriteInfo.Height} rows) | " +
-                                   $"Format: {(SpriteInfo.IsLinear ? "Linear" : "Non-linear")}";
-            }
         }
 
         #endregion SPRITE SELECT COMBO BOX INVOKED FUNCS
 
         #region SPRITE EDITOR INVOKED FUNCS
 
-        private void BeginDrawOp(int startX, int startY, int paletteIndex)
+        protected virtual void BeginDrawOp(int startX, int startY, int paletteIndex)
         {
-            UInt128 spriteHash = Sprite!.GetPixelDataHash();
-            if (SpriteHash != spriteHash)
+            SaveActiveSpritePixelDataSnapshotToHistory();
+
+            ActiveSprite!.SetPixelByPaletteIndex(startX, startY, paletteIndex);
+
+            UpdateStatusBarGridCoordinates(startX, startY);
+            OnSpritePixelDataChanged();
+        }
+
+
+        protected virtual void ContinueDrawOp(int x, int y, int paletteIndex)
+        {
+            ActiveSprite!.SetPixelByPaletteIndex(x, y, paletteIndex);
+            OnSpritePixelDataChanged();
+        }
+
+        protected virtual void EndDrawOp()
+        {
+            SaveActiveSpritePixelDataSnapshotToHistory();
+            OnSpritePixelDataChanged();
+        }
+
+        #endregion SPRITE EDITOR INVOKED FUNCS
+
+        #region HISTORY
+
+        protected void SaveActiveSpritePixelDataSnapshotToHistory()
+        {
+            HistoryItem? historyItem = _history.Last(x => x.SpriteIndex == ActiveSpriteIndex && x.OperationType == OperationType.SpritePixelDataSnapshot);
+            UInt128 spriteHash = ActiveSprite!.GetPixelDataHash();
+
+            if (historyItem == null || historyItem.PixelDataHash != spriteHash)
             {
-                _history.Add(HistoryItem.CreateBeforeSpritePixelDataChangedHistoryItem(Sprite!.ClonePixelData(), spriteHash, SpriteIndex));
-                SpriteHash = Sprite.GetPixelDataHash();
+                _history.Add(HistoryItem.CreateSpritePixelDataChangedHistoryItem(ActiveSprite!.ClonePixelData(), spriteHash, ActiveSpriteIndex));
             }
-
-            Sprite!.SetPixelByPaletteIndex(startX, startY, paletteIndex);
-
-            OnSpritePixelDataChanged();
         }
 
-        private void ContinueDrawOp(int x, int y, int paletteIndex)
+        protected virtual void SetStateFromHistory(HistoryItem item)
         {
-            Sprite!.SetPixelByPaletteIndex(x, y, paletteIndex);
-            OnSpritePixelDataChanged();
-        }
-
-        private void EndDrawOp()
-        {
-            UInt128 spriteHash = Sprite!.GetPixelDataHash();
-            if (SpriteHash != spriteHash)
+            switch (item.OperationType)
             {
-                _history.Add(HistoryItem.CreateAfterSpritePixelDataChangedHistoryItem(Sprite!.ClonePixelData(), spriteHash, SpriteIndex));
-                SpriteHash = spriteHash;
-                OnSpritePixelDataChanged();
+                case OperationType.SpritePixelDataSnapshot:
+                    RestoreSpriteFromHistoryItem(item);
+                    break;
+            }
+        }
+
+        private void RestoreSpriteFromHistoryItem(HistoryItem item)
+        {
+            int offset = AvailableSprites[item.SpriteIndex].Offset;
+            _romData!.PokeBytes(offset, item.PixelData!);
+            SelectActiveSpriteByIndex(item.SpriteIndex, true);
+            OnSpritePixelDataChanged();
+        }
+
+        #endregion HISTORY
+
+        #region STATUS BAR
+
+        /// <summary>
+        /// Updates the status bar with complete sprite information
+        /// </summary>
+        private void UpdateStatusBarSpriteInfo()
+        {
+            if (ActiveSpriteInfo == null)
+            {
+                StatusLabel.Text = "No sprite selected.";
+            }
+            else
+            {
+                // Include the sprite offset in both hex and decimal format
+                StatusLabel.Text = $"Sprite: {ActiveSpriteInfo.Name} | Offset: 0x{ActiveSpriteInfo.Offset:X4} ({ActiveSpriteInfo.Offset}) | " +
+                                   $"Size: {ActiveSpriteInfo.WidthInPixels}x{ActiveSpriteInfo.Height} pixels " +
+                                   $"({ActiveSpriteInfo.WidthInBytes} bytes x {ActiveSpriteInfo.Height} rows) | " +
+                                   $"Format: {(ActiveSpriteInfo.IsLinear ? "Linear" : "Non-linear")}";
             }
         }
 
         private void UpdateStatusBarGridCoordinates(int x, int y)
         {
             // Convert zero based coordinates to 1 based
-            CoordinatesLabel.Text = $"X: {x+ 1}  Y: {y + 1}";
+            CoordinatesLabel.Text = $"X: {x + 1}  Y: {y + 1}";
         }
 
-        #endregion
-
+        #endregion STATUS BAR
 
         protected virtual void OnRomSetLoaded()
         {
-            cboSprite.Enabled = HaveSpritesToSelect;
-            nudZoom.Enabled = Sprite != null;
+            cboSprite.Enabled = AvailableSprites.Count>0;
+            nudZoom.Enabled = ActiveSprite != null;
 
             OnPaletteChanged();
             OnSpriteSelectionChanged();
@@ -548,7 +590,7 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnZoomChanged()
         {
-            bool haveSprite = Sprite != null;
+            bool haveSprite = ActiveSprite != null;
             mnuViewZoomIn.Enabled = haveSprite && ZoomLevel < nudZoom.Maximum;
             mnuViewZoomOut.Enabled = haveSprite && ZoomLevel > nudZoom.Minimum;
             spriteDisplay.ZoomLevel = ZoomLevel;
@@ -557,12 +599,12 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnPaletteChanged()
         {
-            pnlPalette.Enabled = Sprite != null && _palette.Length >= 2;
+            pnlPalette.Enabled = ActiveSprite != null && Palette.Length >= 2;
         }
 
         protected virtual void OnSpriteSelectionChanged()
         {
-            bool haveSprite = Sprite != null;
+            bool haveSprite = ActiveSprite != null;
             mnuSpriteFlipHorizontal.Enabled = haveSprite;
             mnuSpriteFlipVertical.Enabled = haveSprite;
             mnuSpriteShiftUp.Enabled = haveSprite;
@@ -577,29 +619,11 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnSpritePixelDataChanged()
         {
-            mnuEditUndo.Enabled = Sprite != null && _history.CanGoBack;
-            mnuEditRedo.Enabled = Sprite != null && _history.CanGoForward;
+            mnuEditUndo.Enabled = ActiveSprite != null && _history.CanGoBack;
+            mnuEditRedo.Enabled = ActiveSprite != null && _history.CanGoForward;
 
             spriteDisplay.Invalidate();
         }
-
-        #region HISTORY
-
-        private void SetStateFromHistory(HistoryItem item)
-        {
-            switch (item.OperationType)
-            {
-                case OperationType.BeforeSpritePixelDataChanged:
-                case OperationType.AfterSpritePixelDataChanged:
-                    int offset = AllSprites[item.SpriteIndex].Offset;
-                    _romData!.PokeBytes(offset, item.PixelData!);
-                    SelectSpriteByIndex(item.SpriteIndex, true);
-                    OnSpritePixelDataChanged();
-                    break;
-            }
-        }
-
-        #endregion HISTORY
 
         private void DisableEditingControls()
         {
@@ -617,7 +641,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return _spriteFactory!.CreateSpriteFromRomData(_romData!, SpriteInfo!);
+            return _spriteFactory!.CreateSpriteFromRomData(_romData!, ActiveSpriteInfo!);
         }
 
         #endregion ROM
