@@ -11,6 +11,8 @@ namespace WmsGfxSpriteEditor.History
         /// </summary>
         public int Index { get; private set; } = -1;
 
+        public int Count => _historyItems.Count;
+
         public void Add(HistoryItem item)
         {
             // If Index is not equal to the last item in the list, the user has gone back in history with the undo function. 
@@ -28,9 +30,29 @@ namespace WmsGfxSpriteEditor.History
             DumpHistory();
         }
 
-        public HistoryItem? Last(Func<HistoryItem, bool> predicate)
+
+        /// <summary>
+        /// Returns the last <see cref="HistoryItem"/> in the history that matches the specified predicate, searching backward from a given start index.
+        /// </summary>
+        /// <param name="predicate">A function to test each <see cref="HistoryItem"/> for a condition.</param>
+        /// <param name="startIndex">The index to start searching backward from. If less than 0, starts from the item before the current <see cref="Index"/>.</param>
+        /// <returns>The last <see cref="HistoryItem"/> that matches the predicate, or <c>null</c> if no match is found.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="startIndex"/> is 0 or greater than or equal to the number of history items.</exception>
+        public HistoryItem? Last(Func<HistoryItem, bool> predicate, int startIndex = -1)
         {
-            for (int i = _historyItems.Count - 1; i >= 0; i--)
+            if (startIndex <0)
+            {
+                startIndex = Index; // Start from the last added item 
+            }
+
+            if (startIndex >= _historyItems.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex), "Start index is out of range.");
+            }
+
+            Debug.WriteLine("Looking for {0} starting from {1}", predicate, startIndex);
+
+            for (int i = startIndex; i >= 0; i--)
             {
                 HistoryItem item = _historyItems[i];
                 if (predicate(item))
@@ -38,6 +60,8 @@ namespace WmsGfxSpriteEditor.History
                     return item;
                 }
             }
+
+
             return null;
         }
 
@@ -50,7 +74,7 @@ namespace WmsGfxSpriteEditor.History
         {
             if (Index == 0)
             {
-                return null;
+                throw new InvalidOperationException($"Cannot go back, {nameof(Index)} is zero.");
             }
 
             --Index;
@@ -62,9 +86,9 @@ namespace WmsGfxSpriteEditor.History
 
         public HistoryItem? Forward()
         {
-            if (Index >= _historyItems.Count)
+            if (Index >= _historyItems.Count-1)
             {
-                return null;
+                throw new InvalidOperationException($"Cannot go forward, {nameof(Index)} is at the end of the history.");
             }
 
             Index++;
