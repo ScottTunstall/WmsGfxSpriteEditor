@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace WmsGfxSpriteEditor.History
 {
-    public class History
+    public class History : IHistory
     {
         private readonly List<HistoryItem> _historyItems = new();
 
