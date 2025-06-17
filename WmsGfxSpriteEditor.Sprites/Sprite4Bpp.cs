@@ -11,7 +11,7 @@ namespace WmsGfxSpriteEditor.Sprites
         private Sprite4Bpp()
         { }
 
-        public Sprite4Bpp(Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
+        public Sprite4Bpp(int spriteIndex, Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
         {
             if (pixelData.Length != widthInBytes * height)
             {
@@ -21,6 +21,7 @@ namespace WmsGfxSpriteEditor.Sprites
             ArgumentOutOfRangeException.ThrowIfLessThan(widthInBytes,1);
             ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
 
+            SpriteIndex = spriteIndex; 
             PixelData = pixelData;
             WidthInBytes = widthInBytes;
             Height = height;
@@ -29,8 +30,8 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public int BitsPerPixel => 4;
 
+        public int SpriteIndex { get; }
         public Memory<byte> PixelData { get; }
-
         public int Width => WidthInBytes * 2; // Each byte contains 2 pixels
         public int WidthInBytes { get; }
         public int Height { get; }
