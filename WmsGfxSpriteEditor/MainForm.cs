@@ -1,9 +1,10 @@
-using System.Text;
+using WmsGfxSpriteEditor.Commands.Sprite;
+using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.Roms.Robotron2084;
 using WmsGfxSpriteEditor.Sprites;
-using static System.Windows.Forms.AxHost;
+using WmsGfxSpriteEditor.Sprites.Commands;
 
 namespace WmsGfxSpriteEditor
 {
@@ -33,7 +34,7 @@ namespace WmsGfxSpriteEditor
         protected int ZoomLevel { get; private set; } = 3;
 
         private bool _suppressControlChangeEvents;
-        private readonly History.History _history = new();
+        private readonly IHistory _history = new History.History();
 
         // Palette
         protected Color[] Palette { get; private set; } = default!;
@@ -140,12 +141,12 @@ namespace WmsGfxSpriteEditor
 
         private void mnuSpriteShiftLeft_Click(object sender, EventArgs e)
         {
-            ShiftSpriteLeft();
+            ShiftSpritePixelsLeft();
         }
 
         private void mnuSpriteShiftRight_Click(object sender, EventArgs e)
         {
-            ShiftSpriteRight();
+            ShiftSpritePixelsRight();
         }
 
         private void mnuSpriteShiftUp_Click(object sender, EventArgs e)
@@ -244,43 +245,37 @@ namespace WmsGfxSpriteEditor
 
         protected virtual RomData? LoadRomData(string romSetName, IRomService romService)
         {
-            using FolderBrowserDialog folderDialog = new();
-            folderDialog.Description = $"Select the folder containing the {romSetName} ROM files";
-            folderDialog.UseDescriptionForTitle = true;
+            string? directory = new LoadRomDialog(romSetName).BrowseForFolder();
+            if (directory == null)
+            {
+                return null;
+            }
 
-            if (folderDialog.ShowDialog() != DialogResult.OK) return null;
-
-            string directory = folderDialog.SelectedPath;
             RomFileAuditInfo auditInfo = romService.Audit(directory);
 
             if (auditInfo.MissingRomFiles.Length > 0)
             {
-                StringBuilder sb = new("MISSING FILES:");
-                sb.Append(Environment.NewLine);
-                sb.Append(Environment.NewLine);
-                sb.AppendJoin(Environment.NewLine, auditInfo.MissingRomFiles);
-
-                MessageBox.Show(sb.ToString(), $"Could not load {romSetName} ROM files.", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                new MissingFilesDialog(romSetName).ShowDialog(auditInfo.MissingRomFiles, this);
                 return null;
             }
 
             RomData romData = romService.LoadRomData(directory);
 
-            MessageBox.Show($"Loaded {romSetName} ROM files successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            new InformationDialog().ShowDialog($"Loaded {romSetName} ROM files successfully.", "Success", this);
             return romData;
         }
 
         protected virtual void SaveRomData()
         {
-            using FolderBrowserDialog folderDialog = new();
-            folderDialog.Description = $"Select the folder to write the {_romSetName} ROM files.";
-
-            if (folderDialog.ShowDialog() != DialogResult.OK) return;
-
-            string directory = folderDialog.SelectedPath;
+            string? directory = new SaveRomDialog(_romSetName).BrowseForFolder();
+            if (directory == null)
+            {
+                return;
+            }
 
             _romService!.SaveRomData(_romData!, directory);
+
+            new InformationDialog().ShowDialog($"Saved {_romSetName} ROM files successfully.", "Success", this);
         }
 
         protected virtual void OnBeginEdit(string romSetName, RomData romData, IRomService romService, SpriteEditorDependencies editorDependencies)
@@ -378,55 +373,37 @@ namespace WmsGfxSpriteEditor
 
         protected void FlipSpriteHorizontal()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.XFlip();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new FlipSpriteHorizontalCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void FlipSpriteVertical()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.YFlip();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new FlipSpriteVerticalCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
-        protected void ShiftSpriteLeft()
+        protected void ShiftSpritePixelsLeft()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.ShiftPixelsLeft();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new ShiftSpritePixelsLeftCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
-        protected void ShiftSpriteRight()
+        protected void ShiftSpritePixelsRight()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.ShiftPixelsRight();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new ShiftSpritePixelsRightCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteUp()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.ShiftPixelsUp();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new ShiftSpritePixelsUpCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteDown()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
-            ActiveSprite!.ShiftPixelsDown();
-            SaveActiveSpritePixelDataSnapshotToHistory();
-
+            new ShiftSpritePixelsDownCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
@@ -641,7 +618,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return _spriteFactory!.CreateSpriteFromRomData(_romData!, ActiveSpriteInfo!);
+            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory).FromSpriteInfo(ActiveSpriteInfo!);
         }
 
         #endregion ROM

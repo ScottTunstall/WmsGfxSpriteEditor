@@ -195,25 +195,17 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuSprite
             // 
-            mnuSprite.DropDownItems.AddRange(new ToolStripItem[] {
-                mnuSpriteFlipHorizontal,
-                mnuSpriteFlipVertical,
-                mnuSpriteSeparator,
-                mnuSpriteShiftLeft,
-                mnuSpriteShiftRight,
-                mnuSpriteShiftUp,
-                mnuSpriteShiftDown
-            });
+            mnuSprite.DropDownItems.AddRange(new ToolStripItem[] { mnuSpriteFlipHorizontal, mnuSpriteFlipVertical, mnuSpriteSeparator, mnuSpriteShiftLeft, mnuSpriteShiftRight, mnuSpriteShiftUp, mnuSpriteShiftDown });
             mnuSprite.Name = "mnuSprite";
             mnuSprite.ShortcutKeys = Keys.Alt | Keys.S;
-            mnuSprite.Size = new Size(52, 20);
+            mnuSprite.Size = new Size(49, 20);
             mnuSprite.Text = "&Sprite";
             // 
             // mnuSpriteFlipHorizontal
             // 
             mnuSpriteFlipHorizontal.Name = "mnuSpriteFlipHorizontal";
             mnuSpriteFlipHorizontal.ShortcutKeys = Keys.Control | Keys.Shift | Keys.H;
-            mnuSpriteFlipHorizontal.Size = new Size(250, 22);
+            mnuSpriteFlipHorizontal.Size = new Size(276, 22);
             mnuSpriteFlipHorizontal.Text = "Flip &Horizontal";
             mnuSpriteFlipHorizontal.Click += mnuSpriteFlipHorizontal_Click;
             // 
@@ -221,20 +213,20 @@ namespace WmsGfxSpriteEditor
             // 
             mnuSpriteFlipVertical.Name = "mnuSpriteFlipVertical";
             mnuSpriteFlipVertical.ShortcutKeys = Keys.Control | Keys.Shift | Keys.V;
-            mnuSpriteFlipVertical.Size = new Size(250, 22);
+            mnuSpriteFlipVertical.Size = new Size(276, 22);
             mnuSpriteFlipVertical.Text = "Flip &Vertical";
             mnuSpriteFlipVertical.Click += mnuSpriteFlipVertical_Click;
             // 
             // mnuSpriteSeparator
             // 
             mnuSpriteSeparator.Name = "mnuSpriteSeparator";
-            mnuSpriteSeparator.Size = new Size(247, 6);
+            mnuSpriteSeparator.Size = new Size(273, 6);
             // 
             // mnuSpriteShiftLeft
             // 
             mnuSpriteShiftLeft.Name = "mnuSpriteShiftLeft";
             mnuSpriteShiftLeft.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Left;
-            mnuSpriteShiftLeft.Size = new Size(250, 22);
+            mnuSpriteShiftLeft.Size = new Size(276, 22);
             mnuSpriteShiftLeft.Text = "Shift all pixels &Left";
             mnuSpriteShiftLeft.Click += mnuSpriteShiftLeft_Click;
             // 
@@ -242,7 +234,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuSpriteShiftRight.Name = "mnuSpriteShiftRight";
             mnuSpriteShiftRight.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Right;
-            mnuSpriteShiftRight.Size = new Size(250, 22);
+            mnuSpriteShiftRight.Size = new Size(276, 22);
             mnuSpriteShiftRight.Text = "Shift all pixels &Right";
             mnuSpriteShiftRight.Click += mnuSpriteShiftRight_Click;
             // 
@@ -250,7 +242,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuSpriteShiftUp.Name = "mnuSpriteShiftUp";
             mnuSpriteShiftUp.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Up;
-            mnuSpriteShiftUp.Size = new Size(250, 22);
+            mnuSpriteShiftUp.Size = new Size(276, 22);
             mnuSpriteShiftUp.Text = "Shift all pixels &Up";
             mnuSpriteShiftUp.Click += mnuSpriteShiftUp_Click;
             // 
@@ -258,7 +250,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuSpriteShiftDown.Name = "mnuSpriteShiftDown";
             mnuSpriteShiftDown.ShortcutKeys = Keys.Control | Keys.Shift | Keys.Down;
-            mnuSpriteShiftDown.Size = new Size(250, 22);
+            mnuSpriteShiftDown.Size = new Size(276, 22);
             mnuSpriteShiftDown.Text = "Shift all pixels &Down";
             mnuSpriteShiftDown.Click += mnuSpriteShiftDown_Click;
             // 
