@@ -209,3 +209,6 @@ dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
 dotnet_style_namespace_match_folder = true:suggestion
+
+# Disable CA1852 (Type 'Program' can be sealed because it has no accessible constructors and no virtual or abstract members)
+dotnet_diagnostic.CA1852.severity = none
