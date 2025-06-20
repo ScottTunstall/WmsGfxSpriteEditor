@@ -2,18 +2,19 @@ using WmsGfxSpriteEditor.History;
 
 namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    internal abstract class UndoableSpriteCommand
+    /// <summary>
+    /// Helper class for sprite commands to provide undo/redo support via composition.
+    /// </summary>
+    internal class UndoableSpriteHelper
     {
         private readonly IHistory _history;
 
-        protected UndoableSpriteCommand(IHistory history)
+        public UndoableSpriteHelper(IHistory history)
         {
             _history = history ?? throw new ArgumentNullException(nameof(history));
         }
 
-        public abstract void Execute(ISprite sprite);
-
-        protected void ExecuteActionWithUndoRedo(ISprite sprite, Action actionToExecute)
+        public void ExecuteActionWithUndoRedo(ISprite sprite, Action actionToExecute)
         {
             // for undo
             SnapshotPixelDataIfChanged(sprite);
@@ -29,7 +30,7 @@ namespace WmsGfxSpriteEditor.Sprites.Commands
         /// Take a snapshot of the sprite's pixel data, if it has changed
         /// </summary>
         /// <param name="sprite"></param>
-        private void SnapshotPixelDataIfChanged(ISprite sprite)
+        public void SnapshotPixelDataIfChanged(ISprite sprite)
         {
             HistoryItem? historyItem = _history.Last(x => x.SpriteIndex == sprite.SpriteIndex && x.OperationType == OperationType.SpritePixelDataSnapshot);
             UInt128 spriteHash = sprite.GetPixelDataHash();
