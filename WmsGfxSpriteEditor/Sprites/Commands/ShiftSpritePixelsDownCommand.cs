@@ -1,16 +1,17 @@
-using System.Security.Policy;
-using WmsGfxSpriteEditor.Sprites;
-
 namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    internal class ShiftSpritePixelsDownCommand: UndoableSpriteCommand
+    internal class ShiftSpritePixelsDownCommand
     {
-        public ShiftSpritePixelsDownCommand(IHistory history) : base(history)
+        private readonly UndoableSpriteHelper _undoHelper;
+
+        public ShiftSpritePixelsDownCommand(IHistory history)
         {
+            _undoHelper = new UndoableSpriteHelper(history);
         }
-        public override void Execute(ISprite sprite)
+
+        public void Execute(ISprite sprite)
         {
-            ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsDown);
+            _undoHelper.ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsDown);
         }
     }
 }

@@ -1,13 +1,17 @@
 namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    internal class ShiftSpritePixelsRightCommand : UndoableSpriteCommand
+    internal class ShiftSpritePixelsRightCommand
     {
-        public ShiftSpritePixelsRightCommand(IHistory history) : base(history)
+        private readonly UndoableSpriteHelper _undoHelper;
+
+        public ShiftSpritePixelsRightCommand(IHistory history)
         {
+            _undoHelper = new UndoableSpriteHelper(history);
         }
-        public override void Execute(ISprite sprite)
+
+        public void Execute(ISprite sprite)
         {
-            ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsRight);
+            _undoHelper.ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsRight);
         }
     }
 }

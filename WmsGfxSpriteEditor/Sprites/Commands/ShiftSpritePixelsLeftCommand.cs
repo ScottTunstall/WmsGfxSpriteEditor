@@ -1,16 +1,17 @@
-using WmsGfxSpriteEditor.Sprites;
-using WmsGfxSpriteEditor.Sprites.Commands;
-
-namespace WmsGfxSpriteEditor.Commands.Sprite
+namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    internal class ShiftSpritePixelsLeftCommand: UndoableSpriteCommand
+    internal class ShiftSpritePixelsLeftCommand
     {
-        public ShiftSpritePixelsLeftCommand(IHistory history) : base(history)
+        private readonly UndoableSpriteHelper _undoHelper;
+
+        public ShiftSpritePixelsLeftCommand(IHistory history)
         {
+            _undoHelper = new UndoableSpriteHelper(history);
         }
-        public override void Execute(ISprite sprite)
+
+        public void Execute(ISprite sprite)
         {
-            ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsLeft);
+            _undoHelper.ExecuteActionWithUndoRedo(sprite, sprite.ShiftPixelsLeft);
         }
     }
 }

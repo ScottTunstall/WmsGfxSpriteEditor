@@ -1,14 +1,17 @@
 namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    internal class FlipSpriteHorizontalCommand: UndoableSpriteCommand
+    internal class FlipSpriteHorizontalCommand
     {
-        public FlipSpriteHorizontalCommand(IHistory history) : base(history)
+        private readonly UndoableSpriteHelper _undoHelper;
+
+        public FlipSpriteHorizontalCommand(IHistory history)
         {
+            _undoHelper = new UndoableSpriteHelper(history);
         }
 
-        public override void Execute(ISprite sprite)
+        public void Execute(ISprite sprite)
         {
-            ExecuteActionWithUndoRedo(sprite, sprite.XFlip);
+            _undoHelper.ExecuteActionWithUndoRedo(sprite, sprite.XFlip);
         }
     }
 }
