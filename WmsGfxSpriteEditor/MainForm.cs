@@ -1,4 +1,3 @@
-using WmsGfxSpriteEditor.Commands.Sprite;
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Roms;
@@ -21,12 +20,11 @@ namespace WmsGfxSpriteEditor
         private RomData? _romData;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
-
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
-
 
         // User selections
         protected Color ActivePaletteColour { get; private set; } = Color.Black;
+
         protected int ActivePaletteIndex { get; private set; }
         protected int ActiveSpriteIndex { get; private set; }
         protected SpriteInfo? ActiveSpriteInfo { get; private set; }
@@ -194,7 +192,7 @@ namespace WmsGfxSpriteEditor
                 return;
             }
 
-            BeginDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
+            BeginSpriteDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
         }
 
@@ -202,7 +200,7 @@ namespace WmsGfxSpriteEditor
         {
             if (e.Button == MouseButtons.Left)
             {
-                ContinueDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
+                ContinueSpriteDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
                 // Don't need to fire OnSpriteChanged, wait until the MouseUp for that.
             }
 
@@ -211,7 +209,7 @@ namespace WmsGfxSpriteEditor
 
         private void spriteDisplay_GridCellMouseUp(object sender, SpriteGridMouseEventArgs e)
         {
-            EndDrawOp();
+            EndSpriteDrawOp();
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
         }
 
@@ -468,26 +466,25 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE EDITOR INVOKED FUNCS
 
-        protected virtual void BeginDrawOp(int startX, int startY, int paletteIndex)
+        protected virtual void BeginSpriteDrawOp(int startX, int startY, int paletteIndex)
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
+            new BeginSpriteDrawOpCommand(_history).Execute(ActiveSprite!, startX, startY, paletteIndex);
+            
 
-            ActiveSprite!.SetPixelByPaletteIndex(startX, startY, paletteIndex);
-
-            UpdateStatusBarGridCoordinates(startX, startY);
             OnSpritePixelDataChanged();
         }
 
-
-        protected virtual void ContinueDrawOp(int x, int y, int paletteIndex)
+        protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
-            ActiveSprite!.SetPixelByPaletteIndex(x, y, paletteIndex);
+            new SpriteDrawOpCommand().Execute(ActiveSprite!, x, y, paletteIndex);
+
+
             OnSpritePixelDataChanged();
         }
 
-        protected virtual void EndDrawOp()
+        protected virtual void EndSpriteDrawOp()
         {
-            SaveActiveSpritePixelDataSnapshotToHistory();
+            new EndSpriteDrawOpCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
@@ -557,7 +554,7 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnRomSetLoaded()
         {
-            cboSprite.Enabled = AvailableSprites.Count>0;
+            cboSprite.Enabled = AvailableSprites.Count > 0;
             nudZoom.Enabled = ActiveSprite != null;
 
             OnPaletteChanged();
@@ -618,7 +615,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory).FromSpriteInfo(ActiveSpriteInfo!);
+            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory).Execute(ActiveSpriteInfo!);
         }
 
         #endregion ROM
