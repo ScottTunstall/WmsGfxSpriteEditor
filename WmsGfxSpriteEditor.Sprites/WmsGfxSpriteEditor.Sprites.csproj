@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WmsGfxSpriteEditor.History\WmsGfxSpriteEditor.History.csproj" />
     <ProjectReference Include="..\WmsGfxSpriteEditor.Roms\WmsGfxSpriteEditor.Roms.csproj" />
   </ItemGroup>
 
