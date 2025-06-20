@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmsGfxSpriteEditor.Roms.Rob
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmsGfxSpriteEditor.Palettes", "WmsGfxSpriteEditor.Palettes\WmsGfxSpriteEditor.Palettes.csproj", "{AD4F0DD3-7B8C-4E02-8D10-F7AABC1D704D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WmsGfxSpriteEditor.History", "WmsGfxSpriteEditor.History\WmsGfxSpriteEditor.History.csproj", "{05BFD0BD-1623-40DE-A929-A80C7DFBB8A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AD4F0DD3-7B8C-4E02-8D10-F7AABC1D704D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD4F0DD3-7B8C-4E02-8D10-F7AABC1D704D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD4F0DD3-7B8C-4E02-8D10-F7AABC1D704D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05BFD0BD-1623-40DE-A929-A80C7DFBB8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05BFD0BD-1623-40DE-A929-A80C7DFBB8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05BFD0BD-1623-40DE-A929-A80C7DFBB8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05BFD0BD-1623-40DE-A929-A80C7DFBB8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
