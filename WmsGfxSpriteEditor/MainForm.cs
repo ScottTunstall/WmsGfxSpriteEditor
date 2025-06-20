@@ -1,6 +1,7 @@
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Roms;
+using WmsGfxSpriteEditor.Roms.Commands;
 using WmsGfxSpriteEditor.Roms.Robotron2084;
 using WmsGfxSpriteEditor.Sprites;
 using WmsGfxSpriteEditor.Sprites.Commands;
@@ -201,7 +202,6 @@ namespace WmsGfxSpriteEditor
             if (e.Button == MouseButtons.Left)
             {
                 ContinueSpriteDrawOp(e.GridCell.X, e.GridCell.Y, ActivePaletteIndex);
-                // Don't need to fire OnSpriteChanged, wait until the MouseUp for that.
             }
 
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
@@ -469,16 +469,12 @@ namespace WmsGfxSpriteEditor
         protected virtual void BeginSpriteDrawOp(int startX, int startY, int paletteIndex)
         {
             new BeginSpriteDrawOpCommand(_history).Execute(ActiveSprite!, startX, startY, paletteIndex);
-            
-
             OnSpritePixelDataChanged();
         }
 
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
             new SpriteDrawOpCommand().Execute(ActiveSprite!, x, y, paletteIndex);
-
-
             OnSpritePixelDataChanged();
         }
 
@@ -491,17 +487,6 @@ namespace WmsGfxSpriteEditor
         #endregion SPRITE EDITOR INVOKED FUNCS
 
         #region HISTORY
-
-        protected void SaveActiveSpritePixelDataSnapshotToHistory()
-        {
-            HistoryItem? historyItem = _history.Last(x => x.SpriteIndex == ActiveSpriteIndex && x.OperationType == OperationType.SpritePixelDataSnapshot);
-            UInt128 spriteHash = ActiveSprite!.GetPixelDataHash();
-
-            if (historyItem == null || historyItem.PixelDataHash != spriteHash)
-            {
-                _history.Add(HistoryItem.CreateSpritePixelDataChangedHistoryItem(ActiveSprite!.ClonePixelData(), spriteHash, ActiveSpriteIndex));
-            }
-        }
 
         protected virtual void SetStateFromHistory(HistoryItem item)
         {
@@ -516,7 +501,8 @@ namespace WmsGfxSpriteEditor
         private void RestoreSpriteFromHistoryItem(HistoryItem item)
         {
             int offset = AvailableSprites[item.SpriteIndex].Offset;
-            _romData!.PokeBytes(offset, item.PixelData!);
+
+            new UpdateRomDataFromPixelDataCommand(_romData!).Execute(offset, item.PixelData!);
             SelectActiveSpriteByIndex(item.SpriteIndex, true);
             OnSpritePixelDataChanged();
         }
@@ -615,7 +601,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory).Execute(ActiveSpriteInfo!);
+            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory!).Execute(ActiveSpriteInfo!);
         }
 
         #endregion ROM
