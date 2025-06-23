@@ -4,6 +4,8 @@ namespace WmsGfxSpriteEditor
 {
     public interface ISpriteClipboardService
     {
-        void Copy(ISprite sprite, Color[] palette);
+        void Copy(ISprite source);
+        void Paste(ISprite target);
+        bool HasCompatibleBitmap(ISprite target);
     }
 }

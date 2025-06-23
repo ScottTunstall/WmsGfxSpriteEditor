@@ -1,42 +1,100 @@
+using System.Drawing.Imaging;
+using WmsGfxSpriteEditor.Sprites.Commands;
+
 namespace WmsGfxSpriteEditor.Sprites
 {
     public class DefaultSpriteClipboardService : ISpriteClipboardService
     {
-        public void Copy(ISprite sprite, Color[] palette)
+        private readonly IHistory _history;
+
+        public DefaultSpriteClipboardService(IHistory history)
         {
-            if (sprite == null || palette.Length == 0)
+            _history = history ?? throw new ArgumentNullException(nameof(history));
+        }
+
+        public void Copy(ISprite source)
+        {
+            if (source == null)
             {
                 throw new InvalidOperationException("No sprite to copy.");
             }
 
-            DataObject dataObject = new();
-            SpriteClipboardData clipboardData = SpriteClipboardData.FromSprite(sprite);
-            dataObject.SetData("SpriteClipboard.ClipboardData", clipboardData);
-
-            using Bitmap bmp = CreateBitmapFromSprite(sprite, palette);
-            dataObject.SetImage(bmp);
-
-            Clipboard.SetDataObject(dataObject, true);
+            using Bitmap bmp = new CreateBitmapFromSpritePixelsCommand().Execute(source);
+            Clipboard.SetImage(bmp);
         }
 
-
-        // TODO: Probably not the best place to have this, keep for now..
-        private Bitmap CreateBitmapFromSprite(ISprite sprite, Color[] palette)
+        public void Paste(ISprite target)
         {
-            // Create a Bitmap from the sprite and palette
-            Bitmap bmp = new(sprite.Width, sprite.Height);
-
-            for (int y = 0; y < sprite.Height; y++)
+            if (!TryGetCompatibleBitmap(target, out Bitmap? bitmap, out Color[] _))
             {
-                for (int x = 0; x < sprite.Width; x++)
-                {
-                    int paletteIndex = sprite.GetPaletteIndexFromPixel(x, y);
-                    Color color = palette[paletteIndex % palette.Length];
-                    bmp.SetPixel(x, y, color);
-                }
+                throw new InvalidOperationException("No compatible image in clipboard.");
             }
 
-            return bmp;
+            new SetSpritePixelsFromBitmapCommand(_history).Execute(bitmap!, target);
         }
+        
+        public bool HasCompatibleBitmap(ISprite target)
+        {
+            return TryGetCompatibleBitmap(target, out _, out _);
+        }
+
+        private bool TryGetCompatibleBitmap(ISprite target, out Bitmap? bitmap, out Color[] palette)
+        {
+            bitmap = null;
+            palette = [];
+
+            if (!Clipboard.ContainsImage())
+            {
+                return false;
+            }
+
+            Image clipboardImage = Clipboard.GetImage()!;
+            if (clipboardImage is not Bitmap clipboardBmp)
+            {
+                return false;
+            }
+
+            if (clipboardBmp.Width > target.Width || clipboardBmp.Height > target.Height)
+            {
+                return false; // Bitmap is too big to paste into target sprite
+            }
+
+            // Check palette compatibility
+            HashSet<Color> targetPaletteSet = [.. target.Palette];
+            Color[] imagePalette;
+            if ((clipboardBmp.PixelFormat & PixelFormat.Indexed) != 0)
+            {
+                ColorPalette pal = clipboardBmp.Palette;
+                imagePalette = pal.Entries;
+            }
+            else
+            {
+                // If not indexed, extract unique colours 
+                HashSet<Color> colourSet = new();
+                for (int y = 0; y < clipboardBmp.Height; y++)
+                {
+                    for (int x = 0; x < clipboardBmp.Width; x++)
+                    {
+                        colourSet.Add(clipboardBmp.GetPixel(x, y));
+
+                        // if there's more unique colours in the image than the target palette, the image can't be pasted
+                        if (colourSet.Count > targetPaletteSet.Count)
+                            return false;
+                    }
+                }
+                imagePalette = colourSet.ToArray();
+            }
+
+            // Check if all colours in imagePalette exist in targetPalette (order doesn't matter)
+            if (!imagePalette.All(colour => targetPaletteSet.Contains(colour)))
+            {
+                return false;
+            }
+
+            bitmap = clipboardBmp;
+            palette = imagePalette;
+            return true;
+        }
+
     }
 }
