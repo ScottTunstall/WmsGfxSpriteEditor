@@ -60,7 +60,38 @@ namespace WmsGfxSpriteEditor
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+            spriteDisplay.Invalidate();
             pnlPalette.Invalidate();
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (ActiveSprite != null)
+            {
+                // Only zoom if CTRL is held
+                if ((ModifierKeys & Keys.Control) == Keys.Control)
+                {
+
+                    if (e.Delta > 0)
+                    {
+                        // Zoom in
+                        if (ZoomLevel < nudZoom.Maximum)
+                        {
+                            SetZoom(ZoomLevel + 1, true);
+                        }
+                    }
+                    else if (e.Delta < 0)
+                    {
+                        // Zoom out
+                        if (ZoomLevel > nudZoom.Minimum)
+                        {
+                            SetZoom(ZoomLevel - 1, true);
+                        }
+                    }
+                }
+            }
+
+            base.OnMouseWheel(e);
         }
 
         #region FILE MENU EVENT HANDLERS

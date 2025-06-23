@@ -87,7 +87,7 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(180, 22);
+            mnuFileLoad.Size = new Size(143, 22);
             mnuFileLoad.Text = "&Load";
             // 
             // mnuFileLoadRobotron
@@ -117,7 +117,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 22);
+            mnuFileSave.Size = new Size(143, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -134,7 +134,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(180, 22);
+            mnuEditUndo.Size = new Size(144, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -143,20 +143,20 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(180, 22);
+            mnuEditRedo.Size = new Size(144, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuEditSeparator
             // 
             mnuEditSeparator.Name = "mnuEditSeparator";
-            mnuEditSeparator.Size = new Size(177, 6);
+            mnuEditSeparator.Size = new Size(141, 6);
             // 
             // mnuEditCopy
             // 
             mnuEditCopy.Name = "mnuEditCopy";
             mnuEditCopy.ShortcutKeys = Keys.Control | Keys.C;
-            mnuEditCopy.Size = new Size(180, 22);
+            mnuEditCopy.Size = new Size(144, 22);
             mnuEditCopy.Text = "&Copy";
             mnuEditCopy.Click += mnuEditCopy_Click;
             // 
@@ -164,7 +164,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuEditPaste.Name = "mnuEditPaste";
             mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
-            mnuEditPaste.Size = new Size(180, 22);
+            mnuEditPaste.Size = new Size(144, 22);
             mnuEditPaste.Text = "&Paste";
             mnuEditPaste.Click += mnuEditPaste_Click;
             // 
@@ -356,7 +356,7 @@ namespace WmsGfxSpriteEditor
             nudZoom.Enabled = false;
             nudZoom.Location = new Point(391, 8);
             nudZoom.Margin = new Padding(3, 8, 3, 3);
-            nudZoom.Maximum = new decimal(new int[] { 256, 0, 0, 0 });
+            nudZoom.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
             nudZoom.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudZoom.Name = "nudZoom";
             nudZoom.Size = new Size(104, 23);
