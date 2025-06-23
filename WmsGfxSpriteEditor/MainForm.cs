@@ -13,9 +13,10 @@ namespace WmsGfxSpriteEditor
         // Service dependencies
         private IRomService? _romService;
 
+        private readonly IHistory _history;
         private ISpriteGridRenderer? _spriteRenderer;
         private ISpriteFactory? _spriteFactory;
-        private ISpriteClipboardService? _clipboardService = new DefaultSpriteClipboardService();
+        private readonly ISpriteClipboardService _clipboardService;
 
         private string _romSetName = string.Empty;
         private RomData? _romData;
@@ -33,13 +34,15 @@ namespace WmsGfxSpriteEditor
         protected int ZoomLevel { get; private set; } = 3;
 
         private bool _suppressControlChangeEvents;
-        private readonly IHistory _history = new History.History();
 
         // Palette
         protected Color[] Palette { get; private set; } = default!;
 
         public MainForm()
         {
+            _history = new History.History();
+            _clipboardService = new DefaultSpriteClipboardService(_history);
+
             InitializeComponent();
 
             _suppressControlChangeEvents = true;
@@ -94,6 +97,11 @@ namespace WmsGfxSpriteEditor
         private void mnuEditCopy_Click(object sender, EventArgs e)
         {
             CopySpriteToClipboard();
+        }
+
+        private void mnuEditPaste_Click(object sender, EventArgs e)
+        {
+            CopyClipboardToSprite();
         }
 
         #endregion EDIT MENU EVENT HANDLERS
@@ -338,7 +346,17 @@ namespace WmsGfxSpriteEditor
 
         protected void CopySpriteToClipboard()
         {
-            _clipboardService!.Copy(ActiveSprite!, Palette);
+            ThrowIfNoActiveSprite();
+
+            _clipboardService!.Copy(ActiveSprite!);
+        }
+
+        private void CopyClipboardToSprite()
+        {
+            ThrowIfNoActiveSprite();
+
+            _clipboardService!.Paste(ActiveSprite!);
+            OnSpritePixelDataChanged();
         }
 
         #endregion EDIT MENU INVOKED FUNCS
@@ -371,38 +389,53 @@ namespace WmsGfxSpriteEditor
 
         protected void FlipSpriteHorizontal()
         {
-            new FlipSpriteHorizontalCommand(_history).Execute(ActiveSprite!);
+            ThrowIfNoActiveSprite();
+            // Note: I could implement this via Mediatr but its overkill just now.
+            new FlipSpritePixelsHorizontalCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void FlipSpriteVertical()
         {
-            new FlipSpriteVerticalCommand(_history).Execute(ActiveSprite!);
+            ThrowIfNoActiveSprite();
+            new FlipSpritePixelsVerticalCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsLeft()
         {
+            ThrowIfNoActiveSprite();
             new ShiftSpritePixelsLeftCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsRight()
         {
+            ThrowIfNoActiveSprite();
             new ShiftSpritePixelsRightCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteUp()
         {
+            ThrowIfNoActiveSprite();
             new ShiftSpritePixelsUpCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteDown()
         {
+            ThrowIfNoActiveSprite();
             new ShiftSpritePixelsDownCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
+        }
+
+        private void ThrowIfNoActiveSprite()
+        {
+            if (ActiveSprite == null)
+            {
+                throw new InvalidOperationException("Operation cannot be performed without an active sprite");
+            }
         }
 
         #endregion SPRITE MENU INVOKED FUNCS
@@ -464,27 +497,30 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE SELECT COMBO BOX INVOKED FUNCS
 
-        #region SPRITE EDITOR INVOKED FUNCS
+        #region SPRITE GRID INVOKED FUNCS
 
         protected virtual void BeginSpriteDrawOp(int startX, int startY, int paletteIndex)
         {
-            new BeginSpriteDrawOpCommand(_history).Execute(ActiveSprite!, startX, startY, paletteIndex);
+            ThrowIfNoActiveSprite();
+            new BeginSpritePixelOpCommand(_history).Execute(ActiveSprite!, startX, startY, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
-            new SpriteDrawOpCommand().Execute(ActiveSprite!, x, y, paletteIndex);
+            ThrowIfNoActiveSprite();
+            new SpritePixelOpCommand().Execute(ActiveSprite!, x, y, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void EndSpriteDrawOp()
         {
-            new EndSpriteDrawOpCommand(_history).Execute(ActiveSprite!);
+            ThrowIfNoActiveSprite();
+            new EndSpritePixelOpCommand(_history).Execute(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
-        #endregion SPRITE EDITOR INVOKED FUNCS
+        #endregion SPRITE GRID INVOKED FUNCS
 
         #region HISTORY
 
@@ -541,8 +577,6 @@ namespace WmsGfxSpriteEditor
         protected virtual void OnRomSetLoaded()
         {
             cboSprite.Enabled = AvailableSprites.Count > 0;
-            nudZoom.Enabled = ActiveSprite != null;
-
             OnPaletteChanged();
             OnSpriteSelectionChanged();
             OnSpritePixelDataChanged();
@@ -565,12 +599,25 @@ namespace WmsGfxSpriteEditor
         protected virtual void OnSpriteSelectionChanged()
         {
             bool haveSprite = ActiveSprite != null;
+
+            // Edit menu
+            mnuEditCopy.Enabled = haveSprite;
+            mnuEditPaste.Enabled = haveSprite;
+
+            // View menu
+            mnuViewZoomIn.Enabled = haveSprite;
+            mnuViewZoomOut.Enabled = haveSprite;
+
+            // Sprite menu
             mnuSpriteFlipHorizontal.Enabled = haveSprite;
             mnuSpriteFlipVertical.Enabled = haveSprite;
             mnuSpriteShiftUp.Enabled = haveSprite;
             mnuSpriteShiftDown.Enabled = haveSprite;
             mnuSpriteShiftLeft.Enabled = haveSprite;
             mnuSpriteShiftRight.Enabled = haveSprite;
+
+            // Zoom control
+            nudZoom.Enabled = haveSprite;
 
             spriteDisplay.Visible = haveSprite;
             spriteDisplay.Invalidate();
@@ -601,7 +648,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory!).Execute(ActiveSpriteInfo!);
+            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory!).Execute(ActiveSpriteInfo!, Palette);
         }
 
         #endregion ROM
