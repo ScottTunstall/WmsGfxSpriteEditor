@@ -1,20 +1,29 @@
+using System.Drawing;
 using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
     public class SpriteFactory : ISpriteFactory
     {
-        public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo)
+        public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo, Color[] palette)
         {
-            return CreateSprite4Bpp(romData, spriteInfo);
+            if (romData == null) throw new ArgumentNullException(nameof(romData));
+            if (spriteInfo == null) throw new ArgumentNullException(nameof(spriteInfo));
+            if (palette.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(palette));
+            }
+
+            // We currently only support 4bpp sprites, but if we ever support more, we can add a switch on spriteInfo.BitsPerPixel here.
+            return CreateSprite4Bpp(romData, spriteInfo, palette);
         }
 
-        private ISprite CreateSprite4Bpp(RomData romData, SpriteInfo spriteInfo)
+        private ISprite CreateSprite4Bpp(RomData romData, SpriteInfo spriteInfo, Color[] palette)
         {
             int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
             Memory<byte> spriteData = romData!.AsMemory(spriteInfo.Offset, bytesToRead);
 
-            ISprite sprite= new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, spriteInfo.IsLinear);
+            ISprite sprite= new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, palette, spriteInfo.IsLinear);
             return sprite;
         }
     }

@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WmsGfxSpriteEditor.History\WmsGfxSpriteEditor.History.csproj" />
     <ProjectReference Include="..\WmsGfxSpriteEditor.Roms\WmsGfxSpriteEditor.Roms.csproj" />
   </ItemGroup>

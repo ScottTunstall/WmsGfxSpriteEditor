@@ -11,20 +11,22 @@ namespace WmsGfxSpriteEditor.Sprites
         private Sprite4Bpp()
         { }
 
-        public Sprite4Bpp(int spriteIndex, Memory<byte> pixelData, int widthInBytes, int height, bool isLinear = true)
+        public Sprite4Bpp(int spriteIndex, Memory<byte> pixelData, int widthInBytes, int height, Color[] palette, bool isLinear = true)
         {
+            ArgumentOutOfRangeException.ThrowIfNegative(spriteIndex);
+            ArgumentOutOfRangeException.ThrowIfLessThan(widthInBytes, 1);
+            ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
+
             if (pixelData.Length != widthInBytes * height)
             {
                 throw new ArgumentException($"Pixel data length {pixelData.Length} does not match expected size {widthInBytes * height} for width {widthInBytes} and height {height}.");
             }
 
-            ArgumentOutOfRangeException.ThrowIfLessThan(widthInBytes,1);
-            ArgumentOutOfRangeException.ThrowIfLessThan(height, 1);
-
             SpriteIndex = spriteIndex; 
             PixelData = pixelData;
             WidthInBytes = widthInBytes;
             Height = height;
+            Palette = palette;
             IsLinear = isLinear;
         }
 
@@ -32,10 +34,12 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public int SpriteIndex { get; }
         public Memory<byte> PixelData { get; }
+        public object Tag { get; set; } = default!;
         public int Width => WidthInBytes * 2; // Each byte contains 2 pixels
         public int WidthInBytes { get; }
         public int Height { get; }
         public Size Size => new(Width, Height);
+        public Color[] Palette { get; }
         public bool IsLinear { get; }
 
         /// <summary>
@@ -244,6 +248,24 @@ namespace WmsGfxSpriteEditor.Sprites
             newSpriteData.CopyTo(PixelData.Span);
             IsPixelDataDirty = true;
         }
+
+        public Bitmap CreateBitmapFromSprite()
+        {
+            Bitmap bmp = new(Width, Height);
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    int paletteIndex = GetPaletteIndexFromPixel(x, y);
+                    Color color = Palette[paletteIndex % Palette.Length];
+                    bmp.SetPixel(x, y, color);
+                }
+            }
+
+            return bmp;
+        }
+
 
         public byte[] ClonePixelData()
         {
