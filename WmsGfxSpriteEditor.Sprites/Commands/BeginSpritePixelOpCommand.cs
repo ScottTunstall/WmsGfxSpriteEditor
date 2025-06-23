@@ -1,21 +1,22 @@
 namespace WmsGfxSpriteEditor.Sprites.Commands
 {
-    public class EndSpriteDrawOpCommand
+    public class BeginSpritePixelOpCommand
     {
         private readonly UndoableSpriteHelper _undoHelper;
 
-        public EndSpriteDrawOpCommand(IHistory history) 
+        public BeginSpritePixelOpCommand(IHistory history) 
         {
             _undoHelper = new UndoableSpriteHelper(history ?? throw new ArgumentNullException(nameof(history)));
         }
 
-        public void Execute(ISprite sprite)
+        public void Execute(ISprite sprite, int startX, int startY, int paletteIndex)
         {
-            // Take a snapshot of the pixel data for redo purposes
+            // Take a snapshot of the pixel data for undo purposes
             _undoHelper.SnapshotPixelDataIfChanged(sprite);
 
-            // Mark sprite pixel data as clean when drawing operation ends
             sprite.ClearPixelDataDirtyFlag();
+
+            new SpritePixelOpCommand().Execute(sprite, startX, startY, paletteIndex);
         }
     }
 }

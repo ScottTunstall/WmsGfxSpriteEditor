@@ -1,3 +1,4 @@
+using System.Drawing;
 using WmsGfxSpriteEditor.Roms;
 
 namespace WmsGfxSpriteEditor.Sprites.Commands
@@ -13,9 +14,9 @@ namespace WmsGfxSpriteEditor.Sprites.Commands
             _spriteFactory = spriteFactory ?? throw new ArgumentNullException(nameof(spriteFactory));
         }
 
-        public ISprite Execute(SpriteInfo spriteInfo)
+        public ISprite Execute(SpriteInfo spriteInfo, Color[] palette)
         {
-            return _spriteFactory!.CreateSpriteFromRomData(_romData, spriteInfo);
+            return _spriteFactory!.CreateSpriteFromRomData(_romData, spriteInfo, palette);
         }
     }
 }
