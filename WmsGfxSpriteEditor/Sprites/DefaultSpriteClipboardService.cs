@@ -19,7 +19,7 @@ namespace WmsGfxSpriteEditor.Sprites
                 throw new InvalidOperationException("No sprite to copy.");
             }
 
-            using Bitmap bmp = new CreateBitmapFromSpritePixelsCommand().Execute(source);
+            using Bitmap bmp = source.CreateBitmapFromSprite();
             Clipboard.SetImage(bmp);
         }
 
