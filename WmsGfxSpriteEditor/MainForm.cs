@@ -16,6 +16,7 @@ namespace WmsGfxSpriteEditor
         private readonly IHistory _history;
         private ISpriteGridRenderer? _spriteRenderer;
         private ISpriteFactory? _spriteFactory;
+        private readonly ISpriteService _spriteService;
         private readonly ISpriteClipboardService _clipboardService;
 
         private string _romSetName = string.Empty;
@@ -41,6 +42,7 @@ namespace WmsGfxSpriteEditor
         public MainForm()
         {
             _history = new History.History();
+            _spriteService = new SpriteService(_history);
             _clipboardService = new DefaultSpriteClipboardService(_history);
 
             InitializeComponent();
@@ -189,7 +191,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuSpriteShiftUp_Click(object sender, EventArgs e)
         {
-            ShiftSpriteUp();
+            ShiftSpritePixelsUp();
         }
 
         private void mnuSpriteShiftDown_Click(object sender, EventArgs e)
@@ -421,43 +423,42 @@ namespace WmsGfxSpriteEditor
         protected void FlipSpriteHorizontal()
         {
             ThrowIfNoActiveSprite();
-            // Note: I could implement this via Mediatr but its overkill just now.
-            new FlipSpritePixelsHorizontalCommand(_history).Execute(ActiveSprite!);
+            _spriteService.FlipSpriteHorizontal(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void FlipSpriteVertical()
         {
             ThrowIfNoActiveSprite();
-            new FlipSpritePixelsVerticalCommand(_history).Execute(ActiveSprite!);
+            _spriteService.FlipSpriteVertical(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsLeft()
         {
             ThrowIfNoActiveSprite();
-            new ShiftSpritePixelsLeftCommand(_history).Execute(ActiveSprite!);
+            _spriteService.ShiftSpritePixelsLeft(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsRight()
         {
             ThrowIfNoActiveSprite();
-            new ShiftSpritePixelsRightCommand(_history).Execute(ActiveSprite!);
+            _spriteService.ShiftSpritePixelsRight(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
-        protected void ShiftSpriteUp()
+        protected void ShiftSpritePixelsUp()
         {
             ThrowIfNoActiveSprite();
-            new ShiftSpritePixelsUpCommand(_history).Execute(ActiveSprite!);
+            _spriteService.ShiftSpritePixelsUp(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteDown()
         {
             ThrowIfNoActiveSprite();
-            new ShiftSpritePixelsDownCommand(_history).Execute(ActiveSprite!);
+            _spriteService.ShiftSpritePixelsDown(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
@@ -533,21 +534,21 @@ namespace WmsGfxSpriteEditor
         protected virtual void BeginSpriteDrawOp(int startX, int startY, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            new BeginSpritePixelOpCommand(_history).Execute(ActiveSprite!, startX, startY, paletteIndex);
+            _spriteService.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            new SpritePixelOpCommand().Execute(ActiveSprite!, x, y, paletteIndex);
+            _spriteService.ContinueSpriteDrawOp(ActiveSprite!,x,y, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void EndSpriteDrawOp()
         {
             ThrowIfNoActiveSprite();
-            new EndSpritePixelOpCommand(_history).Execute(ActiveSprite!);
+            _spriteService.EndSpriteDrawOp(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
