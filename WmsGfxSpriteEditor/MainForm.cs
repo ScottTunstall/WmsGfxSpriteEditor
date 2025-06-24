@@ -541,7 +541,7 @@ namespace WmsGfxSpriteEditor
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            _spriteService.ContinueSpriteDrawOp(ActiveSprite!,x,y, paletteIndex);
+            _spriteService.SpriteDrawOp(ActiveSprite!,x,y, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
