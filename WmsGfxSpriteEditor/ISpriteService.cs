@@ -6,7 +6,7 @@ namespace WmsGfxSpriteEditor
     {
         void BeginSpriteDrawOp(ISprite sprite, int startX, int startY, int paletteIndex);
 
-        void ContinueSpriteDrawOp(ISprite sprite, int x, int y, int paletteIndex);
+        void SpriteDrawOp(ISprite sprite, int x, int y, int paletteIndex);
 
         void EndSpriteDrawOp(ISprite sprite);
 

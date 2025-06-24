@@ -18,7 +18,7 @@ namespace WmsGfxSpriteEditor.Sprites
             sprite.SetPixelByPaletteIndex(startX, startY, paletteIndex);
         }
 
-        public void ContinueSpriteDrawOp(ISprite sprite, int x, int y, int paletteIndex)
+        public void SpriteDrawOp(ISprite sprite, int x, int y, int paletteIndex)
         {
             sprite.SetPixelByPaletteIndex(x, y, paletteIndex);
         }
