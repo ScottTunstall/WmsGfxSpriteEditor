@@ -7,7 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <Platforms>AnyCPU;x86</Platforms>
+    <ApplicationIcon>hulk-fancy.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="hulk-fancy.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WmsGfxSpriteEditor.Roms.Robotron2084\WmsGfxSpriteEditor.Roms.Robotron2084.csproj" />
