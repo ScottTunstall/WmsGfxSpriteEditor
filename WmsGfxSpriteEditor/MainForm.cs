@@ -477,10 +477,10 @@ namespace WmsGfxSpriteEditor
         {
             MessageBox.Show(
                 this,
-                "Williams Graphics Sprite Editor." + Environment.NewLine + Environment.NewLine + "Designed and written by Scott Tunstall." + Environment.NewLine + "All rights reserved.",
+                "Williams Graphics Sprite Editor." + Environment.NewLine + Environment.NewLine + "Designed and developed by Scott Tunstall." + Environment.NewLine + "All rights reserved.",
                 "About Williams Graphics Sprite Editor",
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information
+                MessageBoxIcon.None
             );
         }
         #endregion HELP MENU EVENT HANDLERS
