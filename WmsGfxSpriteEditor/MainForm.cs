@@ -346,9 +346,14 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = ZoomLevel;
 
-            OnRomSetLoaded();
-
+            cboSprite.Enabled = AvailableSprites.Count > 0;
+            OnPaletteChanged();
+            OnSpriteSelectionChanged();
+            OnSpritePixelDataChanged();
+            
             _suppressControlChangeEvents = false;
+
+            OnReady();
         }
 
         #endregion FILE MENU INVOKED FUNCS
@@ -621,12 +626,9 @@ namespace WmsGfxSpriteEditor
 
 
 
-        protected virtual void OnRomSetLoaded()
+        // Called when the sprite is ready to be edited. Override this method to perform any additional setup.
+        protected virtual void OnReady()
         {
-            cboSprite.Enabled = AvailableSprites.Count > 0;
-            OnPaletteChanged();
-            OnSpriteSelectionChanged();
-            OnSpritePixelDataChanged();
         }
 
         protected virtual void OnZoomChanged()
