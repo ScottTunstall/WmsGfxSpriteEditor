@@ -19,6 +19,7 @@ namespace WmsGfxSpriteEditor
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip = new MenuStrip();
             mnuFile = new ToolStripMenuItem();
             mnuFileLoad = new ToolStripMenuItem();
@@ -420,6 +421,7 @@ namespace WmsGfxSpriteEditor
             Controls.Add(topPanel);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
             Name = "MainForm";
             Text = "Williams Graphics Editor";
