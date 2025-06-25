@@ -472,6 +472,19 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE MENU INVOKED FUNCS
 
+        #region HELP MENU EVENT HANDLERS
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                this,
+                "Williams Graphics Sprite Editor." + Environment.NewLine + Environment.NewLine + "Designed and written by Scott Tunstall." + Environment.NewLine + "All rights reserved.",
+                "About Williams Graphics Sprite Editor",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information
+            );
+        }
+        #endregion HELP MENU EVENT HANDLERS
+
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
 
         protected SpriteInfo SetSpriteSelectDropdown(List<SpriteInfo> spriteInfos, int index = 0)
@@ -605,6 +618,8 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion STATUS BAR
+
+
 
         protected virtual void OnRomSetLoaded()
         {

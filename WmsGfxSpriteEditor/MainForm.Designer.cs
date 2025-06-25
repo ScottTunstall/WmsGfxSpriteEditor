@@ -44,6 +44,8 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftRight = new ToolStripMenuItem();
             mnuSpriteShiftUp = new ToolStripMenuItem();
             mnuSpriteShiftDown = new ToolStripMenuItem();
+            mnuHelp = new ToolStripMenuItem();
+            mnuHelpAbout = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
             Spacer = new ToolStripStatusLabel();
@@ -68,7 +70,7 @@ namespace WmsGfxSpriteEditor
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite, mnuHelp });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(882, 24);
@@ -255,6 +257,22 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftDown.Size = new Size(276, 22);
             mnuSpriteShiftDown.Text = "Shift all pixels &Down";
             mnuSpriteShiftDown.Click += mnuSpriteShiftDown_Click;
+            // 
+            // mnuHelp
+            // 
+            mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuHelpAbout });
+            mnuHelp.Name = "mnuHelp";
+            mnuHelp.ShortcutKeys = Keys.Alt | Keys.H;
+            mnuHelp.Size = new Size(44, 20);
+            mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpAbout
+            // 
+            mnuHelpAbout.Name = "mnuHelpAbout";
+            mnuHelpAbout.ShortcutKeys = Keys.F1;
+            mnuHelpAbout.Size = new Size(180, 22);
+            mnuHelpAbout.Text = "About...";
+            mnuHelpAbout.Click += mnuHelpAbout_Click;
             // 
             // statusStrip
             // 
@@ -469,6 +487,8 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteShiftRight;
         private ToolStripMenuItem mnuSpriteShiftUp;
         private ToolStripMenuItem mnuSpriteShiftDown;
+        private ToolStripMenuItem mnuHelp;
+        private ToolStripMenuItem mnuHelpAbout;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
         private ToolStripStatusLabel Spacer;
