@@ -18,7 +18,7 @@ namespace WmsGfxSpriteEditor
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
-#pragma warning enable SYSLIB1054
+#pragma warning restore SYSLIB1054
 
         // Consts
         const int MinZoomLevel = 1;
