@@ -12,6 +12,7 @@ namespace WmsGfxSpriteEditor.Controls
         private int _hoveredIndex = -1;
         private readonly ToolTip _toolTip = new();
         private readonly PictureBox _pictureBox;
+
         public event EventHandler? SelectedColorChanged;
 
         public ColorPickerPanel()
@@ -36,7 +37,8 @@ namespace WmsGfxSpriteEditor.Controls
             Palette = palette;
         }
 
-
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
         public Color[] Palette
         {
             get => _palette;
@@ -50,20 +52,17 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Browsable(false)]
         public int SelectedPaletteIndex
         {
             get => _selectedPaletteIndex;
             set
             {
-                if (value < 0 || value >= _palette.Length)
-                    return;
-
                 _selectedPaletteIndex = value;
                 _pictureBox.Invalidate();
-                SelectedColorChanged?.Invoke(this, EventArgs.Empty);
             }
         }
-
 
         [EditorBrowsable]
         [Browsable(true)]
@@ -81,21 +80,17 @@ namespace WmsGfxSpriteEditor.Controls
             set;
         } = 4;
 
-
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         public Color? SelectedColor => (_selectedPaletteIndex >= 0 && _selectedPaletteIndex < _palette.Length) ? _palette[_selectedPaletteIndex] : null;
 
-
-        public Size CalculateSize(int columns, int rows)
+        public Size CalculateMinimumSize(int columns, int rows)
         {
             return new Size(
                 ColorBoxMargin + (columns * (ColorBoxSize + ColorBoxMargin)),
                 ColorBoxMargin + (rows * (ColorBoxSize + ColorBoxMargin))
             );
         }
-
-
 
         private void PictureBox_Paint(object? sender, PaintEventArgs e)
         {
@@ -118,7 +113,6 @@ namespace WmsGfxSpriteEditor.Controls
                 }
             }
         }
-
 
         private void PictureBox_MouseMove(object? sender, MouseEventArgs e)
         {
@@ -157,6 +151,7 @@ namespace WmsGfxSpriteEditor.Controls
             if (idx >= 0 && idx < _palette.Length)
             {
                 SelectedPaletteIndex = idx;
+                SelectedColorChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -167,9 +162,10 @@ namespace WmsGfxSpriteEditor.Controls
                 if (GetColorRect(i).Contains(location))
                     return i;
             }
+
             return -1;
         }
-        
+
         private Rectangle GetColorRect(int index)
         {
             int cols = this.Size.Width / (ColorBoxSize + ColorBoxMargin);

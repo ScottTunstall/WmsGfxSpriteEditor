@@ -55,7 +55,7 @@ namespace WmsGfxSpriteEditor.Dialogs
             // 
             // ColorPickerDialog
             // 
-            ClientSize = _palettePanel.CalculateSize(4, 4);
+            ClientSize = _palettePanel.CalculateMinimumSize(4, 4);
             MinimumSize = this.Size;
             Name = "ColorPickerDialog";
             Text = "Palette";
