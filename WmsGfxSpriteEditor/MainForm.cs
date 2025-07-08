@@ -28,6 +28,8 @@ namespace WmsGfxSpriteEditor
         private const int MaxZoomLevel = 32;
         private const int DefaultZoomLevel = 3;
 
+        private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
+
         // Service dependencies
         private IRomService? _romService;
 
@@ -37,23 +39,40 @@ namespace WmsGfxSpriteEditor
         private readonly ISpriteService _spriteService;
         private readonly ISpriteClipboardService _clipboardService;
 
+        // Dialogs
+        private ColorPickerDialog? _colorPickerDialog;
+
+        // Rom specific
         private string _romSetName = string.Empty;
+
         private RomData? _romData;
-        private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
         private bool _suppressControlChangeEvents;
         private Color[] _palette = default!;
         private ISprite? _activeSprite;
         private int _zoomLevel = DefaultZoomLevel;
-
-        private ColorPickerDialog? _colorPickerDialog;
+        private int _activePaletteIndex = -1;
 
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
 
         // User selections
         protected Color ActivePaletteColour { get; private set; } = Color.Black;
 
-        protected int ActivePaletteIndex { get; private set; }
+        protected int ActivePaletteIndex
+        {
+            get => _activePaletteIndex;
+            private set
+            {
+                if (value != _activePaletteIndex)
+                {
+                    _activePaletteIndex = value;
+                    ActivePaletteColour = Palette[value];
+                    OnActivePaletteIndexChanged();
+                }
+            }
+        }
+
+
         protected int ActiveSpriteIndex { get; private set; }
         protected SpriteInfo? ActiveSpriteInfo { get; private set; }
 
@@ -76,7 +95,7 @@ namespace WmsGfxSpriteEditor
             get => _zoomLevel;
             private set
             {
-                if (value < MinZoomLevel || value > MaxZoomLevel)
+                if (value is < MinZoomLevel or > MaxZoomLevel)
                 {
                     throw new ArgumentOutOfRangeException(nameof(value), $"Zoom level must be between {MinZoomLevel} and {MaxZoomLevel}.");
                 }
@@ -124,9 +143,9 @@ namespace WmsGfxSpriteEditor
             nudZoom.Value = ZoomLevel;
 
             // Set up the palette panel - This MUST be done after InitializeComponent
-            pnlPalette.ColorSelected += PnlPalette_ColorSelected;
+            pnlPalette.ColourSelected += PnlPalette_ColorSelected;
 
-            AddClipboardFormatListener(this.Handle);
+            _ = AddClipboardFormatListener(this.Handle);
 
             _suppressControlChangeEvents = false;
         }
@@ -143,7 +162,7 @@ namespace WmsGfxSpriteEditor
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            RemoveClipboardFormatListener(this.Handle);
+            _ = RemoveClipboardFormatListener(this.Handle);
             base.OnFormClosed(e);
         }
 
@@ -249,8 +268,6 @@ namespace WmsGfxSpriteEditor
             ShowColourPickerDialog();
         }
 
-        
-
         private void nudZoom_ValueChanged(object sender, EventArgs e)
         {
             if (_suppressControlChangeEvents)
@@ -313,7 +330,7 @@ namespace WmsGfxSpriteEditor
         {
             string rgb = CopyActivePaletteColourAsRGB();
             new InformationDialog().ShowDialog(
-                "Copied selected colour {rgb} to clipboard as RGB.",
+                $"Copied selected colour {rgb} to clipboard as RGB.",
                 "Colour Copied",
                 this
             );
@@ -382,6 +399,8 @@ namespace WmsGfxSpriteEditor
         {
             ActivePaletteColour = selectedColour;
             ActivePaletteIndex = colourIndex;
+
+            pnlPalette.SelectedPaletteIndex = colourIndex;
         }
 
         #endregion PALETTE FUNCS
@@ -533,6 +552,7 @@ namespace WmsGfxSpriteEditor
                     Owner = this,
                     StartPosition = FormStartPosition.CenterScreen,
                 };
+
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
@@ -547,10 +567,9 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-        #endregion
+        #endregion VIEW MENU INVOKED FUNCS
 
-
-            #region SPRITE MENU INVOKED FUNCS
+        #region SPRITE MENU INVOKED FUNCS
 
         protected void FlipSpriteHorizontal()
         {
@@ -819,6 +838,11 @@ namespace WmsGfxSpriteEditor
             }
 
             mnuEditPaste.Enabled = _clipboardService.HasCompatibleBitmap(ActiveSprite!);
+        }
+
+        protected virtual void OnActivePaletteIndexChanged()
+        {
+            pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
         }
 
         protected virtual void OnActiveSpriteChanged()
