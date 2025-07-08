@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="History\**" />
+    <EmbeddedResource Remove="History\**" />
+    <None Remove="History\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="hulk-fancy.ico" />
   </ItemGroup>
 
@@ -33,10 +39,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="History\" />
   </ItemGroup>
 
 </Project>
