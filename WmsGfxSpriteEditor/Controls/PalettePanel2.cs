@@ -12,7 +12,17 @@ namespace WmsGfxSpriteEditor.Controls
     [ToolboxItem(true)]
     public class PalettePanel2 : Panel
     {
-        private Color[] _palette = Array.Empty<Color>();
+        // Constants for UI configuration
+        private const int DefaultButtonSize = 24;
+
+        private const int DefaultButtonMargin = 1;
+        private const int DefaultToolStripPadding = 0;
+        private const int ToolTipAutoPopDelay = 5000;
+        private const int ToolTipInitialDelay = 500;
+        private const int ToolTipReshowDelay = 100;
+        private const int ToolTipVerticalOffset = 30;
+
+        private Color[] _palette = [];
         private ToolStrip _toolStrip = null!;
         private ToolTip _toolTip = null!;
         private int _selectedColorIndex = -1;
@@ -36,7 +46,7 @@ namespace WmsGfxSpriteEditor.Controls
             get => _palette;
             set
             {
-                _palette = value ?? Array.Empty<Color>();
+                _palette = value;
                 RefreshPalette();
             }
         }
@@ -52,11 +62,17 @@ namespace WmsGfxSpriteEditor.Controls
             get => _selectedColorIndex;
             set
             {
-                if (value >= -1 && value < _palette.Length)
+                if (value > -1 && _palette.Length == 0)
                 {
-                    _selectedColorIndex = value;
-                    UpdateSelectionDisplay();
+                    throw new ArgumentException("SelectedColorIndex cannot be set to a positive integer when the palette is empty.", nameof(value));
                 }
+
+                if (value < -1 || value >= _palette.Length)
+                {
+                    throw new ArgumentException($"SelectedColorIndex must be between -1 and {_palette.Length - 1} (inclusive), but was {value}.", nameof(value));
+                }
+                _selectedColorIndex = value;
+                UpdateSelectionDisplay();
             }
         }
 
@@ -86,15 +102,15 @@ namespace WmsGfxSpriteEditor.Controls
                 GripStyle = ToolStripGripStyle.Hidden,
                 RenderMode = ToolStripRenderMode.System,
                 AutoSize = true,
-                Padding = new Padding(2)
+                Padding = new Padding(DefaultToolStripPadding)
             };
 
             // Create ToolTip
             _toolTip = new ToolTip
             {
-                AutoPopDelay = 5000,
-                InitialDelay = 500,
-                ReshowDelay = 100,
+                AutoPopDelay = ToolTipAutoPopDelay,
+                InitialDelay = ToolTipInitialDelay,
+                ReshowDelay = ToolTipReshowDelay,
                 ShowAlways = true
             };
 
@@ -121,8 +137,8 @@ namespace WmsGfxSpriteEditor.Controls
                 {
                     DisplayStyle = ToolStripItemDisplayStyle.None,
                     BackColor = color,
-                    Size = new Size(24, 24),
-                    Margin = new Padding(1),
+                    Size = new Size(DefaultButtonSize, DefaultButtonSize),
+                    Margin = new Padding(DefaultButtonMargin),
                     Tag = i, // Store the color index
                     AutoSize = false
                 };
@@ -164,7 +180,7 @@ namespace WmsGfxSpriteEditor.Controls
                 // Show tooltip at mouse position
                 Point mousePos = MousePosition;
                 Point controlPos = PointToClient(mousePos);
-                _toolTip.Show(toolTipText, this, controlPos.X, controlPos.Y - 30);
+                _toolTip.Show(toolTipText, this, controlPos.X, controlPos.Y - ToolTipVerticalOffset);
             }
         }
 
@@ -181,7 +197,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         private void ColorButton_Click(object? sender, EventArgs e)
         {
-            if (sender is ToolStripButton button && button.Tag != null)
+            if (sender is ToolStripButton { Tag: not null } button)
             {
                 int colorIndex = (int)button.Tag;
                 Color color = _palette[colorIndex];
@@ -204,17 +220,7 @@ namespace WmsGfxSpriteEditor.Controls
                 if (item.Tag != null)
                 {
                     int colorIndex = (int)item.Tag;
-
-                    if (colorIndex == _selectedColorIndex)
-                    {
-                        // Highlight selected button by making it appear pressed
-                        item.Checked = true;
-                    }
-                    else
-                    {
-                        // Normal appearance
-                        item.Checked = false;
-                    }
+                    item.Checked = colorIndex == _selectedColorIndex;
                 }
             }
         }
