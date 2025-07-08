@@ -61,7 +61,7 @@ namespace WmsGfxSpriteEditor
             lblZoom = new Label();
             nudZoom = new NumericUpDown();
             lblPalette = new Label();
-            pnlPalette = new PalettePanel2();
+            pnlPalette = new PalettePanel3();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
@@ -290,14 +290,14 @@ namespace WmsGfxSpriteEditor
             // mnuCopySelectedColourHex
             // 
             mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
-            mnuCopySelectedColourHex.Size = new Size(180, 22);
+            mnuCopySelectedColourHex.Size = new Size(96, 22);
             mnuCopySelectedColourHex.Text = "&Hex";
             mnuCopySelectedColourHex.Click += mnuCopySelectedColourHex_Click;
             // 
             // mnuCopySelectedColourRgb
             // 
             mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
-            mnuCopySelectedColourRgb.Size = new Size(180, 22);
+            mnuCopySelectedColourRgb.Size = new Size(96, 22);
             mnuCopySelectedColourRgb.Text = "&RGB";
             mnuCopySelectedColourRgb.Click += mnuCopySelectedColourRgb_Click;
             // 
@@ -544,7 +544,7 @@ namespace WmsGfxSpriteEditor
         private NumericUpDown nudZoom;
         private Label lblPalette;
         //private PalettePanel pnlPalette;
-        private PalettePanel2 pnlPalette;
+        private PalettePanel3 pnlPalette;
         private Panel magnifierPanel;
         private SpriteDisplayControl spriteDisplay;
     }
