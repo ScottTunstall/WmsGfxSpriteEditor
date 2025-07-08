@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Roms;
@@ -10,6 +11,20 @@ namespace WmsGfxSpriteEditor
 {
     public partial class MainForm : Form
     {
+        // Windows API constants
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool AddClipboardFormatListener(IntPtr hwnd);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
+
+        [DllImport("user32.dll")]
+        private static extern bool IsClipboardFormatAvailable(uint format);
+
+        // Consts
+        const int MinZoomLevel = 1;
+        const int MaxZoomLevel = 32;
+
         // Service dependencies
         private IRomService? _romService;
 
@@ -51,12 +66,32 @@ namespace WmsGfxSpriteEditor
 
             DisableEditingControls();
 
+            nudZoom.Minimum = MinZoomLevel;
+            nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
 
             // Set up the palette panel - This MUST be done after InitializeComponent
             pnlPalette.ColorSelected += PnlPalette_ColorSelected;
 
+            AddClipboardFormatListener(this.Handle);
+
             _suppressControlChangeEvents = false;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WindowsMessages.WM_CLIPBOARDUPDATE)
+            {
+                OnClipboardChanged();
+            }
+
+            base.WndProc(ref m);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            RemoveClipboardFormatListener(this.Handle);
+            base.OnFormClosed(e);
         }
 
         protected override void OnResize(EventArgs e)
@@ -73,11 +108,10 @@ namespace WmsGfxSpriteEditor
                 // Only zoom if CTRL is held
                 if ((ModifierKeys & Keys.Control) == Keys.Control)
                 {
-
                     if (e.Delta > 0)
                     {
                         // Zoom in
-                        if (ZoomLevel < nudZoom.Maximum)
+                        if (ZoomLevel < MaxZoomLevel)
                         {
                             SetZoom(ZoomLevel + 1, true);
                         }
@@ -85,7 +119,7 @@ namespace WmsGfxSpriteEditor
                     else if (e.Delta < 0)
                     {
                         // Zoom out
-                        if (ZoomLevel > nudZoom.Minimum)
+                        if (ZoomLevel > MinZoomLevel)
                         {
                             SetZoom(ZoomLevel - 1, true);
                         }
@@ -143,7 +177,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuViewZoomIn_Click(object sender, EventArgs e)
         {
-            if (ZoomLevel <= nudZoom.Maximum)
+            if (ZoomLevel < MaxZoomLevel)
             {
                 SetZoom(ZoomLevel + 1, true);
             }
@@ -151,7 +185,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuViewZoomOut_Click(object sender, EventArgs e)
         {
-            if (ZoomLevel >= nudZoom.Minimum)
+            if (ZoomLevel > MinZoomLevel)
             {
                 SetZoom(ZoomLevel - 1, true);
             }
@@ -348,9 +382,9 @@ namespace WmsGfxSpriteEditor
 
             cboSprite.Enabled = AvailableSprites.Count > 0;
             OnPaletteChanged();
-            OnSpriteSelectionChanged();
+            OnActiveSpriteChanged();
             OnSpritePixelDataChanged();
-            
+
             _suppressControlChangeEvents = false;
 
             OnReady();
@@ -382,6 +416,8 @@ namespace WmsGfxSpriteEditor
             SetStateFromHistory(item!);
         }
 
+
+
         protected void CopySpriteToClipboard()
         {
             ThrowIfNoActiveSprite();
@@ -403,7 +439,13 @@ namespace WmsGfxSpriteEditor
 
         protected void SetZoom(int zoomLevel, bool syncZoomControl = true)
         {
+            if (ZoomLevel is < MinZoomLevel or > MaxZoomLevel)
+            {
+                throw new ArgumentOutOfRangeException(nameof(zoomLevel), $"Zoom level must be between {MinZoomLevel} and {MaxZoomLevel}.");
+            }
+
             ZoomLevel = zoomLevel;
+            
             if (syncZoomControl)
             {
                 SetZoomControls(zoomLevel);
@@ -478,6 +520,7 @@ namespace WmsGfxSpriteEditor
         #endregion SPRITE MENU INVOKED FUNCS
 
         #region HELP MENU EVENT HANDLERS
+
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
@@ -488,6 +531,7 @@ namespace WmsGfxSpriteEditor
                 MessageBoxIcon.None
             );
         }
+
         #endregion HELP MENU EVENT HANDLERS
 
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
@@ -527,7 +571,7 @@ namespace WmsGfxSpriteEditor
                 SetActiveSpriteDisplay(null);
             }
 
-            OnSpriteSelectionChanged();
+            OnActiveSpriteChanged();
         }
 
         private void SetSpriteSelectComboBox(int index = 0)
@@ -559,7 +603,7 @@ namespace WmsGfxSpriteEditor
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            _spriteService.SpriteDrawOp(ActiveSprite!,x,y, paletteIndex);
+            _spriteService.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
@@ -624,8 +668,6 @@ namespace WmsGfxSpriteEditor
 
         #endregion STATUS BAR
 
-
-
         // Called when the sprite is ready to be edited. Override this method to perform any additional setup.
         protected virtual void OnReady()
         {
@@ -645,13 +687,26 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Enabled = ActiveSprite != null && Palette.Length >= 2;
         }
 
-        protected virtual void OnSpriteSelectionChanged()
+
+        protected virtual void OnClipboardChanged()
+        {
+            if (ActiveSprite == null)
+            {
+                mnuEditPaste.Enabled = false;
+                return;
+            }
+
+            mnuEditPaste.Enabled = _clipboardService.HasCompatibleBitmap(ActiveSprite!);
+        }
+
+
+        protected virtual void OnActiveSpriteChanged()
         {
             bool haveSprite = ActiveSprite != null;
 
             // Edit menu
             mnuEditCopy.Enabled = haveSprite;
-            mnuEditPaste.Enabled = haveSprite;
+            mnuEditPaste.Enabled = haveSprite && _clipboardService.HasCompatibleBitmap(ActiveSprite!); 
 
             // View menu
             mnuViewZoomIn.Enabled = haveSprite;
