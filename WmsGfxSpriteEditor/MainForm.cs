@@ -11,15 +11,14 @@ namespace WmsGfxSpriteEditor
 {
     public partial class MainForm : Form
     {
+#pragma warning disable SYSLIB1054
         // Windows API constants
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool AddClipboardFormatListener(IntPtr hwnd);
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
-
-        [DllImport("user32.dll")]
-        private static extern bool IsClipboardFormatAvailable(uint format);
+#pragma warning enable SYSLIB1054
 
         // Consts
         const int MinZoomLevel = 1;
