@@ -14,10 +14,10 @@ namespace WmsGfxSpriteEditor.Controls
         private readonly PictureBox _pictureBox;
         private readonly ToolTip _toolTip = new();
         private Color[] _palette = [];
-        private int _selectedColourIndex = -1;
-        private int _hoveredColourIndex = -1;
+        private int _selectedPaletteIndex = -1;
+        private int _hoveredPaletteIndex = -1;
 
-        public event EventHandler<ColourSelectedEventArgs>? ColorSelected;
+        public event EventHandler<ColourSelectedEventArgs>? ColourSelected;
 
         public PalettePanel3()
         {
@@ -48,14 +48,14 @@ namespace WmsGfxSpriteEditor.Controls
 
         [Browsable(false)]
         [DefaultValue(-1)]
-        public int SelectedColourIndex
+        public int SelectedPaletteIndex
         {
-            get => _selectedColourIndex;
+            get => _selectedPaletteIndex;
             set
             {
-                if (_selectedColourIndex != value)
+                if (_selectedPaletteIndex != value)
                 {
-                    _selectedColourIndex = value;
+                    _selectedPaletteIndex = value;
                     _pictureBox.Invalidate();
                 }
             }
@@ -87,7 +87,7 @@ namespace WmsGfxSpriteEditor.Controls
                 }
                 
                 // Draw selection rectangle if this is the selected color
-                if (i == _selectedColourIndex)
+                if (i == _selectedPaletteIndex)
                 {
                     using Pen highlightPen = new(Color.Yellow, 3);
                     Rectangle highlightRect = Rectangle.Inflate(rect, -2, -2);
@@ -99,9 +99,9 @@ namespace WmsGfxSpriteEditor.Controls
         private void PictureBox_MouseMove(object? sender, MouseEventArgs e)
         {
             int idx = HitTest(e.Location);
-            if (idx != _hoveredColourIndex)
+            if (idx != _hoveredPaletteIndex)
             {
-                _hoveredColourIndex = idx;
+                _hoveredPaletteIndex = idx;
                 if (idx >= 0 && idx < _palette.Length)
                 {
                     _pictureBox.Cursor = Cursors.Hand;
@@ -120,7 +120,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private void PictureBox_MouseLeave(object? sender, EventArgs e)
         {
-            _hoveredColourIndex = -1;
+            _hoveredPaletteIndex = -1;
             _pictureBox.Cursor = Cursors.Default;
             _toolTip.SetToolTip(_pictureBox, null);
         }
@@ -130,8 +130,8 @@ namespace WmsGfxSpriteEditor.Controls
             int idx = HitTest(e.Location);
             if (idx >= 0 && idx < _palette.Length)
             {
-                SelectedColourIndex = idx;
-                ColorSelected?.Invoke(this, new ColourSelectedEventArgs(_palette[idx], idx));
+                SelectedPaletteIndex = idx;
+                ColourSelected?.Invoke(this, new ColourSelectedEventArgs(_palette[idx], idx));
             }
         }
 
