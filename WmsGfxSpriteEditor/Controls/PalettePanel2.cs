@@ -14,17 +14,11 @@ namespace WmsGfxSpriteEditor.Controls
     {
         // Constants for UI configuration
         private const int DefaultButtonSize = 24;
-
         private const int DefaultButtonMargin = 1;
         private const int DefaultToolStripPadding = 0;
-        private const int ToolTipAutoPopDelay = 5000;
-        private const int ToolTipInitialDelay = 500;
-        private const int ToolTipReshowDelay = 100;
-        private const int ToolTipVerticalOffset = 30;
 
         private Color[] _palette = [];
         private ToolStrip _toolStrip = null!;
-        private ToolTip _toolTip = null!;
         private int _selectedColorIndex = -1;
 
         /// <summary>
@@ -46,7 +40,7 @@ namespace WmsGfxSpriteEditor.Controls
             get => _palette;
             set
             {
-                _palette = value;
+                _palette = value ?? [];
                 RefreshPalette();
             }
         }
@@ -71,6 +65,7 @@ namespace WmsGfxSpriteEditor.Controls
                 {
                     throw new ArgumentException($"SelectedColorIndex must be between -1 and {_palette.Length - 1} (inclusive), but was {value}.", nameof(value));
                 }
+
                 _selectedColorIndex = value;
                 UpdateSelectionDisplay();
             }
@@ -103,15 +98,6 @@ namespace WmsGfxSpriteEditor.Controls
                 RenderMode = ToolStripRenderMode.System,
                 AutoSize = true,
                 Padding = new Padding(DefaultToolStripPadding)
-            };
-
-            // Create ToolTip
-            _toolTip = new ToolTip
-            {
-                AutoPopDelay = ToolTipAutoPopDelay,
-                InitialDelay = ToolTipInitialDelay,
-                ReshowDelay = ToolTipReshowDelay,
-                ShowAlways = true
             };
 
             // Add ToolStrip to panel
@@ -147,13 +133,12 @@ namespace WmsGfxSpriteEditor.Controls
                 string hexValue = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
                 string decimalValue = $"R:{color.R}, G:{color.G}, B:{color.B}";
                 string toolTipText = $"{hexValue}\n{decimalValue}";
-
                 button.ToolTipText = toolTipText;
 
                 // Handle click event
                 button.Click += ColorButton_Click;
 
-                // Handle mouse events for custom tooltip (since ToolStripButton tooltip might not work as expected)
+                // Handle mouse events for custom tooltip and cursor changes
                 button.MouseEnter += ColorButton_MouseEnter;
                 button.MouseLeave += ColorButton_MouseLeave;
 
@@ -170,17 +155,8 @@ namespace WmsGfxSpriteEditor.Controls
         {
             if (sender is ToolStripButton button && button.Tag != null)
             {
-                int colorIndex = (int)button.Tag;
-                Color color = _palette[colorIndex];
-
-                string hexValue = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
-                string decimalValue = $"R:{color.R}, G:{color.G}, B:{color.B}";
-                string toolTipText = $"{hexValue}\n{decimalValue}";
-
-                // Show tooltip at mouse position
-                Point mousePos = MousePosition;
-                Point controlPos = PointToClient(mousePos);
-                _toolTip.Show(toolTipText, this, controlPos.X, controlPos.Y - ToolTipVerticalOffset);
+                // Change cursor to hand to indicate clickable
+                Cursor = Cursors.Hand;
             }
         }
 
@@ -189,7 +165,9 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         private void ColorButton_MouseLeave(object? sender, EventArgs e)
         {
-            _toolTip.Hide(this);
+            // Reset cursor to default
+            Cursor = Cursors.Default;
+
         }
 
         /// <summary>
@@ -240,7 +218,6 @@ namespace WmsGfxSpriteEditor.Controls
         {
             if (disposing)
             {
-                _toolTip?.Dispose();
                 _toolStrip?.Dispose();
             }
             base.Dispose(disposing);
