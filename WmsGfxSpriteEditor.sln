@@ -18,9 +18,6 @@ EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WmsGfxSpriteEditor.Setup", "WmsGfxSpriteEditor.Setup\WmsGfxSpriteEditor.Setup.vdproj", "{1DE2BAB5-CF0F-169C-FEF5-D50B61FBC208}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-	ProjectSection(SolutionItems) = preProject
-		WindowsMessages.cs = WindowsMessages.cs
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{CADCA356-F28D-4537-8456-F0EFA74C028A}"
 EndProject
