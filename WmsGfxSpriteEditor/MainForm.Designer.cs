@@ -290,14 +290,16 @@ namespace WmsGfxSpriteEditor
             // mnuCopySelectedColourHex
             // 
             mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
-            mnuCopySelectedColourHex.Size = new Size(96, 22);
-            mnuCopySelectedColourHex.Text = "Hex";
+            mnuCopySelectedColourHex.Size = new Size(180, 22);
+            mnuCopySelectedColourHex.Text = "&Hex";
+            mnuCopySelectedColourHex.Click += mnuCopySelectedColourHex_Click;
             // 
             // mnuCopySelectedColourRgb
             // 
             mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
-            mnuCopySelectedColourRgb.Size = new Size(96, 22);
-            mnuCopySelectedColourRgb.Text = "RGB";
+            mnuCopySelectedColourRgb.Size = new Size(180, 22);
+            mnuCopySelectedColourRgb.Text = "&RGB";
+            mnuCopySelectedColourRgb.Click += mnuCopySelectedColourRgb_Click;
             // 
             // mnuHelp
             // 

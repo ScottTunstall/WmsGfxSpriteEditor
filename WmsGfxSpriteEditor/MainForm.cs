@@ -12,17 +12,21 @@ namespace WmsGfxSpriteEditor
     public partial class MainForm : Form
     {
 #pragma warning disable SYSLIB1054
+
         // Windows API constants
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool AddClipboardFormatListener(IntPtr hwnd);
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
+
 #pragma warning restore SYSLIB1054
 
         // Consts
-        const int MinZoomLevel = 1;
-        const int MaxZoomLevel = 32;
+        private const int MinZoomLevel = 1;
+
+        private const int MaxZoomLevel = 32;
+        private const int DefaultZoomLevel = 3;
 
         // Service dependencies
         private IRomService? _romService;
@@ -37,6 +41,11 @@ namespace WmsGfxSpriteEditor
         private RomData? _romData;
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
+        private bool _suppressControlChangeEvents;
+        private Color[] _palette = default!;
+        private ISprite? _activeSprite;
+        private int _zoomLevel = DefaultZoomLevel;
+
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
 
         // User selections
@@ -45,13 +54,56 @@ namespace WmsGfxSpriteEditor
         protected int ActivePaletteIndex { get; private set; }
         protected int ActiveSpriteIndex { get; private set; }
         protected SpriteInfo? ActiveSpriteInfo { get; private set; }
-        protected ISprite? ActiveSprite { get; private set; }
-        protected int ZoomLevel { get; private set; } = 3;
 
-        private bool _suppressControlChangeEvents;
+        protected ISprite? ActiveSprite
+        {
+            get => _activeSprite;
+            private set
+            {
+                if (value != _activeSprite)
+                {
+                    _activeSprite = value;
+                    _activeSprite?.ClearPixelDataDirtyFlag();
+                    OnActiveSpriteChanged();
+                }
+            }
+        }
+
+        protected int ZoomLevel
+        {
+            get => _zoomLevel;
+            private set
+            {
+                if (value < MinZoomLevel || value > MaxZoomLevel)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Zoom level must be between {MinZoomLevel} and {MaxZoomLevel}.");
+                }
+
+                if (value == _zoomLevel)
+                {
+                    return; // No change
+                }
+
+                _zoomLevel = value;
+                OnZoomChanged();
+            }
+        }
 
         // Palette
-        protected Color[] Palette { get; private set; } = default!;
+        protected Color[] Palette
+        {
+            get => _palette;
+            private set
+            {
+                if (value.Length < 2)
+                {
+                    throw new ArgumentException("Palette must have at least 2 colors.", nameof(value));
+                }
+
+                _palette = value;
+                OnPaletteChanged();
+            }
+        }
 
         public MainForm()
         {
@@ -112,7 +164,7 @@ namespace WmsGfxSpriteEditor
                         // Zoom in
                         if (ZoomLevel < MaxZoomLevel)
                         {
-                            SetZoom(ZoomLevel + 1, true);
+                            ZoomLevel++;
                         }
                     }
                     else if (e.Delta < 0)
@@ -120,7 +172,7 @@ namespace WmsGfxSpriteEditor
                         // Zoom out
                         if (ZoomLevel > MinZoomLevel)
                         {
-                            SetZoom(ZoomLevel - 1, true);
+                            ZoomLevel--;
                         }
                     }
                 }
@@ -178,7 +230,7 @@ namespace WmsGfxSpriteEditor
         {
             if (ZoomLevel < MaxZoomLevel)
             {
-                SetZoom(ZoomLevel + 1, true);
+                ZoomLevel++;
             }
         }
 
@@ -186,7 +238,7 @@ namespace WmsGfxSpriteEditor
         {
             if (ZoomLevel > MinZoomLevel)
             {
-                SetZoom(ZoomLevel - 1, true);
+                ZoomLevel--;
             }
         }
 
@@ -195,7 +247,7 @@ namespace WmsGfxSpriteEditor
             if (_suppressControlChangeEvents)
                 return;
 
-            SetZoom((int)nudZoom.Value, false);
+            ZoomLevel = (int)nudZoom.Value;
         }
 
         #endregion VIEW MENU EVENT HANDLERS
@@ -234,6 +286,32 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE MENU EVENT HANDLERS
 
+        #region PALETTE MENU EVENT HANDLERS
+
+        // Handler for Copy Selected Colour as Hex
+        private void mnuCopySelectedColourHex_Click(object sender, EventArgs e)
+        {
+            string hex = CopyActivePaletteColourAsHex();
+            new InformationDialog().ShowDialog(
+                $"Copied selected colour {hex} to clipboard as hex.",
+                "Colour Copied",
+                this
+            );
+        }
+
+        // Handler for Copy Selected Colour as RGB
+        private void mnuCopySelectedColourRgb_Click(object sender, EventArgs e)
+        {
+            string rgb = CopyActivePaletteColourAsRGB();
+            new InformationDialog().ShowDialog(
+                "Copied selected colour {rgb} to clipboard as RGB.",
+                "Colour Copied",
+                this
+            );
+        }
+
+        #endregion PALETTE MENU EVENT HANDLERS
+
         #region SPRITE COMBO BOX EVENT HANDLERS
 
         private void cboSprite_SelectedIndexChanged(object sender, EventArgs e)
@@ -253,7 +331,7 @@ namespace WmsGfxSpriteEditor
             if (_suppressControlChangeEvents)
                 return;
 
-            SelectPalette(e.SelectedColour, e.ColourIndex);
+            SelectActivePaletteColour(e.SelectedColour, e.ColourIndex);
         }
 
         #endregion PALETTE CONTROL EVENT HANDLERS
@@ -291,7 +369,7 @@ namespace WmsGfxSpriteEditor
 
         #region PALETTE FUNCS
 
-        protected void SelectPalette(Color selectedColour, int colourIndex)
+        protected void SelectActivePaletteColour(Color selectedColour, int colourIndex)
         {
             ActivePaletteColour = selectedColour;
             ActivePaletteIndex = colourIndex;
@@ -380,8 +458,6 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.ZoomLevel = ZoomLevel;
 
             cboSprite.Enabled = AvailableSprites.Count > 0;
-            OnPaletteChanged();
-            OnActiveSpriteChanged();
             OnSpritePixelDataChanged();
 
             _suppressControlChangeEvents = false;
@@ -415,8 +491,6 @@ namespace WmsGfxSpriteEditor
             SetStateFromHistory(item!);
         }
 
-
-
         protected void CopySpriteToClipboard()
         {
             ThrowIfNoActiveSprite();
@@ -434,35 +508,7 @@ namespace WmsGfxSpriteEditor
 
         #endregion EDIT MENU INVOKED FUNCS
 
-        #region VIEW MENU INVOKED FUNCS
 
-        protected void SetZoom(int zoomLevel, bool syncZoomControl = true)
-        {
-            if (ZoomLevel is < MinZoomLevel or > MaxZoomLevel)
-            {
-                throw new ArgumentOutOfRangeException(nameof(zoomLevel), $"Zoom level must be between {MinZoomLevel} and {MaxZoomLevel}.");
-            }
-
-            ZoomLevel = zoomLevel;
-            
-            if (syncZoomControl)
-            {
-                SetZoomControls(zoomLevel);
-            }
-
-            OnZoomChanged();
-        }
-
-        private void SetZoomControls(int zoomLevel)
-        {
-            bool oldValue = _suppressControlChangeEvents;
-            _suppressControlChangeEvents = true;
-            nudZoom.Value = zoomLevel;
-            spriteDisplay.ZoomLevel = zoomLevel;
-            _suppressControlChangeEvents = oldValue;
-        }
-
-        #endregion VIEW MENU INVOKED FUNCS
 
         #region SPRITE MENU INVOKED FUNCS
 
@@ -517,6 +563,26 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion SPRITE MENU INVOKED FUNCS
+
+        #region PALETTE MENU INVOKED FUNCS
+
+        private string CopyActivePaletteColourAsHex()
+        {
+            // Copy ActivePaletteColour as #RRGGBB
+            string hex = $"#{ActivePaletteColour.R:X2}{ActivePaletteColour.G:X2}{ActivePaletteColour.B:X2}";
+            Clipboard.SetText(hex);
+            return hex;
+        }
+
+        private string CopyActivePaletteColourAsRGB()
+        {
+            // Copy ActivePaletteColour as R,G,B
+            string rgb = $"{ActivePaletteColour.R},{ActivePaletteColour.G},{ActivePaletteColour.B}";
+            Clipboard.SetText(rgb);
+            return rgb;
+        }
+
+        #endregion PALETTE MENU INVOKED FUNCS
 
         #region HELP MENU EVENT HANDLERS
 
@@ -677,15 +743,28 @@ namespace WmsGfxSpriteEditor
             bool haveSprite = ActiveSprite != null;
             mnuViewZoomIn.Enabled = haveSprite && ZoomLevel < nudZoom.Maximum;
             mnuViewZoomOut.Enabled = haveSprite && ZoomLevel > nudZoom.Minimum;
+
+            bool oldValue = _suppressControlChangeEvents;
+
+            _suppressControlChangeEvents = true;
+
+            if (nudZoom.Value != ZoomLevel)
+            {
+                nudZoom.Value = ZoomLevel;
+            }
+
             spriteDisplay.ZoomLevel = ZoomLevel;
+            _suppressControlChangeEvents = oldValue;
             spriteDisplay.Invalidate();
         }
 
         protected virtual void OnPaletteChanged()
         {
-            pnlPalette.Enabled = ActiveSprite != null && Palette.Length >= 2;
-        }
+            bool havePalette = Palette.Length > 1;
 
+            mnuPalette.Enabled = havePalette;
+            pnlPalette.Enabled = havePalette;
+        }
 
         protected virtual void OnClipboardChanged()
         {
@@ -698,20 +777,20 @@ namespace WmsGfxSpriteEditor
             mnuEditPaste.Enabled = _clipboardService.HasCompatibleBitmap(ActiveSprite!);
         }
 
-
         protected virtual void OnActiveSpriteChanged()
         {
             bool haveSprite = ActiveSprite != null;
 
             // Edit menu
             mnuEditCopy.Enabled = haveSprite;
-            mnuEditPaste.Enabled = haveSprite && _clipboardService.HasCompatibleBitmap(ActiveSprite!); 
+            mnuEditPaste.Enabled = haveSprite && _clipboardService.HasCompatibleBitmap(ActiveSprite!);
 
             // View menu
             mnuViewZoomIn.Enabled = haveSprite;
             mnuViewZoomOut.Enabled = haveSprite;
 
             // Sprite menu
+            mnuSprite.Enabled = haveSprite;
             mnuSpriteFlipHorizontal.Enabled = haveSprite;
             mnuSpriteFlipVertical.Enabled = haveSprite;
             mnuSpriteShiftUp.Enabled = haveSprite;
@@ -729,8 +808,8 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnSpritePixelDataChanged()
         {
-            mnuEditUndo.Enabled = ActiveSprite != null && _history.CanGoBack;
-            mnuEditRedo.Enabled = ActiveSprite != null && _history.CanGoForward;
+            mnuEditUndo.Enabled = _history.CanGoBack;
+            mnuEditRedo.Enabled = _history.CanGoForward;
 
             spriteDisplay.Invalidate();
         }
