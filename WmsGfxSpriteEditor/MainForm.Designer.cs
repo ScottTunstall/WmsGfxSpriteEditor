@@ -57,7 +57,7 @@ namespace WmsGfxSpriteEditor
             lblZoom = new Label();
             nudZoom = new NumericUpDown();
             lblPalette = new Label();
-            pnlPalette = new PalettePanel();
+            pnlPalette = new PalettePanel2();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
@@ -411,6 +411,7 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Location = new Point(553, 8);
             pnlPalette.Margin = new Padding(3, 8, 3, 3);
             pnlPalette.Name = "pnlPalette";
+            pnlPalette.SelectedColorIndex = -1;
             pnlPalette.Size = new Size(326, 29);
             pnlPalette.TabIndex = 5;
             // 
@@ -465,10 +466,6 @@ namespace WmsGfxSpriteEditor
             PerformLayout();
         }
 
-        private void MnuEditCopy_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
         #endregion
 
@@ -509,7 +506,8 @@ namespace WmsGfxSpriteEditor
         private Label lblZoom;
         private NumericUpDown nudZoom;
         private Label lblPalette;
-        private PalettePanel pnlPalette;
+        //private PalettePanel pnlPalette;
+        private PalettePanel2 pnlPalette;
         private Panel magnifierPanel;
         private SpriteDisplayControl spriteDisplay;
     }
