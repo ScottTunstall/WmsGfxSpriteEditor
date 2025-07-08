@@ -157,6 +157,11 @@ dotnet_naming_rule.private_fields_should_have_underscore.severity = warning
 dotnet_naming_rule.private_fields_should_have_underscore.symbols = private_fields
 dotnet_naming_rule.private_fields_should_have_underscore.style = underscore_prefix
 
+# Private constants naming rule - should NOT have underscore prefix
+dotnet_naming_rule.private_constants_should_be_pascal_case.severity = warning
+dotnet_naming_rule.private_constants_should_be_pascal_case.symbols = private_constants
+dotnet_naming_rule.private_constants_should_be_pascal_case.style = pascal_case
+
 # Symbol specifications
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
@@ -174,6 +179,11 @@ dotnet_naming_symbols.non_field_members.required_modifiers =
 # Private field symbol specification - added as requested
 dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# Private constants symbol specification - added as requested
+dotnet_naming_symbols.private_constants.applicable_kinds = field
+dotnet_naming_symbols.private_constants.applicable_accessibilities = private
+dotnet_naming_symbols.private_constants.required_modifiers = const
 
 # Naming styles
 
