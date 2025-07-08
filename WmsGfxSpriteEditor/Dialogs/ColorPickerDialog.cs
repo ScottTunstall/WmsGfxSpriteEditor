@@ -7,6 +7,17 @@ namespace WmsGfxSpriteEditor.Dialogs
         private ColorPickerPanel _palettePanel;
         public event EventHandler? SelectedColorChanged;
 
+        public ColorPickerDialog()
+        {
+            InitializeComponent();
+        }
+
+        public ColorPickerDialog(Color[] palette) : this()
+        {
+            Palette = palette;
+        }
+
+
         public Color[] Palette
         {
             get => _palettePanel.Palette;
@@ -18,19 +29,6 @@ namespace WmsGfxSpriteEditor.Dialogs
             get => _palettePanel.SelectedPaletteIndex;
             set => _palettePanel.SelectedPaletteIndex = value;
         }
-
-        public Color? SelectedColor => _palettePanel.SelectedColor;
-
-        public ColorPickerDialog()
-        {
-            InitializeComponent();
-        }
-
-        public ColorPickerDialog(Color[] palette) : this()
-        {
-            Palette = palette;
-        }
-
 
         protected override void OnResize(EventArgs e)
         {
