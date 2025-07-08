@@ -46,6 +46,8 @@ namespace WmsGfxSpriteEditor
         private ISprite? _activeSprite;
         private int _zoomLevel = DefaultZoomLevel;
 
+        private ColorPickerDialog? _colorPickerDialog;
+
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
 
         // User selections
@@ -241,6 +243,13 @@ namespace WmsGfxSpriteEditor
                 ZoomLevel--;
             }
         }
+
+        private void mnuViewPalette_Click(object sender, EventArgs e)
+        {
+            ShowColourPickerDialog();
+        }
+
+        
 
         private void nudZoom_ValueChanged(object sender, EventArgs e)
         {
@@ -508,9 +517,40 @@ namespace WmsGfxSpriteEditor
 
         #endregion EDIT MENU INVOKED FUNCS
 
+        #region VIEW MENU INVOKED FUNCS
+
+        private void ShowColourPickerDialog()
+        {
+            if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
+            {
+                _colorPickerDialog.BringToFront();
+            }
+            else
+            {
+                _colorPickerDialog = new ColorPickerDialog(Palette)
+                {
+                    SelectedPaletteIndex = ActivePaletteIndex,
+                    Owner = this,
+                    StartPosition = FormStartPosition.CenterScreen,
+                };
+                _colorPickerDialog.SelectedColorChanged += (s, args) =>
+                {
+                    if (_colorPickerDialog.SelectedPaletteIndex >= 0)
+                    {
+                        SelectActivePaletteColour(_colorPickerDialog.Palette[_colorPickerDialog.SelectedPaletteIndex],
+                            _colorPickerDialog.SelectedPaletteIndex);
+                    }
+                };
+
+                _colorPickerDialog.FormClosed += (s, args) => { _colorPickerDialog = null; };
+                _colorPickerDialog.Show(this);
+            }
+        }
+
+        #endregion
 
 
-        #region SPRITE MENU INVOKED FUNCS
+            #region SPRITE MENU INVOKED FUNCS
 
         protected void FlipSpriteHorizontal()
         {

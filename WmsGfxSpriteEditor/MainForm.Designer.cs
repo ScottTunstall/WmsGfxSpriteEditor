@@ -36,6 +36,8 @@ namespace WmsGfxSpriteEditor
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
+            mnuViewPaletteSeparator = new ToolStripSeparator();
+            mnuViewPalette = new ToolStripMenuItem();
             mnuSprite = new ToolStripMenuItem();
             mnuSpriteFlipHorizontal = new ToolStripMenuItem();
             mnuSpriteFlipVertical = new ToolStripMenuItem();
@@ -179,7 +181,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuView
             // 
-            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut });
+            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewPaletteSeparator, mnuViewPalette });
             mnuView.Name = "mnuView";
             mnuView.ShortcutKeys = Keys.Alt | Keys.V;
             mnuView.Size = new Size(44, 20);
@@ -202,6 +204,18 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut.Size = new Size(207, 22);
             mnuViewZoomOut.Text = "Zoom &Out";
             mnuViewZoomOut.Click += mnuViewZoomOut_Click;
+            // 
+            // mnuViewPaletteSeparator
+            // 
+            mnuViewPaletteSeparator.Name = "mnuViewPaletteSeparator";
+            mnuViewPaletteSeparator.Size = new Size(204, 6);
+            // 
+            // mnuViewPalette
+            // 
+            mnuViewPalette.Name = "mnuViewPalette";
+            mnuViewPalette.Size = new Size(207, 22);
+            mnuViewPalette.Text = "Palette...";
+            mnuViewPalette.Click += mnuViewPalette_Click;
             // 
             // mnuSprite
             // 
@@ -313,7 +327,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuHelpAbout.Name = "mnuHelpAbout";
             mnuHelpAbout.ShortcutKeys = Keys.F1;
-            mnuHelpAbout.Size = new Size(180, 22);
+            mnuHelpAbout.Size = new Size(135, 22);
             mnuHelpAbout.Text = "About...";
             mnuHelpAbout.Click += mnuHelpAbout_Click;
             // 
@@ -518,6 +532,8 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
+        private ToolStripSeparator mnuViewPaletteSeparator;
+        private ToolStripMenuItem mnuViewPalette;
         private ToolStripMenuItem mnuSprite;
         private ToolStripMenuItem mnuSpriteFlipHorizontal;
         private ToolStripMenuItem mnuSpriteFlipVertical;
