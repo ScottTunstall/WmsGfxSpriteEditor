@@ -590,7 +590,11 @@ namespace WmsGfxSpriteEditor
         {
             MessageBox.Show(
                 this,
-                "Williams Graphics Sprite Editor." + Environment.NewLine + Environment.NewLine + "Designed and developed by Scott Tunstall." + Environment.NewLine + "All rights reserved.",
+                "Williams Graphics Sprite Editor." + Environment.NewLine +
+                Environment.NewLine +
+                "Designed and developed by Scott Tunstall." + Environment.NewLine +
+                "Sprite offsets discovered and documented by Sean Riddle." + Environment.NewLine +
+                "All rights reserved.",
                 "About Williams Graphics Sprite Editor",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.None

@@ -313,7 +313,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuHelpAbout.Name = "mnuHelpAbout";
             mnuHelpAbout.ShortcutKeys = Keys.F1;
-            mnuHelpAbout.Size = new Size(135, 22);
+            mnuHelpAbout.Size = new Size(180, 22);
             mnuHelpAbout.Text = "About...";
             mnuHelpAbout.Click += mnuHelpAbout_Click;
             // 
