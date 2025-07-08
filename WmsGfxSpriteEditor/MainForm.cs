@@ -284,7 +284,7 @@ namespace WmsGfxSpriteEditor
 
         protected virtual RomData? LoadRomData(string romSetName, IRomService romService)
         {
-            string? directory = new LoadRomDialog(romSetName).BrowseForFolder();
+            string? directory = new LoadRomDialog().BrowseForFolder(romSetName);
             if (directory == null)
             {
                 return null;
@@ -294,7 +294,7 @@ namespace WmsGfxSpriteEditor
 
             if (auditInfo.MissingRomFiles.Length > 0)
             {
-                new MissingFilesDialog(romSetName).ShowDialog(auditInfo.MissingRomFiles, this);
+                new MissingFilesDialog().ShowDialog(_romSetName, auditInfo.MissingRomFiles, this);
                 return null;
             }
 
@@ -306,7 +306,7 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void SaveRomData()
         {
-            string? directory = new SaveRomDialog(_romSetName).BrowseForFolder();
+            string? directory = new SaveRomDialog().BrowseForFolder(_romSetName);
             if (directory == null)
             {
                 return;
