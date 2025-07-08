@@ -44,6 +44,10 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftRight = new ToolStripMenuItem();
             mnuSpriteShiftUp = new ToolStripMenuItem();
             mnuSpriteShiftDown = new ToolStripMenuItem();
+            mnuPalette = new ToolStripMenuItem();
+            mnuCopySelectedColour = new ToolStripMenuItem();
+            mnuCopySelectedColourHex = new ToolStripMenuItem();
+            mnuCopySelectedColourRgb = new ToolStripMenuItem();
             mnuHelp = new ToolStripMenuItem();
             mnuHelpAbout = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
@@ -70,7 +74,7 @@ namespace WmsGfxSpriteEditor
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite, mnuHelp });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite, mnuPalette, mnuHelp });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(882, 24);
@@ -267,6 +271,34 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftDown.Text = "Shift all pixels &Down";
             mnuSpriteShiftDown.Click += mnuSpriteShiftDown_Click;
             // 
+            // mnuPalette
+            // 
+            mnuPalette.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColour });
+            mnuPalette.Enabled = false;
+            mnuPalette.Name = "mnuPalette";
+            mnuPalette.ShortcutKeys = Keys.Alt | Keys.P;
+            mnuPalette.Size = new Size(55, 20);
+            mnuPalette.Text = "&Palette";
+            // 
+            // mnuCopySelectedColour
+            // 
+            mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
+            mnuCopySelectedColour.Name = "mnuCopySelectedColour";
+            mnuCopySelectedColour.Size = new Size(185, 22);
+            mnuCopySelectedColour.Text = "Copy selected colour";
+            // 
+            // mnuCopySelectedColourHex
+            // 
+            mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
+            mnuCopySelectedColourHex.Size = new Size(96, 22);
+            mnuCopySelectedColourHex.Text = "Hex";
+            // 
+            // mnuCopySelectedColourRgb
+            // 
+            mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
+            mnuCopySelectedColourRgb.Size = new Size(96, 22);
+            mnuCopySelectedColourRgb.Text = "RGB";
+            // 
             // mnuHelp
             // 
             mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuHelpAbout });
@@ -411,7 +443,6 @@ namespace WmsGfxSpriteEditor
             pnlPalette.Location = new Point(553, 8);
             pnlPalette.Margin = new Padding(3, 8, 3, 3);
             pnlPalette.Name = "pnlPalette";
-            pnlPalette.SelectedColorIndex = -1;
             pnlPalette.Size = new Size(326, 29);
             pnlPalette.TabIndex = 5;
             // 
@@ -493,6 +524,10 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteShiftRight;
         private ToolStripMenuItem mnuSpriteShiftUp;
         private ToolStripMenuItem mnuSpriteShiftDown;
+        private ToolStripMenuItem mnuPalette;
+        private ToolStripMenuItem mnuCopySelectedColour;
+        private ToolStripMenuItem mnuCopySelectedColourHex;
+        private ToolStripMenuItem mnuCopySelectedColourRgb;
         private ToolStripMenuItem mnuHelp;
         private ToolStripMenuItem mnuHelpAbout;
         private StatusStrip statusStrip;
