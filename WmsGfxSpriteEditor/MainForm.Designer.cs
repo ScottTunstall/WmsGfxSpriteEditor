@@ -441,10 +441,11 @@ namespace WmsGfxSpriteEditor
             // toolStrip1
             // 
             toolStrip1.Dock = DockStyle.Fill;
+            toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.Items.AddRange(new ToolStripItem[] { btnShowPalette });
-            toolStrip1.Location = new Point(816, 0);
+            toolStrip1.Location = new Point(856, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(66, 40);
+            toolStrip1.Size = new Size(26, 40);
             toolStrip1.TabIndex = 5;
             toolStrip1.Text = "toolStrip1";
             // 

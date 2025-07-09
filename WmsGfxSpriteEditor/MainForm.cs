@@ -350,7 +350,7 @@ namespace WmsGfxSpriteEditor
 
         private void btnShowPalette_Click(object sender, EventArgs e)
         {
-            ToggleColourPickerDialog(btnShowPalette.Checked);
+            ToggleColourPickerDialog();
         }
 
         #endregion
@@ -531,10 +531,9 @@ namespace WmsGfxSpriteEditor
 
         #region VIEW MENU INVOKED FUNCS
 
-
-        private void ToggleColourPickerDialog(bool show)
+        private void ToggleColourPickerDialog()
         {
-            if (show)
+            if (_colorPickerDialog == null || !_colorPickerDialog.Visible)
             {
                 ShowColourPickerDialog();
             }
@@ -542,8 +541,9 @@ namespace WmsGfxSpriteEditor
             {
                 HideColourPickerDialog();
             }
-        }
 
+            HideColourPickerDialog();
+        }
 
         private void ShowColourPickerDialog()
         {
@@ -551,6 +551,7 @@ namespace WmsGfxSpriteEditor
             {
                 _colorPickerDialog.Show();
                 _colorPickerDialog.BringToFront();
+                OnColourPickerShown();
             }
             else
             {
@@ -874,7 +875,6 @@ namespace WmsGfxSpriteEditor
             //pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
         }
 
-
         protected virtual void OnColourPickerShown()
         {
             btnShowPalette.Checked = true;
@@ -884,7 +884,6 @@ namespace WmsGfxSpriteEditor
         {
             btnShowPalette.Checked = false;
         }
-
 
         protected virtual void OnActiveSpriteChanged()
         {
