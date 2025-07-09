@@ -135,7 +135,7 @@ namespace WmsGfxSpriteEditor
             InitializeComponent();
 
             // Subscribe to magPanel.ZoomMouseWheel to always zoom
-            magPanel.ZoomMouseWheel += MagPanel_MouseWheel;
+            magnificationPanel.ZoomMouseWheel += MagPanel_MouseWheel;
 
             _suppressControlChangeEvents = true;
 
@@ -195,35 +195,6 @@ namespace WmsGfxSpriteEditor
         {
             base.OnResize(e);
             spriteDisplay.Invalidate();
-        }
-
-        protected override void OnMouseWheel(MouseEventArgs e)
-        {
-            //if (ActiveSprite != null)
-            //{
-            //    Only zoom if CTRL is held
-            //    if ((ModifierKeys & Keys.Control) == Keys.Control)
-            //        {
-            //            if (e.Delta > 0)
-            //            {
-            //                Zoom in
-            //            if (ZoomLevel < MaxZoomLevel)
-            //                {
-            //                    ZoomLevel++;
-            //                }
-            //            }
-            //            else if (e.Delta < 0)
-            //            {
-            //                Zoom out
-            //            if (ZoomLevel > MinZoomLevel)
-            //                {
-            //                    ZoomLevel--;
-            //                }
-            //            }
-            //        }
-            //}
-
-            //base.OnMouseWheel(e);
         }
 
         #region FILE MENU EVENT HANDLERS

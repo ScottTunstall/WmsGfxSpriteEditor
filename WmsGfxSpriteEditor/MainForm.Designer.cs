@@ -64,7 +64,7 @@ namespace WmsGfxSpriteEditor
             nudZoom = new NumericUpDown();
             toolStripQuickAccess = new ToolStrip();
             btnShowPalette = new ToolStripButton();
-            magPanel = new MagPanel();
+            magnificationPanel = new MagnificationPanel();
             spriteDisplay = new SpriteDisplayControl();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
@@ -72,7 +72,7 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
             toolStripQuickAccess.SuspendLayout();
-            magPanel.SuspendLayout();
+            magnificationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
             SuspendLayout();
             // 
@@ -465,14 +465,14 @@ namespace WmsGfxSpriteEditor
             // 
             // magPanel
             // 
-            magPanel.AutoScroll = true;
-            magPanel.BackColor = Color.LightGray;
-            magPanel.Controls.Add(spriteDisplay);
-            magPanel.Dock = DockStyle.Fill;
-            magPanel.Location = new Point(0, 64);
-            magPanel.Name = "magPanel";
-            magPanel.Size = new Size(882, 459);
-            magPanel.TabIndex = 3;
+            magnificationPanel.AutoScroll = true;
+            magnificationPanel.BackColor = Color.LightGray;
+            magnificationPanel.Controls.Add(spriteDisplay);
+            magnificationPanel.Dock = DockStyle.Fill;
+            magnificationPanel.Location = new Point(0, 64);
+            magnificationPanel.Name = "magnificationPanel";
+            magnificationPanel.Size = new Size(882, 459);
+            magnificationPanel.TabIndex = 3;
             // 
             // spriteDisplay
             // 
@@ -498,7 +498,7 @@ namespace WmsGfxSpriteEditor
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(882, 547);
-            Controls.Add(magPanel);
+            Controls.Add(magnificationPanel);
             Controls.Add(topPanel);
             Controls.Add(statusStrip);
             Controls.Add(menuStrip);
@@ -517,7 +517,7 @@ namespace WmsGfxSpriteEditor
             ((System.ComponentModel.ISupportInitialize)nudZoom).EndInit();
             toolStripQuickAccess.ResumeLayout(false);
             toolStripQuickAccess.PerformLayout();
-            magPanel.ResumeLayout(false);
+            magnificationPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -570,7 +570,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySprite;
         private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
-        private MagPanel magPanel;
+        private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
     }
 }
