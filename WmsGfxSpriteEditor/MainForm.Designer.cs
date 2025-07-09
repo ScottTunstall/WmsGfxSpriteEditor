@@ -144,7 +144,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(144, 22);
+            mnuEditUndo.Size = new Size(180, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -153,28 +153,28 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(144, 22);
+            mnuEditRedo.Size = new Size(180, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuEditSeparator
             // 
             mnuEditSeparator.Name = "mnuEditSeparator";
-            mnuEditSeparator.Size = new Size(141, 6);
+            mnuEditSeparator.Size = new Size(177, 6);
             // 
             // mnuEditCopy
             // 
             mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
-            mnuEditCopy.Size = new Size(144, 22);
+            mnuEditCopy.Size = new Size(180, 22);
             mnuEditCopy.Text = "&Copy";
             // 
             // mnuCopySprite
             // 
             mnuCopySprite.Name = "mnuCopySprite";
             mnuCopySprite.ShortcutKeys = Keys.Control | Keys.C;
-            mnuCopySprite.Size = new Size(157, 22);
+            mnuCopySprite.Size = new Size(180, 22);
             mnuCopySprite.Text = "&Sprite";
             mnuCopySprite.Click += mnuEditCopy_Click;
             // 
@@ -182,7 +182,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
             mnuCopySelectedColour.Name = "mnuCopySelectedColour";
-            mnuCopySelectedColour.Size = new Size(157, 22);
+            mnuCopySelectedColour.Size = new Size(180, 22);
             mnuCopySelectedColour.Text = "Selected Colour";
             // 
             // mnuCopySelectedColourHex
@@ -204,7 +204,7 @@ namespace WmsGfxSpriteEditor
             mnuEditPaste.Enabled = false;
             mnuEditPaste.Name = "mnuEditPaste";
             mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
-            mnuEditPaste.Size = new Size(144, 22);
+            mnuEditPaste.Size = new Size(180, 22);
             mnuEditPaste.Text = "&Paste";
             mnuEditPaste.Click += mnuEditPaste_Click;
             // 
@@ -241,6 +241,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuViewPalette
             // 
+            mnuViewPalette.Enabled = false;
             mnuViewPalette.Name = "mnuViewPalette";
             mnuViewPalette.ShortcutKeys = Keys.F8;
             mnuViewPalette.Size = new Size(207, 22);
@@ -443,9 +444,9 @@ namespace WmsGfxSpriteEditor
             toolStripQuickAccess.Dock = DockStyle.Fill;
             toolStripQuickAccess.GripStyle = ToolStripGripStyle.Hidden;
             toolStripQuickAccess.Items.AddRange(new ToolStripItem[] { btnShowPalette });
-            toolStripQuickAccess.Location = new Point(825, 0);
+            toolStripQuickAccess.Location = new Point(856, 0);
             toolStripQuickAccess.Name = "toolStripQuickAccess";
-            toolStripQuickAccess.Size = new Size(57, 40);
+            toolStripQuickAccess.Size = new Size(26, 40);
             toolStripQuickAccess.TabIndex = 5;
             toolStripQuickAccess.Text = "toolStrip1";
             // 
@@ -453,6 +454,7 @@ namespace WmsGfxSpriteEditor
             // 
             btnShowPalette.CheckOnClick = true;
             btnShowPalette.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnShowPalette.Enabled = false;
             btnShowPalette.Image = (Image)resources.GetObject("btnShowPalette.Image");
             btnShowPalette.ImageTransparentColor = Color.Magenta;
             btnShowPalette.Name = "btnShowPalette";
@@ -462,7 +464,7 @@ namespace WmsGfxSpriteEditor
             // 
             // spriteDisplay
             // 
-            spriteDisplay.BackColor = Color.Transparent;
+            spriteDisplay.BackColor = Color.LightGray;
             spriteDisplay.Dock = DockStyle.Fill;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 64);

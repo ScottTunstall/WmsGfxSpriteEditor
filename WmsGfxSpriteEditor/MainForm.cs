@@ -855,6 +855,8 @@ namespace WmsGfxSpriteEditor
         protected virtual void OnPaletteChanged()
         {
             bool havePalette = Palette.Length > 1;
+            mnuViewPalette.Enabled = havePalette;
+            btnShowPalette.Enabled = havePalette;
         }
 
         protected virtual void OnClipboardChanged()
