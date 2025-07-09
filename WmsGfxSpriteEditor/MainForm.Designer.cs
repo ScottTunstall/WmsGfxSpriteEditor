@@ -64,7 +64,7 @@ namespace WmsGfxSpriteEditor
             nudZoom = new NumericUpDown();
             toolStripQuickAccess = new ToolStrip();
             btnShowPalette = new ToolStripButton();
-            magPanel = new Panel();
+            magPanel = new MagPanel();
             spriteDisplay = new SpriteDisplayControl();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
@@ -488,6 +488,10 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.TabStop = false;
             spriteDisplay.ZoomLevel = 1;
             spriteDisplay.ZoomLevelThreshold = 3;
+            spriteDisplay.GridCellMouseMove += spriteDisplay_GridCellMouseMove;
+            spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
+            spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
+
             // 
             // MainForm
             // 
@@ -566,7 +570,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySprite;
         private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
-        private Panel magPanel;
+        private MagPanel magPanel;
         private SpriteDisplayControl spriteDisplay;
     }
 }

@@ -134,6 +134,9 @@ namespace WmsGfxSpriteEditor
 
             InitializeComponent();
 
+            // Subscribe to magPanel.ZoomMouseWheel to always zoom
+            magPanel.ZoomMouseWheel += MagPanel_MouseWheel;
+
             _suppressControlChangeEvents = true;
 
             DisableEditingControls();
@@ -145,6 +148,31 @@ namespace WmsGfxSpriteEditor
             _ = AddClipboardFormatListener(this.Handle);
 
             _suppressControlChangeEvents = false;
+        }
+
+        private void MagPanel_MouseWheel(object? sender, MouseEventArgs e)
+        {
+            if (ActiveSprite != null)
+            {
+                if ((ModifierKeys & Keys.Control) == Keys.Control)
+                {
+                    if (e.Delta > 0)
+                    {
+                        if (ZoomLevel < MaxZoomLevel)
+                        {
+                            ZoomLevel++;
+                        }
+                    }
+                    else if (e.Delta < 0)
+                    {
+                        if (ZoomLevel > MinZoomLevel)
+                        {
+                            ZoomLevel--;
+                        }
+                    }
+                }
+            }
+            // No need to set Handled, as MagPanel prevents scrolling
         }
 
         protected override void WndProc(ref Message m)
@@ -171,31 +199,31 @@ namespace WmsGfxSpriteEditor
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            if (ActiveSprite != null)
-            {
-                // Only zoom if CTRL is held
-                if ((ModifierKeys & Keys.Control) == Keys.Control)
-                {
-                    if (e.Delta > 0)
-                    {
-                        // Zoom in
-                        if (ZoomLevel < MaxZoomLevel)
-                        {
-                            ZoomLevel++;
-                        }
-                    }
-                    else if (e.Delta < 0)
-                    {
-                        // Zoom out
-                        if (ZoomLevel > MinZoomLevel)
-                        {
-                            ZoomLevel--;
-                        }
-                    }
-                }
-            }
+            //if (ActiveSprite != null)
+            //{
+            //    Only zoom if CTRL is held
+            //    if ((ModifierKeys & Keys.Control) == Keys.Control)
+            //        {
+            //            if (e.Delta > 0)
+            //            {
+            //                Zoom in
+            //            if (ZoomLevel < MaxZoomLevel)
+            //                {
+            //                    ZoomLevel++;
+            //                }
+            //            }
+            //            else if (e.Delta < 0)
+            //            {
+            //                Zoom out
+            //            if (ZoomLevel > MinZoomLevel)
+            //                {
+            //                    ZoomLevel--;
+            //                }
+            //            }
+            //        }
+            //}
 
-            base.OnMouseWheel(e);
+            //base.OnMouseWheel(e);
         }
 
         #region FILE MENU EVENT HANDLERS
@@ -368,7 +396,7 @@ namespace WmsGfxSpriteEditor
             UpdateStatusBarGridCoordinates(e.GridCell.X, e.GridCell.Y);
         }
 
-        private void SpriteDisplay_GridCellMouseMove(object sender, SpriteGridMouseEventArgs e)
+        private void spriteDisplay_GridCellMouseMove(object sender, SpriteGridMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
