@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using WmsGfxSpriteEditor.Controls;
 
 namespace WmsGfxSpriteEditor.Dialogs
@@ -5,25 +6,29 @@ namespace WmsGfxSpriteEditor.Dialogs
     public class ColorPickerDialog : Form
     {
         private ColorPickerPanel _colourPickerPanel;
+
         public event EventHandler? SelectedColorChanged;
 
-        public ColorPickerDialog()
+        public ColorPickerDialog(Color[] palette)
         {
-            InitializeComponent();
+            if (palette.Length == 0)
+            {
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(palette));
+            }
+
+            InitializeComponent(palette);
         }
 
-        public ColorPickerDialog(Color[] palette) : this()
-        {
-            Palette = palette;
-        }
-
-
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public Color[] Palette
         {
             get => _colourPickerPanel.Palette;
             set => _colourPickerPanel.Palette = value;
         }
 
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public int SelectedPaletteIndex
         {
             get => _colourPickerPanel.SelectedPaletteIndex;
@@ -36,33 +41,36 @@ namespace WmsGfxSpriteEditor.Dialogs
             base.OnResize(e);
         }
 
-        private void InitializeComponent()
+        private void InitializeComponent(Color[] palette)
         {
             _colourPickerPanel = new ColorPickerPanel();
             SuspendLayout();
-            // 
+            //
             // _colourPickerPanel
-            // 
+            //
             _colourPickerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             _colourPickerPanel.ColorBoxMargin = 4;
             _colourPickerPanel.ColorBoxSize = 24;
             _colourPickerPanel.Location = new Point(0, 0);
             _colourPickerPanel.Name = "_colourPickerPanel";
             _colourPickerPanel.SelectedPaletteIndex = -1;
-            _colourPickerPanel.Size = new Size(119, 117);
             _colourPickerPanel.TabIndex = 0;
             _colourPickerPanel.SelectedColorChanged += OnSelectedColorChanged;
-            // 
+            _colourPickerPanel.Palette = palette;
+            _colourPickerPanel.ClientSize = _colourPickerPanel.GetPreferredSize();
+
+            //
             // ColorPickerDialog
-            // 
-            ClientSize = new Size(116, 116);
+            //
+
             Controls.Add(_colourPickerPanel);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
-            MinimumSize = new Size(132, 155);
             Name = "ColorPickerDialog";
             ShowInTaskbar = false;
             Text = "Palette";
+            ClientSize = _colourPickerPanel.ClientSize;
+            MinimumSize = Size;
             ResumeLayout(false);
         }
 
@@ -70,6 +78,5 @@ namespace WmsGfxSpriteEditor.Dialogs
         {
             SelectedColorChanged?.Invoke(this, EventArgs.Empty);
         }
-
     }
 }

@@ -1,7 +1,4 @@
-using System;
 using System.ComponentModel;
-using System.Drawing;
-using System.Windows.Forms;
 
 namespace WmsGfxSpriteEditor.Controls
 {
@@ -84,6 +81,22 @@ namespace WmsGfxSpriteEditor.Controls
         [Browsable(false)]
         public Color? SelectedColor => (_selectedPaletteIndex >= 0 && _selectedPaletteIndex < _palette.Length) ? _palette[_selectedPaletteIndex] : null;
 
+        public Size GetPreferredSize()
+        {
+            if (_palette.Length == 0)
+            {
+                return Size.Empty;
+            }
+
+            int columns = (int)Math.Ceiling(Math.Sqrt(_palette.Length));
+            int rows = (int)Math.Ceiling(_palette.Length / (double)columns);
+
+            int width = ColorBoxMargin * 2 + columns * (ColorBoxSize + ColorBoxMargin);
+            int height = ColorBoxMargin * 2 + rows * (ColorBoxSize + ColorBoxMargin);
+
+            return new Size(width, height);
+        }
+
         private void PictureBox_Paint(object? sender, PaintEventArgs e)
         {
             for (int i = 0; i < _palette.Length; i++)
@@ -160,7 +173,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private Rectangle GetColorRect(int index)
         {
-            int cols = this.Size.Width / (ColorBoxSize + ColorBoxMargin);
+            int cols = (this.ClientSize.Width-(ColorBoxMargin*2)) / (ColorBoxSize + ColorBoxMargin);
             int row = index / cols;
             int col = index % cols;
             int x = ColorBoxMargin + col * (ColorBoxSize + ColorBoxMargin);
