@@ -476,7 +476,7 @@ namespace WmsGfxSpriteEditor
             // 
             // spriteDisplay
             // 
-            spriteDisplay.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            spriteDisplay.Dock = DockStyle.None;
             spriteDisplay.BackColor = Color.LightGray;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);
