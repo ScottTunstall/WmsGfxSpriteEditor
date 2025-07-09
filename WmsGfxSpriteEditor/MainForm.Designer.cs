@@ -32,6 +32,10 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo = new ToolStripMenuItem();
             mnuEditSeparator = new ToolStripSeparator();
             mnuEditCopy = new ToolStripMenuItem();
+            mnuCopySprite = new ToolStripMenuItem();
+            mnuCopySelectedColour = new ToolStripMenuItem();
+            mnuCopySelectedColourHex = new ToolStripMenuItem();
+            mnuCopySelectedColourRgb = new ToolStripMenuItem();
             mnuEditPaste = new ToolStripMenuItem();
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
@@ -46,10 +50,6 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftRight = new ToolStripMenuItem();
             mnuSpriteShiftUp = new ToolStripMenuItem();
             mnuSpriteShiftDown = new ToolStripMenuItem();
-            mnuPalette = new ToolStripMenuItem();
-            mnuCopySelectedColour = new ToolStripMenuItem();
-            mnuCopySelectedColourHex = new ToolStripMenuItem();
-            mnuCopySelectedColourRgb = new ToolStripMenuItem();
             mnuHelp = new ToolStripMenuItem();
             mnuHelpAbout = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
@@ -62,8 +62,6 @@ namespace WmsGfxSpriteEditor
             cboSprite = new ComboBox();
             lblZoom = new Label();
             nudZoom = new NumericUpDown();
-            lblPalette = new Label();
-            pnlPalette = new PalettePanel3();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
@@ -76,7 +74,7 @@ namespace WmsGfxSpriteEditor
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite, mnuPalette, mnuHelp });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuFile, mnuEdit, mnuView, mnuSprite, mnuHelp });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
             menuStrip.Size = new Size(882, 24);
@@ -163,12 +161,41 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuEditCopy
             // 
+            mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
             mnuEditCopy.ShortcutKeys = Keys.Control | Keys.C;
             mnuEditCopy.Size = new Size(144, 22);
             mnuEditCopy.Text = "&Copy";
             mnuEditCopy.Click += mnuEditCopy_Click;
+            // 
+            // mnuCopySprite
+            // 
+            mnuCopySprite.Name = "mnuCopySprite";
+            mnuCopySprite.ShortcutKeys = Keys.Control | Keys.C;
+            mnuCopySprite.Size = new Size(163, 22);
+            mnuCopySprite.Text = "&Sprite";
+            // 
+            // mnuCopySelectedColour
+            // 
+            mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
+            mnuCopySelectedColour.Name = "mnuCopySelectedColour";
+            mnuCopySelectedColour.Size = new Size(163, 22);
+            mnuCopySelectedColour.Text = "Selected Colour..";
+            // 
+            // mnuCopySelectedColourHex
+            // 
+            mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
+            mnuCopySelectedColourHex.Size = new Size(96, 22);
+            mnuCopySelectedColourHex.Text = "&Hex";
+            mnuCopySelectedColourHex.Click += mnuCopySelectedColourHex_Click;
+            // 
+            // mnuCopySelectedColourRgb
+            // 
+            mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
+            mnuCopySelectedColourRgb.Size = new Size(96, 22);
+            mnuCopySelectedColourRgb.Text = "&RGB";
+            mnuCopySelectedColourRgb.Click += MnuCopySelectedColourRgb_Click;
             // 
             // mnuEditPaste
             // 
@@ -213,8 +240,9 @@ namespace WmsGfxSpriteEditor
             // mnuViewPalette
             // 
             mnuViewPalette.Name = "mnuViewPalette";
+            mnuViewPalette.ShortcutKeys = Keys.Control | Keys.Shift | Keys.P;
             mnuViewPalette.Size = new Size(207, 22);
-            mnuViewPalette.Text = "Palette...";
+            mnuViewPalette.Text = "Palette";
             mnuViewPalette.Click += mnuViewPalette_Click;
             // 
             // mnuSprite
@@ -285,36 +313,6 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftDown.Text = "Shift all pixels &Down";
             mnuSpriteShiftDown.Click += mnuSpriteShiftDown_Click;
             // 
-            // mnuPalette
-            // 
-            mnuPalette.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColour });
-            mnuPalette.Enabled = false;
-            mnuPalette.Name = "mnuPalette";
-            mnuPalette.ShortcutKeys = Keys.Alt | Keys.P;
-            mnuPalette.Size = new Size(55, 20);
-            mnuPalette.Text = "&Palette";
-            // 
-            // mnuCopySelectedColour
-            // 
-            mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
-            mnuCopySelectedColour.Name = "mnuCopySelectedColour";
-            mnuCopySelectedColour.Size = new Size(185, 22);
-            mnuCopySelectedColour.Text = "Copy selected colour";
-            // 
-            // mnuCopySelectedColourHex
-            // 
-            mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
-            mnuCopySelectedColourHex.Size = new Size(96, 22);
-            mnuCopySelectedColourHex.Text = "&Hex";
-            mnuCopySelectedColourHex.Click += mnuCopySelectedColourHex_Click;
-            // 
-            // mnuCopySelectedColourRgb
-            // 
-            mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
-            mnuCopySelectedColourRgb.Size = new Size(96, 22);
-            mnuCopySelectedColourRgb.Text = "&RGB";
-            mnuCopySelectedColourRgb.Click += mnuCopySelectedColourRgb_Click;
-            // 
             // mnuHelp
             // 
             mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuHelpAbout });
@@ -381,8 +379,6 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.Controls.Add(cboSprite, 1, 0);
             tableLayoutPanel.Controls.Add(lblZoom, 2, 0);
             tableLayoutPanel.Controls.Add(nudZoom, 3, 0);
-            tableLayoutPanel.Controls.Add(lblPalette, 4, 0);
-            tableLayoutPanel.Controls.Add(pnlPalette, 5, 0);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Name = "tableLayoutPanel";
@@ -411,7 +407,7 @@ namespace WmsGfxSpriteEditor
             cboSprite.Location = new Point(49, 8);
             cboSprite.Margin = new Padding(3, 8, 3, 3);
             cboSprite.Name = "cboSprite";
-            cboSprite.Size = new Size(288, 23);
+            cboSprite.Size = new Size(309, 23);
             cboSprite.TabIndex = 1;
             cboSprite.SelectedIndexChanged += cboSprite_SelectedIndexChanged;
             // 
@@ -419,7 +415,7 @@ namespace WmsGfxSpriteEditor
             // 
             lblZoom.AutoSize = true;
             lblZoom.Dock = DockStyle.Fill;
-            lblZoom.Location = new Point(343, 0);
+            lblZoom.Location = new Point(364, 0);
             lblZoom.Name = "lblZoom";
             lblZoom.Size = new Size(42, 40);
             lblZoom.TabIndex = 2;
@@ -430,37 +426,15 @@ namespace WmsGfxSpriteEditor
             // 
             nudZoom.Dock = DockStyle.Fill;
             nudZoom.Enabled = false;
-            nudZoom.Location = new Point(391, 8);
+            nudZoom.Location = new Point(412, 8);
             nudZoom.Margin = new Padding(3, 8, 3, 3);
             nudZoom.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
             nudZoom.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudZoom.Name = "nudZoom";
-            nudZoom.Size = new Size(104, 23);
+            nudZoom.Size = new Size(112, 23);
             nudZoom.TabIndex = 3;
             nudZoom.Value = new decimal(new int[] { 10, 0, 0, 0 });
             nudZoom.ValueChanged += nudZoom_ValueChanged;
-            // 
-            // lblPalette
-            // 
-            lblPalette.AutoSize = true;
-            lblPalette.Dock = DockStyle.Fill;
-            lblPalette.Location = new Point(501, 0);
-            lblPalette.Name = "lblPalette";
-            lblPalette.Size = new Size(46, 40);
-            lblPalette.TabIndex = 4;
-            lblPalette.Text = "Palette:";
-            lblPalette.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // pnlPalette
-            // 
-            pnlPalette.BackColor = Color.DimGray;
-            pnlPalette.BorderStyle = BorderStyle.FixedSingle;
-            pnlPalette.Dock = DockStyle.Fill;
-            pnlPalette.Location = new Point(553, 8);
-            pnlPalette.Margin = new Padding(3, 8, 3, 3);
-            pnlPalette.Name = "pnlPalette";
-            pnlPalette.Size = new Size(326, 29);
-            pnlPalette.TabIndex = 5;
             // 
             // spriteDisplay
             // 
@@ -513,6 +487,11 @@ namespace WmsGfxSpriteEditor
             PerformLayout();
         }
 
+        private void MnuCopySelectedColourRgb_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
 
         #endregion
 
@@ -542,10 +521,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteShiftRight;
         private ToolStripMenuItem mnuSpriteShiftUp;
         private ToolStripMenuItem mnuSpriteShiftDown;
-        private ToolStripMenuItem mnuPalette;
-        private ToolStripMenuItem mnuCopySelectedColour;
-        private ToolStripMenuItem mnuCopySelectedColourHex;
-        private ToolStripMenuItem mnuCopySelectedColourRgb;
         private ToolStripMenuItem mnuHelp;
         private ToolStripMenuItem mnuHelpAbout;
         private StatusStrip statusStrip;
@@ -558,10 +533,11 @@ namespace WmsGfxSpriteEditor
         private ComboBox cboSprite;
         private Label lblZoom;
         private NumericUpDown nudZoom;
-        private Label lblPalette;
-        //private PalettePanel pnlPalette;
-        private PalettePanel3 pnlPalette;
         private Panel magnifierPanel;
         private SpriteDisplayControl spriteDisplay;
+        private ToolStripMenuItem mnuCopySelectedColour;
+        private ToolStripMenuItem mnuCopySelectedColourHex;
+        private ToolStripMenuItem mnuCopySelectedColourRgb;
+        private ToolStripMenuItem mnuCopySprite;
     }
 }

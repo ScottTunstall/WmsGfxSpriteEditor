@@ -142,9 +142,6 @@ namespace WmsGfxSpriteEditor
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
 
-            // Set up the palette panel - This MUST be done after InitializeComponent
-            pnlPalette.ColourSelected += PnlPalette_ColorSelected;
-
             _ = AddClipboardFormatListener(this.Handle);
 
             _suppressControlChangeEvents = false;
@@ -170,7 +167,6 @@ namespace WmsGfxSpriteEditor
         {
             base.OnResize(e);
             spriteDisplay.Invalidate();
-            pnlPalette.Invalidate();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -400,7 +396,7 @@ namespace WmsGfxSpriteEditor
             ActivePaletteColour = selectedColour;
             ActivePaletteIndex = colourIndex;
 
-            pnlPalette.SelectedPaletteIndex = colourIndex;
+            //pnlPalette.SelectedPaletteIndex = colourIndex;
         }
 
         #endregion PALETTE FUNCS
@@ -470,7 +466,7 @@ namespace WmsGfxSpriteEditor
             _romService = romService;
             _spriteFactory = editorDependencies.SpriteFactory;
             Palette = editorDependencies.PaletteService.GetPalette();
-            pnlPalette.Palette = Palette;
+
             _spriteRenderer = editorDependencies.SpriteRenderer;
 
             List<SpriteInfo> allSprites = editorDependencies.SpriteRepository.GetAllSprites().ToList();
@@ -824,9 +820,6 @@ namespace WmsGfxSpriteEditor
         protected virtual void OnPaletteChanged()
         {
             bool havePalette = Palette.Length > 1;
-
-            mnuPalette.Enabled = havePalette;
-            pnlPalette.Enabled = havePalette;
         }
 
         protected virtual void OnClipboardChanged()
@@ -842,7 +835,7 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnActivePaletteIndexChanged()
         {
-            pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
+            //pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
         }
 
         protected virtual void OnActiveSpriteChanged()
@@ -888,7 +881,7 @@ namespace WmsGfxSpriteEditor
             cboSprite.DataSource = null;
             cboSprite.SelectedIndex = -1;
             nudZoom.Enabled = false;
-            pnlPalette.Enabled = false;
+
         }
 
         #region ROM
