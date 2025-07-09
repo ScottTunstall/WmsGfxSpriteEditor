@@ -84,14 +84,6 @@ namespace WmsGfxSpriteEditor.Controls
         [Browsable(false)]
         public Color? SelectedColor => (_selectedPaletteIndex >= 0 && _selectedPaletteIndex < _palette.Length) ? _palette[_selectedPaletteIndex] : null;
 
-        public Size CalculateMinimumSize(int columns, int rows)
-        {
-            return new Size(
-                ColorBoxMargin + (columns * (ColorBoxSize + ColorBoxMargin)),
-                ColorBoxMargin + (rows * (ColorBoxSize + ColorBoxMargin))
-            );
-        }
-
         private void PictureBox_Paint(object? sender, PaintEventArgs e)
         {
             for (int i = 0; i < _palette.Length; i++)
