@@ -62,7 +62,7 @@ namespace WmsGfxSpriteEditor
             cboSprite = new ComboBox();
             lblZoom = new Label();
             nudZoom = new NumericUpDown();
-            toolStrip1 = new ToolStrip();
+            toolStripQuickAccess = new ToolStrip();
             btnShowPalette = new ToolStripButton();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
@@ -71,7 +71,7 @@ namespace WmsGfxSpriteEditor
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
-            toolStrip1.SuspendLayout();
+            toolStripQuickAccess.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
             SuspendLayout();
             // 
@@ -381,7 +381,7 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.Controls.Add(cboSprite, 1, 0);
             tableLayoutPanel.Controls.Add(lblZoom, 2, 0);
             tableLayoutPanel.Controls.Add(nudZoom, 3, 0);
-            tableLayoutPanel.Controls.Add(toolStrip1, 5, 0);
+            tableLayoutPanel.Controls.Add(toolStripQuickAccess, 5, 0);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Name = "tableLayoutPanel";
@@ -438,16 +438,16 @@ namespace WmsGfxSpriteEditor
             nudZoom.Value = new decimal(new int[] { 10, 0, 0, 0 });
             nudZoom.ValueChanged += nudZoom_ValueChanged;
             // 
-            // toolStrip1
+            // toolStripQuickAccess
             // 
-            toolStrip1.Dock = DockStyle.Fill;
-            toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
-            toolStrip1.Items.AddRange(new ToolStripItem[] { btnShowPalette });
-            toolStrip1.Location = new Point(856, 0);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(26, 40);
-            toolStrip1.TabIndex = 5;
-            toolStrip1.Text = "toolStrip1";
+            toolStripQuickAccess.Dock = DockStyle.Fill;
+            toolStripQuickAccess.GripStyle = ToolStripGripStyle.Hidden;
+            toolStripQuickAccess.Items.AddRange(new ToolStripItem[] { btnShowPalette });
+            toolStripQuickAccess.Location = new Point(825, 0);
+            toolStripQuickAccess.Name = "toolStripQuickAccess";
+            toolStripQuickAccess.Size = new Size(57, 40);
+            toolStripQuickAccess.TabIndex = 5;
+            toolStripQuickAccess.Text = "toolStrip1";
             // 
             // btnShowPalette
             // 
@@ -507,8 +507,8 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).EndInit();
-            toolStrip1.ResumeLayout(false);
-            toolStrip1.PerformLayout();
+            toolStripQuickAccess.ResumeLayout(false);
+            toolStripQuickAccess.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -561,7 +561,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySelectedColourHex;
         private ToolStripMenuItem mnuCopySelectedColourRgb;
         private ToolStripMenuItem mnuCopySprite;
-        private ToolStrip toolStrip1;
+        private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
     }
 }

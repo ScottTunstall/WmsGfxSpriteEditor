@@ -541,8 +541,6 @@ namespace WmsGfxSpriteEditor
             {
                 HideColourPickerDialog();
             }
-
-            HideColourPickerDialog();
         }
 
         private void ShowColourPickerDialog()
