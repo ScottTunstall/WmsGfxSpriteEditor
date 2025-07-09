@@ -38,27 +38,32 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         private void InitializeComponent()
         {
-            FormBorderStyle = FormBorderStyle.SizableToolWindow;
-            ShowInTaskbar = false;
-            DoubleBuffered = true;
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            _palettePanel = new ColorPickerPanel
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
-                Dock = DockStyle.Fill
-            };
-            _palettePanel.SelectedColorChanged += OnSelectedColorChanged;
-
+            _palettePanel = new ColorPickerPanel();
             SuspendLayout();
+            // 
+            // _palettePanel
+            // 
+            _palettePanel.ColorBoxMargin = 4;
+            _palettePanel.ColorBoxSize = 24;
+            _palettePanel.Location = new Point(0, 0);
+            _palettePanel.Name = "_palettePanel";
+            _palettePanel.SelectedPaletteIndex = -1;
+            _palettePanel.Size = new Size(200, 100);
+            _palettePanel.TabIndex = 0;
+            _palettePanel.SelectedColorChanged += OnSelectedColorChanged;
             // 
             // ColorPickerDialog
             // 
-            ClientSize = _palettePanel.CalculateMinimumSize(4, 4);
-            MinimumSize = this.Size;
+            ClientSize = new Size(116, 116);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            MinimumSize = new Size(132, 155);
             Name = "ColorPickerDialog";
+            ShowInTaskbar = false;
             Text = "Palette";
 
             Controls.Add(_palettePanel);
+
             ResumeLayout(false);
         }
 
