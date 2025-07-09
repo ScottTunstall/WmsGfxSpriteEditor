@@ -346,17 +346,14 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE COMBO BOX EVENT HANDLERS
 
-        #region PALETTE CONTROL EVENT HANDLERS
+        #region TOOLSTRIP EVENT HANDLERS
 
-        private void PnlPalette_ColorSelected(object? sender, ColourSelectedEventArgs e)
+        private void btnShowPalette_Click(object sender, EventArgs e)
         {
-            if (_suppressControlChangeEvents)
-                return;
-
-            SelectActivePaletteColour(e.SelectedColour, e.ColourIndex);
+            ToggleColourPickerDialog(btnShowPalette.Checked);
         }
 
-        #endregion PALETTE CONTROL EVENT HANDLERS
+        #endregion
 
         #region SPRITE EDITOR EVENT HANDLERS
 
@@ -534,10 +531,25 @@ namespace WmsGfxSpriteEditor
 
         #region VIEW MENU INVOKED FUNCS
 
+
+        private void ToggleColourPickerDialog(bool show)
+        {
+            if (show)
+            {
+                ShowColourPickerDialog();
+            }
+            else
+            {
+                HideColourPickerDialog();
+            }
+        }
+
+
         private void ShowColourPickerDialog()
         {
             if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
             {
+                _colorPickerDialog.Show();
                 _colorPickerDialog.BringToFront();
             }
             else
@@ -545,10 +557,14 @@ namespace WmsGfxSpriteEditor
                 _colorPickerDialog = new ColorPickerDialog(Palette)
                 {
                     SelectedPaletteIndex = ActivePaletteIndex,
-                    Owner = this,
-                    StartPosition = FormStartPosition.CenterScreen,
+                    StartPosition = FormStartPosition.Manual,
                 };
 
+                _colorPickerDialog.Location = new Point(
+                    this.Location.X + (this.Width - _colorPickerDialog.Width) / 2,
+                    this.Location.Y + (this.Height - _colorPickerDialog.Height) / 2
+                );
+                
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
@@ -558,9 +574,29 @@ namespace WmsGfxSpriteEditor
                     }
                 };
 
-                _colorPickerDialog.FormClosed += (s, args) => { _colorPickerDialog = null; };
+                _colorPickerDialog.Shown+= (s, args) =>
+                {
+                    OnColourPickerShown();
+                };
+
+                _colorPickerDialog.FormClosing += (s, args) =>
+                {
+                    if (args.CloseReason != CloseReason.FormOwnerClosing)
+                    {
+                        args.Cancel = true;
+                        _colorPickerDialog.Hide();
+                        OnColourPickerDialogHidden();
+                    }
+                };
+
                 _colorPickerDialog.Show(this);
             }
+        }
+
+
+        private void HideColourPickerDialog()
+        {
+            _colorPickerDialog?.Hide();
         }
 
         #endregion VIEW MENU INVOKED FUNCS
@@ -838,6 +874,18 @@ namespace WmsGfxSpriteEditor
             //pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
         }
 
+
+        protected virtual void OnColourPickerShown()
+        {
+            btnShowPalette.Checked = true;
+        }
+
+        protected virtual void OnColourPickerDialogHidden()
+        {
+            btnShowPalette.Checked = false;
+        }
+
+
         protected virtual void OnActiveSpriteChanged()
         {
             bool haveSprite = ActiveSprite != null;
@@ -895,5 +943,7 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion ROM
+
+
     }
 }

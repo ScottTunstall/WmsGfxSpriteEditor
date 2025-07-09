@@ -62,6 +62,8 @@ namespace WmsGfxSpriteEditor
             cboSprite = new ComboBox();
             lblZoom = new Label();
             nudZoom = new NumericUpDown();
+            toolStrip1 = new ToolStrip();
+            btnShowPalette = new ToolStripButton();
             spriteDisplay = new SpriteDisplayControl();
             magnifierPanel = new Panel();
             menuStrip.SuspendLayout();
@@ -69,6 +71,7 @@ namespace WmsGfxSpriteEditor
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
+            toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
             SuspendLayout();
             // 
@@ -164,24 +167,23 @@ namespace WmsGfxSpriteEditor
             mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
-            mnuEditCopy.ShortcutKeys = Keys.Control | Keys.C;
             mnuEditCopy.Size = new Size(144, 22);
             mnuEditCopy.Text = "&Copy";
-            mnuEditCopy.Click += mnuEditCopy_Click;
             // 
             // mnuCopySprite
             // 
             mnuCopySprite.Name = "mnuCopySprite";
             mnuCopySprite.ShortcutKeys = Keys.Control | Keys.C;
-            mnuCopySprite.Size = new Size(163, 22);
+            mnuCopySprite.Size = new Size(157, 22);
             mnuCopySprite.Text = "&Sprite";
+            mnuCopySprite.Click += mnuEditCopy_Click;
             // 
             // mnuCopySelectedColour
             // 
             mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
             mnuCopySelectedColour.Name = "mnuCopySelectedColour";
-            mnuCopySelectedColour.Size = new Size(163, 22);
-            mnuCopySelectedColour.Text = "Selected Colour..";
+            mnuCopySelectedColour.Size = new Size(157, 22);
+            mnuCopySelectedColour.Text = "Selected Colour";
             // 
             // mnuCopySelectedColourHex
             // 
@@ -195,7 +197,7 @@ namespace WmsGfxSpriteEditor
             mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
             mnuCopySelectedColourRgb.Size = new Size(96, 22);
             mnuCopySelectedColourRgb.Text = "&RGB";
-            mnuCopySelectedColourRgb.Click += MnuCopySelectedColourRgb_Click;
+            mnuCopySelectedColourRgb.Click += mnuCopySelectedColourRgb_Click;
             // 
             // mnuEditPaste
             // 
@@ -240,7 +242,7 @@ namespace WmsGfxSpriteEditor
             // mnuViewPalette
             // 
             mnuViewPalette.Name = "mnuViewPalette";
-            mnuViewPalette.ShortcutKeys = Keys.Control | Keys.Shift | Keys.P;
+            mnuViewPalette.ShortcutKeys = Keys.F8;
             mnuViewPalette.Size = new Size(207, 22);
             mnuViewPalette.Text = "Palette";
             mnuViewPalette.Click += mnuViewPalette_Click;
@@ -370,15 +372,16 @@ namespace WmsGfxSpriteEditor
             // 
             tableLayoutPanel.ColumnCount = 6;
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel.Controls.Add(lblSprite, 0, 0);
             tableLayoutPanel.Controls.Add(cboSprite, 1, 0);
             tableLayoutPanel.Controls.Add(lblZoom, 2, 0);
             tableLayoutPanel.Controls.Add(nudZoom, 3, 0);
+            tableLayoutPanel.Controls.Add(toolStrip1, 5, 0);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
             tableLayoutPanel.Name = "tableLayoutPanel";
@@ -391,6 +394,7 @@ namespace WmsGfxSpriteEditor
             // 
             lblSprite.AutoSize = true;
             lblSprite.Dock = DockStyle.Fill;
+            lblSprite.Font = new Font("Segoe UI", 9F);
             lblSprite.Location = new Point(3, 0);
             lblSprite.Name = "lblSprite";
             lblSprite.Size = new Size(40, 40);
@@ -400,14 +404,13 @@ namespace WmsGfxSpriteEditor
             // 
             // cboSprite
             // 
-            cboSprite.Dock = DockStyle.Fill;
             cboSprite.DropDownStyle = ComboBoxStyle.DropDownList;
             cboSprite.Enabled = false;
             cboSprite.FormattingEnabled = true;
             cboSprite.Location = new Point(49, 8);
             cboSprite.Margin = new Padding(3, 8, 3, 3);
             cboSprite.Name = "cboSprite";
-            cboSprite.Size = new Size(309, 23);
+            cboSprite.Size = new Size(277, 23);
             cboSprite.TabIndex = 1;
             cboSprite.SelectedIndexChanged += cboSprite_SelectedIndexChanged;
             // 
@@ -415,7 +418,7 @@ namespace WmsGfxSpriteEditor
             // 
             lblZoom.AutoSize = true;
             lblZoom.Dock = DockStyle.Fill;
-            lblZoom.Location = new Point(364, 0);
+            lblZoom.Location = new Point(332, 0);
             lblZoom.Name = "lblZoom";
             lblZoom.Size = new Size(42, 40);
             lblZoom.TabIndex = 2;
@@ -424,17 +427,37 @@ namespace WmsGfxSpriteEditor
             // 
             // nudZoom
             // 
-            nudZoom.Dock = DockStyle.Fill;
             nudZoom.Enabled = false;
-            nudZoom.Location = new Point(412, 8);
+            nudZoom.Location = new Point(380, 8);
             nudZoom.Margin = new Padding(3, 8, 3, 3);
             nudZoom.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
             nudZoom.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             nudZoom.Name = "nudZoom";
-            nudZoom.Size = new Size(112, 23);
+            nudZoom.Size = new Size(76, 23);
             nudZoom.TabIndex = 3;
             nudZoom.Value = new decimal(new int[] { 10, 0, 0, 0 });
             nudZoom.ValueChanged += nudZoom_ValueChanged;
+            // 
+            // toolStrip1
+            // 
+            toolStrip1.Dock = DockStyle.Fill;
+            toolStrip1.Items.AddRange(new ToolStripItem[] { btnShowPalette });
+            toolStrip1.Location = new Point(816, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(66, 40);
+            toolStrip1.TabIndex = 5;
+            toolStrip1.Text = "toolStrip1";
+            // 
+            // btnShowPalette
+            // 
+            btnShowPalette.CheckOnClick = true;
+            btnShowPalette.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnShowPalette.Image = (Image)resources.GetObject("btnShowPalette.Image");
+            btnShowPalette.ImageTransparentColor = Color.Magenta;
+            btnShowPalette.Name = "btnShowPalette";
+            btnShowPalette.Size = new Size(23, 37);
+            btnShowPalette.Text = "Show Palette (F8)";
+            btnShowPalette.Click += btnShowPalette_Click;
             // 
             // spriteDisplay
             // 
@@ -473,6 +496,7 @@ namespace WmsGfxSpriteEditor
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
             Name = "MainForm";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Williams Graphics Editor";
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
@@ -482,14 +506,11 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).EndInit();
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).EndInit();
             ResumeLayout(false);
             PerformLayout();
-        }
-
-        private void MnuCopySelectedColourRgb_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
 
@@ -539,5 +560,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySelectedColourHex;
         private ToolStripMenuItem mnuCopySelectedColourRgb;
         private ToolStripMenuItem mnuCopySprite;
+        private ToolStrip toolStrip1;
+        private ToolStripButton btnShowPalette;
     }
 }
