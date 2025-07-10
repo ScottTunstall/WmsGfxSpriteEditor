@@ -98,14 +98,14 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(143, 22);
-            mnuFileLoad.Text = "&Load";
+            mnuFileLoad.Size = new Size(180, 22);
+            mnuFileLoad.Text = "&Open";
             // 
             // mnuFileLoadRobotron
             // 
             mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(154, 22);
+            mnuFileLoadRobotron.Size = new Size(180, 22);
             mnuFileLoadRobotron.Text = "Robotron: 2084";
             // 
             // mnuFileLoadRobotronBlueLabel
@@ -128,7 +128,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(143, 22);
+            mnuFileSave.Size = new Size(180, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -463,7 +463,7 @@ namespace WmsGfxSpriteEditor
             btnShowPalette.Text = "Show Palette (F8)";
             btnShowPalette.Click += btnShowPalette_Click;
             // 
-            // magPanel
+            // magnificationPanel
             // 
             magnificationPanel.AutoScroll = true;
             magnificationPanel.BackColor = Color.LightGray;
@@ -473,10 +473,10 @@ namespace WmsGfxSpriteEditor
             magnificationPanel.Name = "magnificationPanel";
             magnificationPanel.Size = new Size(882, 459);
             magnificationPanel.TabIndex = 3;
+            magnificationPanel.ZoomMouseWheel += MagPanel_MouseWheel;
             // 
             // spriteDisplay
             // 
-            spriteDisplay.Dock = DockStyle.None;
             spriteDisplay.BackColor = Color.LightGray;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);
@@ -491,7 +491,6 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridCellMouseMove += spriteDisplay_GridCellMouseMove;
             spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
             spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
-
             // 
             // MainForm
             // 

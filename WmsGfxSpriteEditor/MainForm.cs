@@ -134,9 +134,6 @@ namespace WmsGfxSpriteEditor
 
             InitializeComponent();
 
-            // Subscribe to magPanel.ZoomMouseWheel to always zoom
-            magnificationPanel.ZoomMouseWheel += MagPanel_MouseWheel;
-
             _suppressControlChangeEvents = true;
 
             DisableEditingControls();
@@ -201,12 +198,12 @@ namespace WmsGfxSpriteEditor
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
         {
-            BrowseForRobotronRom(RomSetNames.BlueLabel, RomSetType.BlueLabel);
+            BrowseForRobotronRom(RobotronRomSetNames.BlueLabel, RobotronRomSetType.BlueLabel);
         }
 
         private void mnuFileLoadRobotronTieDieWDPU_Click(object sender, EventArgs e)
         {
-            BrowseForRobotronRom(RomSetNames.BlueLabel, RomSetType.TieDieWDPU);
+            BrowseForRobotronRom(RobotronRomSetNames.TieDieWDPU, RobotronRomSetType.TieDieWDPU);
         }
 
         private void mnuFileSave_Click(object sender, EventArgs e)
@@ -399,18 +396,17 @@ namespace WmsGfxSpriteEditor
 
         #region FILE MENU INVOKED FUNCS
 
-        protected void BrowseForRobotronRom(string label, RomSetType romSetType)
+        protected void BrowseForRobotronRom(string label, RobotronRomSetType romSetType)
         {
-            IRomService service = RomServiceFactory.Create(romSetType);
+            SpriteEditorDependencies dependencies = SpriteEditorDependenciesFactory.CreateForRobotron(romSetType);
 
-            RomData? romData = LoadRomData(label, service);
+            RomData? romData = LoadRomData(label, dependencies.RomService);
             if (romData == null)
             {
                 return;
             }
 
-            SpriteEditorDependencies dependencies = SpriteEditorDependenciesFactory.Create(romSetType);
-            OnBeginEdit(label, romData, service, dependencies);
+            OnBeginEdit(label, romData, dependencies);
         }
 
         protected virtual RomData? LoadRomData(string romSetName, IRomService romService)
@@ -448,7 +444,7 @@ namespace WmsGfxSpriteEditor
             new InformationDialog().ShowDialog($"Saved {_romSetName} ROM files successfully.", "Success", this);
         }
 
-        protected virtual void OnBeginEdit(string romSetName, RomData romData, IRomService romService, SpriteEditorDependencies editorDependencies)
+        protected virtual void OnBeginEdit(string romSetName, RomData romData, SpriteEditorDependencies editorDependencies)
         {
             _suppressControlChangeEvents = true;
 
@@ -459,7 +455,7 @@ namespace WmsGfxSpriteEditor
             _romData?.Dispose();
             _romData = romData;
 
-            _romService = romService;
+            _romService = editorDependencies.RomService;
             _spriteFactory = editorDependencies.SpriteFactory;
             Palette = editorDependencies.PaletteService.GetPalette();
 
