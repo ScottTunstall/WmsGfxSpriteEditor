@@ -133,6 +133,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFileSave
             // 
+            mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
             mnuFileSave.Size = new Size(180, 22);
@@ -152,7 +153,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(180, 22);
+            mnuEditUndo.Size = new Size(144, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -161,21 +162,21 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(180, 22);
+            mnuEditRedo.Size = new Size(144, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuEditSeparator
             // 
             mnuEditSeparator.Name = "mnuEditSeparator";
-            mnuEditSeparator.Size = new Size(177, 6);
+            mnuEditSeparator.Size = new Size(141, 6);
             // 
             // mnuEditCopy
             // 
             mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
-            mnuEditCopy.Size = new Size(180, 22);
+            mnuEditCopy.Size = new Size(144, 22);
             mnuEditCopy.Text = "&Copy";
             // 
             // mnuCopySprite
@@ -212,7 +213,7 @@ namespace WmsGfxSpriteEditor
             mnuEditPaste.Enabled = false;
             mnuEditPaste.Name = "mnuEditPaste";
             mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
-            mnuEditPaste.Size = new Size(180, 22);
+            mnuEditPaste.Size = new Size(144, 22);
             mnuEditPaste.Text = "&Paste";
             mnuEditPaste.Click += mnuEditPaste_Click;
             // 
