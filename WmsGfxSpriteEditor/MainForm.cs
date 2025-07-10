@@ -72,7 +72,6 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-
         protected int ActiveSpriteIndex { get; private set; }
         protected SpriteInfo? ActiveSpriteInfo { get; private set; }
 
@@ -147,7 +146,6 @@ namespace WmsGfxSpriteEditor
             _suppressControlChangeEvents = false;
         }
 
-
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WindowsMessages.WM_CLIPBOARDUPDATE)
@@ -195,7 +193,6 @@ namespace WmsGfxSpriteEditor
             // No need to set Handled, as MagPanel prevents scrolling
         }
 
-
         #region FILE MENU EVENT HANDLERS
 
         private void mnuFileLoadRobotronBlueLabel_Click(object sender, EventArgs e)
@@ -212,7 +209,6 @@ namespace WmsGfxSpriteEditor
         {
             BrowseForRobotronRom(RobotronRomSetNames.TieDieMAME, RobotronRomSetType.TieDieMAME);
         }
-
 
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
@@ -357,7 +353,7 @@ namespace WmsGfxSpriteEditor
             ToggleColourPickerDialog();
         }
 
-        #endregion
+        #endregion TOOLSTRIP EVENT HANDLERS
 
         #region SPRITE EDITOR EVENT HANDLERS
 
@@ -396,8 +392,6 @@ namespace WmsGfxSpriteEditor
         {
             ActivePaletteColour = selectedColour;
             ActivePaletteIndex = colourIndex;
-
-            //pnlPalette.SelectedPaletteIndex = colourIndex;
         }
 
         #endregion PALETTE FUNCS
@@ -594,7 +588,6 @@ namespace WmsGfxSpriteEditor
                 _colorPickerDialog.Show(this);
             }
         }
-
 
         private void HideColourPickerDialog()
         {
@@ -931,7 +924,6 @@ namespace WmsGfxSpriteEditor
             cboSprite.DataSource = null;
             cboSprite.SelectedIndex = -1;
             nudZoom.Enabled = false;
-
         }
 
         #region ROM
@@ -945,6 +937,5 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion ROM
-
     }
 }
