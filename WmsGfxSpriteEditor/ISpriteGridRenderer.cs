@@ -22,7 +22,6 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         public void RenderSpriteWithoutGrid(Graphics graphics,
             ISprite sprite,
-            Color[] palette,
             int cellSize,
             Rectangle clientArea);
 
@@ -31,7 +30,6 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
-            Color[] palette,
             int cellSize,
             Color gridColour,
             Rectangle clientArea);
