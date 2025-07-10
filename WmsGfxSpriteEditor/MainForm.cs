@@ -471,7 +471,6 @@ namespace WmsGfxSpriteEditor
 
             spriteDisplay.SpriteRenderer = _spriteRenderer;
             spriteDisplay.Sprite = ActiveSprite;
-            spriteDisplay.Palette = Palette;
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = ZoomLevel;
 
