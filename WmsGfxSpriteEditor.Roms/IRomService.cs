@@ -2,6 +2,8 @@ namespace WmsGfxSpriteEditor.Roms
 {
     public interface IRomService
     {
+        string RomSetName { get; }
+
         public RomFileAuditInfo Audit(string folderPath);
 
         /// <summary>

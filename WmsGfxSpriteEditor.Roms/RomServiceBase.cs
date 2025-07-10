@@ -2,6 +2,8 @@ namespace WmsGfxSpriteEditor.Roms
 {
     public abstract class RomServiceBase : IRomService
     {
+        public abstract string RomSetName { get; }
+
         protected abstract RomFileInfo[] RequiredRoms { get; }
 
         public RomFileAuditInfo Audit(string folderPath)
