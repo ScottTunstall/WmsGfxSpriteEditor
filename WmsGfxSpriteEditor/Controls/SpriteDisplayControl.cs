@@ -45,6 +45,7 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         public ISpriteGridRenderer SpriteRenderer
         {
@@ -55,6 +56,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Sprite to render
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         public ISprite? Sprite
         {
@@ -71,6 +73,9 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Gets or sets the grid color
         /// </summary>
+        ///
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
         public Color GridColor
         {
             get => _gridColor;
@@ -84,6 +89,8 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Gets or sets the zoom level
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
         public int ZoomLevel
         {
             get => _zoomLevel;
@@ -101,6 +108,9 @@ namespace WmsGfxSpriteEditor.Controls
         /// <summary>
         /// Get or set the "Show grid when zoom level meets or exceeds the supplied value" threshold
         /// </summary>
+
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
         public int ZoomLevelThreshold
         {
             get => _zoomLevelGridThreshold;
