@@ -473,7 +473,7 @@ namespace WmsGfxSpriteEditor
             magnificationPanel.Name = "magnificationPanel";
             magnificationPanel.Size = new Size(882, 459);
             magnificationPanel.TabIndex = 3;
-            magnificationPanel.ZoomMouseWheel += MagPanel_MouseWheel;
+            magnificationPanel.ZoomMouseWheel += MagnificationPanel_MouseWheel;
             // 
             // spriteDisplay
             // 

@@ -147,7 +147,30 @@ namespace WmsGfxSpriteEditor
             _suppressControlChangeEvents = false;
         }
 
-        private void MagPanel_MouseWheel(object? sender, MouseEventArgs e)
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WindowsMessages.WM_CLIPBOARDUPDATE)
+            {
+                OnClipboardChanged();
+            }
+
+            base.WndProc(ref m);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _ = RemoveClipboardFormatListener(this.Handle);
+            base.OnFormClosed(e);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            spriteDisplay.Invalidate();
+        }
+
+        private void MagnificationPanel_MouseWheel(object? sender, MouseEventArgs e)
         {
             if (ActiveSprite != null)
             {
@@ -172,27 +195,6 @@ namespace WmsGfxSpriteEditor
             // No need to set Handled, as MagPanel prevents scrolling
         }
 
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == WindowsMessages.WM_CLIPBOARDUPDATE)
-            {
-                OnClipboardChanged();
-            }
-
-            base.WndProc(ref m);
-        }
-
-        protected override void OnFormClosed(FormClosedEventArgs e)
-        {
-            _ = RemoveClipboardFormatListener(this.Handle);
-            base.OnFormClosed(e);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            spriteDisplay.Invalidate();
-        }
 
         #region FILE MENU EVENT HANDLERS
 
