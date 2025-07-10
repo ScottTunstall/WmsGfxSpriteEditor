@@ -208,6 +208,12 @@ namespace WmsGfxSpriteEditor
             BrowseForRobotronRom(RobotronRomSetNames.TieDieWDPU, RobotronRomSetType.TieDieWDPU);
         }
 
+        private void mnuFileLoadRobotronTieDieMAME_Click(object sender, EventArgs e)
+        {
+            BrowseForRobotronRom(RobotronRomSetNames.TieDieMAME, RobotronRomSetType.TieDieMAME);
+        }
+
+
         private void mnuFileSave_Click(object sender, EventArgs e)
         {
             SaveRomData();
@@ -423,7 +429,7 @@ namespace WmsGfxSpriteEditor
 
             if (auditInfo.MissingRomFiles.Length > 0)
             {
-                new MissingFilesDialog().ShowDialog(_romSetName, auditInfo.MissingRomFiles, this);
+                new MissingFilesDialog().ShowDialog(romSetName, auditInfo.MissingRomFiles, this);
                 return null;
             }
 
@@ -560,7 +566,7 @@ namespace WmsGfxSpriteEditor
                     this.Location.X + (this.Width - _colorPickerDialog.Width) / 2,
                     this.Location.Y + (this.Height - _colorPickerDialog.Height) / 2
                 );
-                
+
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
@@ -570,7 +576,7 @@ namespace WmsGfxSpriteEditor
                     }
                 };
 
-                _colorPickerDialog.Shown+= (s, args) =>
+                _colorPickerDialog.Shown += (s, args) =>
                 {
                     OnColourPickerShown();
                 };
@@ -939,7 +945,6 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion ROM
-
 
     }
 }
