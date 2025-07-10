@@ -1,12 +1,14 @@
 namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel
 {
-    public class RobotronBlueLabelRomService: RomServiceBase 
+    public class RobotronBlueLabelRomService: RomServiceBase
     {
+        public override string RomSetName => RobotronRomSetNames.BlueLabel;
+
         /// <summary>
         /// Array of ROM file information in order
         /// </summary>
-        protected override RomFileInfo[] RequiredRoms => new[]
-        {
+        protected override RomFileInfo[] RequiredRoms =>
+        [
             // offsets taken from src\mame\midway\williams.cpp in MAME source code
             new RomFileInfo("2084_rom_1b_3005-13.e4", 0x0000, 0x1000),
             new RomFileInfo("2084_rom_2b_3005-14.c4", 0x1000, 0x1000),
@@ -20,7 +22,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel
             new RomFileInfo("2084_rom_10b_3005-22.a7", 0xD000, 0x1000),
             new RomFileInfo("2084_rom_11b_3005-23.c7", 0xE000, 0x1000),
             new RomFileInfo("2084_rom_12b_3005-24.e7", 0xF000, 0x1000)
-        };
+        ];
 
 
         public override RomData LoadRomData(string folderPath)

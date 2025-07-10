@@ -5,6 +5,8 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie
     /// </summary>
     public class RobotronWDPUTieDieRomService: RomServiceBase
     {
+        public override string RomSetName => RobotronRomSetNames.TieDieWDPU;
+
         protected override RomFileInfo[] RequiredRoms => new RomFileInfo[]
         {
             new("robotron.sb1", 0x0000, 0x1000),

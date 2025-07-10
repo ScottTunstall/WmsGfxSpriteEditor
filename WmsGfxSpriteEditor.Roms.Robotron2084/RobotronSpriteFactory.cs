@@ -3,7 +3,7 @@ using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
-    public class SpriteFactory : ISpriteFactory
+    public class RobotronSpriteFactory : ISpriteFactory
     {
         public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo, Color[] palette)
         {
