@@ -14,10 +14,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void Copy(ISprite source)
         {
-            if (source == null)
-            {
-                throw new InvalidOperationException("No sprite to copy.");
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             using Bitmap bmp = source.CreateBitmapFromSprite();
             Clipboard.SetImage(bmp);
@@ -25,6 +22,8 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void Paste(ISprite target)
         {
+            ArgumentNullException.ThrowIfNull(target);
+
             if (!TryGetCompatibleBitmap(target, out Bitmap? bitmap, out Color[] _))
             {
                 throw new InvalidOperationException("No compatible image in clipboard.");
@@ -40,6 +39,8 @@ namespace WmsGfxSpriteEditor.Sprites
 
         private bool TryGetCompatibleBitmap(ISprite target, out Bitmap? bitmap, out Color[] palette)
         {
+            ArgumentNullException.ThrowIfNull(target);
+
             bitmap = null;
             palette = [];
 

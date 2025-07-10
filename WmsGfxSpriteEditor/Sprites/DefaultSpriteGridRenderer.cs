@@ -25,16 +25,17 @@ namespace WmsGfxSpriteEditor.Sprites
         /// </summary>
         public void RenderSpriteWithoutGrid(Graphics graphics,
             ISprite sprite,
-            Color[] palette,
             int cellSize,
             Rectangle clientArea)
         {
+            ArgumentNullException.ThrowIfNull(sprite);
+
             // If we have no sprite data, exit without rendering anything
             if (sprite.PixelData.Length == 0)
             {
                 return;
             }
-
+            
             // Start rendering from the top-left corner (0,0)
             int startX = clientArea.X;
             int startY = clientArea.Y;
@@ -49,7 +50,7 @@ namespace WmsGfxSpriteEditor.Sprites
                     // Draw the first pixel
                     int pixelX = startX + x * cellSize;
                     int pixelY = startY + (y * cellSize);
-                    DrawPixel(graphics, pixelX, pixelY, palette[paletteIndex], cellSize);
+                    DrawPixel(graphics, pixelX, pixelY, sprite.Palette[paletteIndex], cellSize);
                 }
             }
         }
@@ -59,7 +60,6 @@ namespace WmsGfxSpriteEditor.Sprites
         /// </summary>
         public void RenderSpriteWithGrid(Graphics graphics,
             ISprite sprite,
-            Color[] palette,
             int cellSize,
             Color gridColour,
             Rectangle clientArea)
@@ -83,7 +83,7 @@ namespace WmsGfxSpriteEditor.Sprites
                     // Draw the first pixel
                     int pixelX = startX + x * cellSize;
                     int pixelY = startY + (y * cellSize);
-                    DrawPixel(graphics, pixelX, pixelY, palette[paletteIndex], cellSize);
+                    DrawPixel(graphics, pixelX, pixelY, sprite.Palette[paletteIndex], cellSize);
 
                     // Draw grid cells around the pixels
                     DrawGridCell(graphics, pixelX, pixelY, gridColour, cellSize);
