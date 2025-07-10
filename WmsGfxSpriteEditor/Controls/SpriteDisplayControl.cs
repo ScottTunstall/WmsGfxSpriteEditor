@@ -13,7 +13,6 @@ namespace WmsGfxSpriteEditor.Controls
         // Required services
         private ISpriteGridRenderer _spriteRenderer = new DefaultSpriteGridRenderer();
         private ISprite? _sprite;
-        private Color[] _palette = Array.Empty<Color>();
 
         private Color _gridColor = Color.FromArgb(80, 80, 80);
         private int _zoomLevel = 1;
@@ -64,22 +63,6 @@ namespace WmsGfxSpriteEditor.Controls
             {
                 _sprite = value;
                 UpdateSizeForZoom();
-                Invalidate();
-            }
-        }
-
-
-        public Color[] Palette
-        {
-            get => _palette;
-            set
-            {
-                if (value.Length<2)
-                {
-                    throw new ArgumentException("Palette must contain at least 2 colours.");
-                }
-
-                _palette = value;
                 Invalidate();
             }
         }
@@ -147,7 +130,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             base.OnPaint(pe);
 
-            if ( _palette.Length == 0 || _sprite == null || _sprite.PixelData.Length == 0)
+            if ( _sprite == null || _sprite.PixelData.Length == 0)
             {
                 return;
             }
@@ -157,7 +140,6 @@ namespace WmsGfxSpriteEditor.Controls
                 _spriteRenderer.RenderSpriteWithoutGrid(
                     pe.Graphics,
                     _sprite,
-                    _palette,
                     _zoomLevel * CellSize,
                     new(Point.Empty, Size)
                     );
@@ -167,7 +149,6 @@ namespace WmsGfxSpriteEditor.Controls
                 _spriteRenderer.RenderSpriteWithGrid(
                     pe.Graphics,
                     _sprite,
-                    _palette,
                     _zoomLevel * CellSize,
                     _gridColor,
                     new(Point.Empty, Size));
