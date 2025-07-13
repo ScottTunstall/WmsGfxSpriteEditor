@@ -1,6 +1,7 @@
 using System.Runtime.InteropServices;
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
+using WmsGfxSpriteEditor.Palette;
 using WmsGfxSpriteEditor.Roms;
 using WmsGfxSpriteEditor.Roms.Commands;
 using WmsGfxSpriteEditor.Roms.Robotron2084;
@@ -38,6 +39,7 @@ namespace WmsGfxSpriteEditor
         private ISpriteFactory? _spriteFactory;
         private readonly ISpriteService _spriteService;
         private readonly ISpriteClipboardService _clipboardService;
+        private readonly DefaultPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
 
         // Dialogs
         private ColorPickerDialog? _colorPickerDialog;
@@ -684,17 +686,13 @@ namespace WmsGfxSpriteEditor
 
         protected string CopyActivePaletteColourAsHex()
         {
-            // Copy ActivePaletteColour as #RRGGBB
-            string hex = $"#{ActivePaletteColour.R:X2}{ActivePaletteColour.G:X2}{ActivePaletteColour.B:X2}";
-            Clipboard.SetText(hex);
+            string hex = _paletteService.CopyAsHexString(ActivePaletteColour);
             return hex;
         }
 
         protected string CopyActivePaletteColourAsRGB()
         {
-            // Copy ActivePaletteColour as R,G,B
-            string rgb = $"{ActivePaletteColour.R},{ActivePaletteColour.G},{ActivePaletteColour.B}";
-            Clipboard.SetText(rgb);
+            string rgb = _paletteService.CopyAsRGBString(ActivePaletteColour);
             return rgb;
         }
 
