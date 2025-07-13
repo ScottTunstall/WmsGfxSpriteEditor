@@ -79,7 +79,8 @@ namespace WmsGfxSpriteEditor.Controls
             set;
         }
 
-        public Size GetPreferredSize()
+
+        public Size GetPreferredClientSize()
         {
             if (_palette.Length == 0)
             {
@@ -94,6 +95,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             return new Size(width, height);
         }
+
 
         private void PictureBox_Paint(object? sender, PaintEventArgs e)
         {
@@ -213,7 +215,9 @@ namespace WmsGfxSpriteEditor.Controls
             
             _pictureBox = new PictureBox
             {
-                Dock = DockStyle.Fill,
+                Location = new Point(0, 0),
+                ClientSize = this.ClientSize,
+                Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 BackColor = Color.Transparent,
                 SizeMode = PictureBoxSizeMode.Normal
             };
@@ -226,5 +230,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             Controls.Add(_pictureBox);
         }
+
+
     }
 }
