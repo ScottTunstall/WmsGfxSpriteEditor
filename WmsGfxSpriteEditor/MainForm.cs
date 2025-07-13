@@ -259,6 +259,12 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        // Handler for Zoom to Window
+        private void mnuViewZoomToWindow_Click(object sender, EventArgs e)
+        {
+            ZoomToFit();
+        }
+
         private void mnuViewPalette_Click(object sender, EventArgs e)
         {
             ShowColourPickerDialog();
@@ -333,6 +339,25 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion PALETTE MENU EVENT HANDLERS
+
+        #region HELP MENU EVENT HANDLERS
+
+        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                this,
+                "Williams Graphics Sprite Editor." + Environment.NewLine +
+                Environment.NewLine +
+                "Designed and developed by Scott Tunstall." + Environment.NewLine +
+                "Sprite offsets discovered and documented by Sean Riddle." + Environment.NewLine +
+                "All rights reserved.",
+                "About Williams Graphics Sprite Editor",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.None
+            );
+        }
+
+        #endregion HELP MENU EVENT HANDLERS
 
         #region SPRITE COMBO BOX EVENT HANDLERS
 
@@ -515,7 +540,7 @@ namespace WmsGfxSpriteEditor
             _clipboardService!.Copy(ActiveSprite!);
         }
 
-        private void CopyClipboardToSprite()
+        protected void CopyClipboardToSprite()
         {
             ThrowIfNoActiveSprite();
 
@@ -527,7 +552,13 @@ namespace WmsGfxSpriteEditor
 
         #region VIEW MENU INVOKED FUNCS
 
-        private void ToggleColourPickerDialog()
+        protected void ZoomToFit()
+        {
+            spriteDisplay.Zoom(magnificationPanel.ClientSize);
+            ZoomLevel = spriteDisplay.ZoomLevel;
+        }
+
+        protected void ToggleColourPickerDialog()
         {
             if (_colorPickerDialog == null || !_colorPickerDialog.Visible)
             {
@@ -539,7 +570,7 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-        private void ShowColourPickerDialog()
+        protected void ShowColourPickerDialog()
         {
             if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
             {
@@ -588,7 +619,7 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-        private void HideColourPickerDialog()
+        protected void HideColourPickerDialog()
         {
             _colorPickerDialog?.Hide();
         }
@@ -651,7 +682,7 @@ namespace WmsGfxSpriteEditor
 
         #region PALETTE MENU INVOKED FUNCS
 
-        private string CopyActivePaletteColourAsHex()
+        protected string CopyActivePaletteColourAsHex()
         {
             // Copy ActivePaletteColour as #RRGGBB
             string hex = $"#{ActivePaletteColour.R:X2}{ActivePaletteColour.G:X2}{ActivePaletteColour.B:X2}";
@@ -659,7 +690,7 @@ namespace WmsGfxSpriteEditor
             return hex;
         }
 
-        private string CopyActivePaletteColourAsRGB()
+        protected string CopyActivePaletteColourAsRGB()
         {
             // Copy ActivePaletteColour as R,G,B
             string rgb = $"{ActivePaletteColour.R},{ActivePaletteColour.G},{ActivePaletteColour.B}";
@@ -668,25 +699,6 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion PALETTE MENU INVOKED FUNCS
-
-        #region HELP MENU EVENT HANDLERS
-
-        private void mnuHelpAbout_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(
-                this,
-                "Williams Graphics Sprite Editor." + Environment.NewLine +
-                Environment.NewLine +
-                "Designed and developed by Scott Tunstall." + Environment.NewLine +
-                "Sprite offsets discovered and documented by Sean Riddle." + Environment.NewLine +
-                "All rights reserved.",
-                "About Williams Graphics Sprite Editor",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.None
-            );
-        }
-
-        #endregion HELP MENU EVENT HANDLERS
 
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
 
@@ -891,6 +903,7 @@ namespace WmsGfxSpriteEditor
             // View menu
             mnuViewZoomIn.Enabled = haveSprite;
             mnuViewZoomOut.Enabled = haveSprite;
+            mnuViewZoomToWindow.Enabled = haveSprite;
 
             // Sprite menu
             mnuSprite.Enabled = haveSprite;

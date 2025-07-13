@@ -41,6 +41,7 @@ namespace WmsGfxSpriteEditor
             mnuView = new ToolStripMenuItem();
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
+            mnuViewZoomToWindow = new ToolStripMenuItem();
             mnuViewPaletteSeparator = new ToolStripSeparator();
             mnuViewPalette = new ToolStripMenuItem();
             mnuSprite = new ToolStripMenuItem();
@@ -99,14 +100,14 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(180, 22);
+            mnuFileLoad.Size = new Size(146, 22);
             mnuFileLoad.Text = "&Open";
             // 
             // mnuFileLoadRobotron
             // 
             mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU, mnuFileLoadRobotronTieDieMAME });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(180, 22);
+            mnuFileLoadRobotron.Size = new Size(154, 22);
             mnuFileLoadRobotron.Text = "&Robotron: 2084";
             // 
             // mnuFileLoadRobotronBlueLabel
@@ -136,7 +137,7 @@ namespace WmsGfxSpriteEditor
             mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 22);
+            mnuFileSave.Size = new Size(146, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
@@ -219,7 +220,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuView
             // 
-            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewPaletteSeparator, mnuViewPalette });
+            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewZoomToWindow, mnuViewPaletteSeparator, mnuViewPalette });
             mnuView.Name = "mnuView";
             mnuView.ShortcutKeys = Keys.Alt | Keys.V;
             mnuView.Size = new Size(44, 20);
@@ -229,8 +230,9 @@ namespace WmsGfxSpriteEditor
             // 
             mnuViewZoomIn.Enabled = false;
             mnuViewZoomIn.Name = "mnuViewZoomIn";
-            mnuViewZoomIn.ShortcutKeys = Keys.Control | Keys.Add;
-            mnuViewZoomIn.Size = new Size(207, 22);
+            mnuViewZoomIn.ShortcutKeyDisplayString = "Ctrl ++";
+            mnuViewZoomIn.ShortcutKeys = Keys.Control | Keys.Oemplus;
+            mnuViewZoomIn.Size = new Size(208, 22);
             mnuViewZoomIn.Text = "Zoom &In";
             mnuViewZoomIn.Click += mnuViewZoomIn_Click;
             // 
@@ -238,22 +240,32 @@ namespace WmsGfxSpriteEditor
             // 
             mnuViewZoomOut.Enabled = false;
             mnuViewZoomOut.Name = "mnuViewZoomOut";
-            mnuViewZoomOut.ShortcutKeys = Keys.Control | Keys.Subtract;
-            mnuViewZoomOut.Size = new Size(207, 22);
+            mnuViewZoomOut.ShortcutKeyDisplayString = "Ctrl +-";
+            mnuViewZoomOut.ShortcutKeys = Keys.Control | Keys.OemMinus;
+            mnuViewZoomOut.Size = new Size(208, 22);
             mnuViewZoomOut.Text = "Zoom &Out";
             mnuViewZoomOut.Click += mnuViewZoomOut_Click;
+            // 
+            // mnuViewZoomToWindow
+            // 
+            mnuViewZoomToWindow.Enabled = false;
+            mnuViewZoomToWindow.Name = "mnuViewZoomToWindow";
+            mnuViewZoomToWindow.ShortcutKeys = Keys.Control | Keys.B;
+            mnuViewZoomToWindow.Size = new Size(222, 22);
+            mnuViewZoomToWindow.Text = "Zoom to Window";
+            mnuViewZoomToWindow.Click += mnuViewZoomToWindow_Click;
             // 
             // mnuViewPaletteSeparator
             // 
             mnuViewPaletteSeparator.Name = "mnuViewPaletteSeparator";
-            mnuViewPaletteSeparator.Size = new Size(204, 6);
+            mnuViewPaletteSeparator.Size = new Size(219, 6);
             // 
             // mnuViewPalette
             // 
             mnuViewPalette.Enabled = false;
             mnuViewPalette.Name = "mnuViewPalette";
             mnuViewPalette.ShortcutKeys = Keys.F8;
-            mnuViewPalette.Size = new Size(207, 22);
+            mnuViewPalette.Size = new Size(222, 22);
             mnuViewPalette.Text = "Palette";
             mnuViewPalette.Click += mnuViewPalette_Click;
             // 
@@ -549,6 +561,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuView;
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
+        private ToolStripMenuItem mnuViewZoomToWindow;
         private ToolStripSeparator mnuViewPaletteSeparator;
         private ToolStripMenuItem mnuViewPalette;
         private ToolStripMenuItem mnuSprite;
