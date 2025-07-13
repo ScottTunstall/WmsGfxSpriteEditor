@@ -1,11 +1,18 @@
 using System.ComponentModel;
+using System.Windows.Forms;
 using WmsGfxSpriteEditor.Controls;
+using WmsGfxSpriteEditor.Palette;
+using WmsGfxSpriteEditor.Palettes;
 
 namespace WmsGfxSpriteEditor.Dialogs
 {
     public class ColorPickerDialog : Form
     {
         private ColorPickerPanel _colourPickerPanel;
+        private ContextMenuStrip _contextMenu;
+        private ToolStripMenuItem _copyRgbMenuItem;
+        private ToolStripMenuItem _copyHexMenuItem;
+        private readonly DefaultPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
 
         public event EventHandler? SelectedColorChanged;
 
@@ -46,6 +53,18 @@ namespace WmsGfxSpriteEditor.Dialogs
             _colourPickerPanel = new ColorPickerPanel();
             SuspendLayout();
             //
+            // Context menu for color picker
+            //
+            _contextMenu = new ContextMenuStrip();
+            _copyRgbMenuItem = new ToolStripMenuItem("Copy RGB");
+            _copyHexMenuItem = new ToolStripMenuItem("Copy RGB as Hex");
+            _copyRgbMenuItem.ShortcutKeys = Keys.Control | Keys.R; // Match MainForm
+            _copyHexMenuItem.ShortcutKeys = Keys.Control | Keys.H; // Match MainForm
+            _copyRgbMenuItem.Click += CopyRgbMenuItem_Click;
+            _copyHexMenuItem.Click += CopyHexMenuItem_Click;
+            _contextMenu.Items.AddRange([_copyRgbMenuItem, _copyHexMenuItem]);
+
+            //
             // _colourPickerPanel
             //
             _colourPickerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -58,6 +77,8 @@ namespace WmsGfxSpriteEditor.Dialogs
             _colourPickerPanel.SelectedColorChanged += OnSelectedColorChanged;
             _colourPickerPanel.Palette = palette;
             _colourPickerPanel.ClientSize = _colourPickerPanel.GetPreferredSize();
+            _colourPickerPanel.ContextMenuStrip = _contextMenu;
+
 
             //
             // ColorPickerDialog
@@ -72,6 +93,26 @@ namespace WmsGfxSpriteEditor.Dialogs
             ClientSize = _colourPickerPanel.ClientSize;
             MinimumSize = Size;
             ResumeLayout(false);
+        }
+
+        private void CopyRgbMenuItem_Click(object? sender, EventArgs e)
+        {
+            int idx = _colourPickerPanel.SelectedPaletteIndex;
+            if (idx >= 0 && idx < _colourPickerPanel.Palette.Length)
+            {
+                Color c = _colourPickerPanel.Palette[idx];
+                _paletteService.CopyAsRGBString(c);
+            }
+        }
+
+        private void CopyHexMenuItem_Click(object? sender, EventArgs e)
+        {
+            int idx = _colourPickerPanel.SelectedPaletteIndex;
+            if (idx >= 0 && idx < _colourPickerPanel.Palette.Length)
+            {
+                Color c = _colourPickerPanel.Palette[idx];
+                _paletteService.CopyAsHexString(c);
+            }
         }
 
         private void OnSelectedColorChanged(object? s, EventArgs e)
