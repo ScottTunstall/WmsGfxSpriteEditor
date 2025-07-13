@@ -14,6 +14,10 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         public event EventHandler? SelectedColorChanged;
 
+        public ColorPickerDialog() : this(new Color[16])
+        {
+        }
+
         public ColorPickerDialog(Color[] palette)
         {
             if (palette.Length == 0)
@@ -76,7 +80,7 @@ namespace WmsGfxSpriteEditor.Dialogs
             _colourPickerPanel.SelectedColorChanged += OnSelectedColorChanged;
             _colourPickerPanel.Palette = palette;
             _colourPickerPanel.ClientSize = _colourPickerPanel.GetPreferredSize();
-            _colourPickerPanel.ContextMenuStrip = _contextMenu;
+            _colourPickerPanel.ColourContextMenuStrip = _contextMenu;
 
 
             //
