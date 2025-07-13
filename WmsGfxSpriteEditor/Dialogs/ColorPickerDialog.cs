@@ -10,6 +10,7 @@ namespace WmsGfxSpriteEditor.Dialogs
         private ContextMenuStrip _contextMenu;
         private ToolStripMenuItem _copyRgbMenuItem;
         private ToolStripMenuItem _copyHexMenuItem;
+        private IContainer components;
         private readonly DefaultPaletteClipboardService _paletteService = new();
 
         public event EventHandler? SelectedColorChanged;
@@ -55,47 +56,60 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         private void InitializeComponent()
         {
+            components = new Container();
             _colourPickerPanel = new ColorPickerPanel();
+            _contextMenu = new ContextMenuStrip(components);
+            _copyRgbMenuItem = new ToolStripMenuItem();
+            _copyHexMenuItem = new ToolStripMenuItem();
+            _contextMenu.SuspendLayout();
             SuspendLayout();
-            //
-            // Context menu for color picker
-            //
-            _contextMenu = new ContextMenuStrip();
-            _copyRgbMenuItem = new ToolStripMenuItem("Copy RGB");
-            _copyHexMenuItem = new ToolStripMenuItem("Copy RGB as Hex");
-            _copyRgbMenuItem.ShortcutKeys = Keys.Control | Keys.R; // Match MainForm
-            _copyHexMenuItem.ShortcutKeys = Keys.Control | Keys.H; // Match MainForm
-            _copyRgbMenuItem.Click += CopyRgbMenuItem_Click;
-            _copyHexMenuItem.Click += CopyHexMenuItem_Click;
-            _contextMenu.Items.Add(_copyRgbMenuItem);
-            _contextMenu.Items.Add(_copyHexMenuItem);
-
-            //
+            // 
             // _colourPickerPanel
-            //
+            // 
             _colourPickerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             _colourPickerPanel.ColorBoxMargin = 4;
             _colourPickerPanel.ColorBoxSize = 24;
+            _colourPickerPanel.ColourContextMenuStrip = _contextMenu;
             _colourPickerPanel.Location = new Point(0, 0);
             _colourPickerPanel.Name = "_colourPickerPanel";
             _colourPickerPanel.SelectedPaletteIndex = -1;
+            _colourPickerPanel.Size = new Size(284, 261);
             _colourPickerPanel.TabIndex = 0;
             _colourPickerPanel.SelectedColorChanged += OnSelectedColorChanged;
-            _colourPickerPanel.Palette = Palette;
-            _colourPickerPanel.ColourContextMenuStrip = _contextMenu;
-            _colourPickerPanel.ClientSize = this.ClientSize;
-
-
-            //
+            // 
+            // _contextMenu
+            // 
+            _contextMenu.Items.AddRange(new ToolStripItem[] { _copyRgbMenuItem, _copyHexMenuItem });
+            _contextMenu.Name = "_contextMenu";
+            _contextMenu.Size = new Size(169, 26);
+            // 
+            // _copyRgbMenuItem
+            // 
+            _copyRgbMenuItem.Name = "_copyRgbMenuItem";
+            _copyRgbMenuItem.ShortcutKeys = Keys.Control | Keys.R;
+            _copyRgbMenuItem.Size = new Size(168, 22);
+            _copyRgbMenuItem.Text = "Copy RGB";
+            _copyRgbMenuItem.Click += CopyRgbMenuItem_Click;
+            // 
+            // _copyHexMenuItem
+            // 
+            _copyHexMenuItem.Name = "_copyHexMenuItem";
+            _copyHexMenuItem.ShortcutKeys = Keys.Control | Keys.H;
+            _copyHexMenuItem.Size = new Size(32, 19);
+            _copyHexMenuItem.Text = "Copy RGB as Hex";
+            _copyHexMenuItem.Click += CopyHexMenuItem_Click;
+            // 
             // ColorPickerDialog
-            //
-
+            // 
+            ClientSize = new Size(284, 261);
             Controls.Add(_colourPickerPanel);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            MinimumSize = new Size(128, 128);
             Name = "ColorPickerDialog";
             ShowInTaskbar = false;
             Text = "Palette";
+            _contextMenu.ResumeLayout(false);
             ResumeLayout(false);
         }
 
