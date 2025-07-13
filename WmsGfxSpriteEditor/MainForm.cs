@@ -39,7 +39,7 @@ namespace WmsGfxSpriteEditor
         private ISpriteFactory? _spriteFactory;
         private readonly ISpriteService _spriteService;
         private readonly ISpriteClipboardService _clipboardService;
-        private readonly DefaultPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
+        private readonly IPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
 
         // Dialogs
         private ColorPickerDialog? _colorPickerDialog;
