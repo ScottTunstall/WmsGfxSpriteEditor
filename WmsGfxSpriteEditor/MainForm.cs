@@ -582,17 +582,20 @@ namespace WmsGfxSpriteEditor
             }
             else
             {
-                _colorPickerDialog = new ColorPickerDialog(Palette)
+                _colorPickerDialog = new ColorPickerDialog()
                 {
+                    Palette = Palette,
                     SelectedPaletteIndex = ActivePaletteIndex,
                     StartPosition = FormStartPosition.Manual,
                 };
+
+                _colorPickerDialog.ShrinkToFit();
 
                 _colorPickerDialog.Location = new Point(
                     this.Location.X + (this.Width - _colorPickerDialog.Width) / 2,
                     this.Location.Y + (this.Height - _colorPickerDialog.Height) / 2
                 );
-
+                
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
