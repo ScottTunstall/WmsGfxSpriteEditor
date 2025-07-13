@@ -1,6 +1,6 @@
 namespace WmsGfxSpriteEditor.Palette
 {
-    public class DefaultPaletteClipboardService : IDefaultPaletteClipboardService
+    public class DefaultPaletteClipboardService : IPaletteClipboardService
     {
         public string CopyAsRGBString(Color color)
         {

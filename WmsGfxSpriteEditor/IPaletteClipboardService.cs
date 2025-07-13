@@ -1,6 +1,6 @@
 namespace WmsGfxSpriteEditor
 {
-    public interface IDefaultPaletteClipboardService
+    public interface IPaletteClipboardService
     {
         string CopyAsRGBString(Color color);
         string CopyAsHexString(Color color);
