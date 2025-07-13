@@ -7,26 +7,14 @@ namespace WmsGfxSpriteEditor.Controls
         private Color[] _palette = [];
         private int _selectedPaletteIndex = -1;
         private int _hoveredIndex = -1;
-        private readonly ToolTip _toolTip = new();
-        private readonly PictureBox _pictureBox;
+        private ToolTip _toolTip = new();
+        private PictureBox _pictureBox = new();
 
         public event EventHandler? SelectedColorChanged;
 
         public ColorPickerPanel()
         {
-            DoubleBuffered = true;
-            _pictureBox = new PictureBox
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.Transparent,
-                SizeMode = PictureBoxSizeMode.Normal
-            };
-
-            _pictureBox.Paint += PictureBox_Paint;
-            _pictureBox.MouseMove += PictureBox_MouseMove;
-            _pictureBox.MouseLeave += PictureBox_MouseLeave;
-            _pictureBox.MouseClick += PictureBox_MouseClick;
-            Controls.Add(_pictureBox);
+            InitialiseComponent();
         }
 
         public ColorPickerPanel(Color[] palette) : this()
@@ -43,7 +31,9 @@ namespace WmsGfxSpriteEditor.Controls
             {
                 _palette = value;
                 if (_selectedPaletteIndex >= _palette.Length)
+                {
                     _selectedPaletteIndex = _palette.Length - 1;
+                }
 
                 _pictureBox.Invalidate();
             }
@@ -103,7 +93,9 @@ namespace WmsGfxSpriteEditor.Controls
             {
                 Rectangle rect = GetColorRect(i);
                 using (Brush b = new SolidBrush(_palette[i]))
+                {
                     e.Graphics.FillRectangle(b, rect);
+                }
 
                 if (i == _selectedPaletteIndex)
                 {
@@ -160,6 +152,19 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
+        private void PictureBox_MouseUp(object? sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int idx = HitTest(e.Location);
+                if (idx >= 0 && idx < _palette.Length && ContextMenuStrip != null)
+                {
+                    SelectedPaletteIndex = idx;
+                    ContextMenuStrip.Show(_pictureBox, e.Location);
+                }
+            }
+        }
+
         private int HitTest(Point location)
         {
             for (int i = 0; i < _palette.Length; i++)
@@ -173,7 +178,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private Rectangle GetColorRect(int index)
         {
-            int cols = (this.ClientSize.Width-(ColorBoxMargin*2)) / (ColorBoxSize + ColorBoxMargin);
+            int cols = (this.ClientSize.Width - (ColorBoxMargin * 2)) / (ColorBoxSize + ColorBoxMargin);
             int row = index / cols;
             int col = index % cols;
             int x = ColorBoxMargin + col * (ColorBoxSize + ColorBoxMargin);
@@ -190,6 +195,28 @@ namespace WmsGfxSpriteEditor.Controls
                 return Color.FromArgb(255, 255, 255, 255); // white
             else
                 return Color.FromArgb(255, 255, 215, 0); // gold
+        }
+
+        private void InitialiseComponent()
+        {
+            DoubleBuffered = true;
+
+            _toolTip = new();
+            
+            _pictureBox = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.Transparent,
+                SizeMode = PictureBoxSizeMode.Normal
+            };
+
+            _pictureBox.Paint += PictureBox_Paint;
+            _pictureBox.MouseMove += PictureBox_MouseMove;
+            _pictureBox.MouseLeave += PictureBox_MouseLeave;
+            _pictureBox.MouseClick += PictureBox_MouseClick;
+            _pictureBox.MouseUp += PictureBox_MouseUp;
+
+            Controls.Add(_pictureBox);
         }
     }
 }
