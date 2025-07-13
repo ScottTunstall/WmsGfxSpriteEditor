@@ -96,7 +96,9 @@ namespace WmsGfxSpriteEditor.Controls
             set
             {
                 if (value < 1)
+                {
                     value = 1;
+                }
 
                 _zoomLevel = value;
                 UpdateSizeForZoom();
