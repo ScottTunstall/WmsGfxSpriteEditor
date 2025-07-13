@@ -1,8 +1,6 @@
 using System.ComponentModel;
-using System.Windows.Forms;
 using WmsGfxSpriteEditor.Controls;
 using WmsGfxSpriteEditor.Palette;
-using WmsGfxSpriteEditor.Palettes;
 
 namespace WmsGfxSpriteEditor.Dialogs
 {
@@ -12,7 +10,7 @@ namespace WmsGfxSpriteEditor.Dialogs
         private ContextMenuStrip _contextMenu;
         private ToolStripMenuItem _copyRgbMenuItem;
         private ToolStripMenuItem _copyHexMenuItem;
-        private readonly DefaultPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
+        private readonly DefaultPaletteClipboardService _paletteService = new();
 
         public event EventHandler? SelectedColorChanged;
 
@@ -62,7 +60,8 @@ namespace WmsGfxSpriteEditor.Dialogs
             _copyHexMenuItem.ShortcutKeys = Keys.Control | Keys.H; // Match MainForm
             _copyRgbMenuItem.Click += CopyRgbMenuItem_Click;
             _copyHexMenuItem.Click += CopyHexMenuItem_Click;
-            _contextMenu.Items.AddRange([_copyRgbMenuItem, _copyHexMenuItem]);
+            _contextMenu.Items.Add(_copyRgbMenuItem);
+            _contextMenu.Items.Add(_copyHexMenuItem);
 
             //
             // _colourPickerPanel

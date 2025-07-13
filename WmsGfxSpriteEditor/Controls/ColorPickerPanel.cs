@@ -71,6 +71,14 @@ namespace WmsGfxSpriteEditor.Controls
         [Browsable(false)]
         public Color? SelectedColor => (_selectedPaletteIndex >= 0 && _selectedPaletteIndex < _palette.Length) ? _palette[_selectedPaletteIndex] : null;
 
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Browsable(true)]
+        public ContextMenuStrip? ColourContextMenuStrip
+        {
+            get;
+            set;
+        }
+
         public Size GetPreferredSize()
         {
             if (_palette.Length == 0)
@@ -154,13 +162,13 @@ namespace WmsGfxSpriteEditor.Controls
 
         private void PictureBox_MouseUp(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right && ColourContextMenuStrip!=null)
             {
                 int idx = HitTest(e.Location);
-                if (idx >= 0 && idx < _palette.Length && ContextMenuStrip != null)
+                if (idx >= 0 && idx < _palette.Length)
                 {
                     SelectedPaletteIndex = idx;
-                    ContextMenuStrip.Show(_pictureBox, e.Location);
+                    ColourContextMenuStrip!.Show(_pictureBox, e.Location);
                 }
             }
         }
