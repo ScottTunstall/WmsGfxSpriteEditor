@@ -12,6 +12,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         // Required services
         private ISpriteGridRenderer _spriteRenderer = new DefaultSpriteGridRenderer();
+
         private ISprite? _sprite;
 
         private Color _gridColor = Color.FromArgb(80, 80, 80);
@@ -44,7 +45,6 @@ namespace WmsGfxSpriteEditor.Controls
             DoubleBuffered = true;
         }
 
-
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         public ISpriteGridRenderer SpriteRenderer
@@ -69,11 +69,10 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
-
         /// <summary>
         /// Gets or sets the grid color
         /// </summary>
-        ///
+
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         public Color GridColor
@@ -134,13 +133,35 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
+        /// Sets the zoom level so the sprite fits best in the given available size
+        /// </summary>
+        public void Zoom(Size size)
+        {
+            if (size.Width <= 0 || size.Height <= 0)
+            {
+                throw new ArgumentException("Invalid size", nameof(size));
+            }
+
+            if (_sprite == null)
+            {
+                throw new InvalidOperationException($"Set {nameof(Sprite)} property before calling {nameof(Zoom)}.");
+            }
+
+            // Calculate the maximum zoom level that fits the sprite in the available size
+            int zoomX = size.Width / (_sprite.Width * CellSize);
+            int zoomY = size.Height / (_sprite.Height * CellSize);
+            int bestZoom = Math.Max(1, Math.Min(zoomX, zoomY));
+            ZoomLevel = bestZoom;
+        }
+
+        /// <summary>
         /// Handles the Paint event
         /// </summary>
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
 
-            if ( _sprite == null || _sprite.PixelData.Length == 0)
+            if (_sprite == null || _sprite.PixelData.Length == 0)
             {
                 return;
             }
@@ -171,7 +192,7 @@ namespace WmsGfxSpriteEditor.Controls
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            
+
             if (GridCellMouseMove == null || _zoomLevel <= 0 || _sprite == null)
                 return;
 
@@ -224,7 +245,9 @@ namespace WmsGfxSpriteEditor.Controls
             base.OnMouseClick(e);
 
             if (GridCellClicked == null || _zoomLevel <= 0 || _sprite == null)
+            {
                 return;
+            }
 
             GridCell pt = _spriteRenderer!.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
