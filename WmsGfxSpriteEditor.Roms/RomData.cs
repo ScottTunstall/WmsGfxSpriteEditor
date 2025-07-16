@@ -1,6 +1,6 @@
 namespace WmsGfxSpriteEditor.Roms
 {
-    public record RomData : IDisposable
+    public class RomData : IDisposable
     {
         private readonly MemoryStream _romData;
         private bool _disposedValue;
@@ -44,6 +44,13 @@ namespace WmsGfxSpriteEditor.Roms
             buffer[offset + 1] = (byte)(word & 0xff);           // write LSB
         }
 
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -55,13 +62,6 @@ namespace WmsGfxSpriteEditor.Roms
 
                 _disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
