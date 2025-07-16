@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.History;
@@ -865,6 +866,7 @@ namespace WmsGfxSpriteEditor
         // Called when the sprite is ready to be edited. Override this method to perform any additional setup.
         protected virtual void OnReady()
         {
+            mnuFileSave.Enabled = true;
         }
 
         protected virtual void OnZoomChanged()
@@ -988,6 +990,8 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore IDE1006 // Element should begin with upper-case letter
 #pragma warning restore SA1202 // Elements should be ordered by access
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoHistory()
         {
             if (_history == null)
@@ -996,6 +1000,8 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoClipboardService()
         {
             if (_clipboardService == null)
@@ -1004,6 +1010,8 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoActiveSprite()
         {
             if (ActiveSprite == null)
@@ -1012,6 +1020,8 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoSpriteService()
         {
             if (_spriteService == null)
@@ -1020,6 +1030,8 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoPaletteService()
         {
             if (_paletteService == null)
