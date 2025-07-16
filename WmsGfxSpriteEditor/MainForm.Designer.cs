@@ -70,6 +70,9 @@ namespace WmsGfxSpriteEditor
             btnShowPalette = new ToolStripButton();
             magnificationPanel = new MagnificationPanel();
             spriteDisplay = new SpriteDisplayControl();
+            mnuSpriteGotoNextSprite = new ToolStripMenuItem();
+            mnuSpriteGoToPreviousSprite = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripSeparator();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
             topPanel.SuspendLayout();
@@ -102,14 +105,14 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(180, 22);
+            mnuFileLoad.Size = new Size(146, 22);
             mnuFileLoad.Text = "&Open";
             // 
             // mnuFileLoadRobotron
             // 
             mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU, mnuFileLoadRobotronTieDieMAME });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(180, 22);
+            mnuFileLoadRobotron.Size = new Size(154, 22);
             mnuFileLoadRobotron.Text = "&Robotron: 2084";
             // 
             // mnuFileLoadRobotronBlueLabel
@@ -137,25 +140,26 @@ namespace WmsGfxSpriteEditor
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(177, 6);
+            toolStripMenuItem1.Size = new Size(143, 6);
             // 
             // mnuFileSave
             // 
             mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(180, 22);
+            mnuFileSave.Size = new Size(146, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(177, 6);
+            toolStripMenuItem2.Size = new Size(143, 6);
             // 
             // mnuEdit
             // 
             mnuEdit.DropDownItems.AddRange(new ToolStripItem[] { mnuEditUndo, mnuEditRedo, mnuEditSeparator, mnuEditCopy, mnuEditPaste });
+            mnuEdit.Enabled = false;
             mnuEdit.Name = "mnuEdit";
             mnuEdit.ShortcutKeys = Keys.Alt | Keys.E;
             mnuEdit.Size = new Size(39, 20);
@@ -166,7 +170,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(144, 22);
+            mnuEditUndo.Size = new Size(180, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -175,21 +179,21 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(144, 22);
+            mnuEditRedo.Size = new Size(180, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuEditSeparator
             // 
             mnuEditSeparator.Name = "mnuEditSeparator";
-            mnuEditSeparator.Size = new Size(141, 6);
+            mnuEditSeparator.Size = new Size(177, 6);
             // 
             // mnuEditCopy
             // 
             mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
-            mnuEditCopy.Size = new Size(144, 22);
+            mnuEditCopy.Size = new Size(180, 22);
             mnuEditCopy.Text = "&Copy";
             // 
             // mnuCopySprite
@@ -226,13 +230,14 @@ namespace WmsGfxSpriteEditor
             mnuEditPaste.Enabled = false;
             mnuEditPaste.Name = "mnuEditPaste";
             mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
-            mnuEditPaste.Size = new Size(144, 22);
+            mnuEditPaste.Size = new Size(180, 22);
             mnuEditPaste.Text = "&Paste";
             mnuEditPaste.Click += mnuEditPaste_Click;
             // 
             // mnuView
             // 
             mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewZoomToWindow, mnuViewPaletteSeparator, mnuViewPalette });
+            mnuView.Enabled = false;
             mnuView.Name = "mnuView";
             mnuView.ShortcutKeys = Keys.Alt | Keys.V;
             mnuView.Size = new Size(44, 20);
@@ -283,7 +288,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuSprite
             // 
-            mnuSprite.DropDownItems.AddRange(new ToolStripItem[] { mnuSpriteFlipHorizontal, mnuSpriteFlipVertical, mnuSpriteSeparator, mnuSpriteShiftLeft, mnuSpriteShiftRight, mnuSpriteShiftUp, mnuSpriteShiftDown });
+            mnuSprite.DropDownItems.AddRange(new ToolStripItem[] { mnuSpriteGotoNextSprite, mnuSpriteGoToPreviousSprite, toolStripMenuItem3, mnuSpriteFlipHorizontal, mnuSpriteFlipVertical, mnuSpriteSeparator, mnuSpriteShiftLeft, mnuSpriteShiftRight, mnuSpriteShiftUp, mnuSpriteShiftDown });
             mnuSprite.Enabled = false;
             mnuSprite.Name = "mnuSprite";
             mnuSprite.ShortcutKeys = Keys.Alt | Keys.S;
@@ -524,6 +529,29 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
             spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
             // 
+            // mnuSpriteGotoNextSprite
+            // 
+            mnuSpriteGotoNextSprite.Enabled = false;
+            mnuSpriteGotoNextSprite.Name = "mnuSpriteGotoNextSprite";
+            mnuSpriteGotoNextSprite.ShortcutKeys = Keys.Control | Keys.Down;
+            mnuSpriteGotoNextSprite.Size = new Size(276, 22);
+            mnuSpriteGotoNextSprite.Text = "&Next";
+            mnuSpriteGotoNextSprite.Click += mnuSpriteGotoNextSprite_Click;
+            // 
+            // mnuSpriteGoToPreviousSprite
+            // 
+            mnuSpriteGoToPreviousSprite.Enabled = false;
+            mnuSpriteGoToPreviousSprite.Name = "mnuSpriteGoToPreviousSprite";
+            mnuSpriteGoToPreviousSprite.ShortcutKeys = Keys.Control | Keys.Up;
+            mnuSpriteGoToPreviousSprite.Size = new Size(276, 22);
+            mnuSpriteGoToPreviousSprite.Text = "&Previous";
+            mnuSpriteGoToPreviousSprite.Click += mnuSpriteGoToPreviousSprite_Click;
+            // 
+            // toolStripMenuItem3
+            // 
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(273, 6);
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -607,5 +635,8 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripMenuItem mnuSpriteGotoNextSprite;
+        private ToolStripMenuItem mnuSpriteGoToPreviousSprite;
+        private ToolStripSeparator toolStripMenuItem3;
     }
 }
