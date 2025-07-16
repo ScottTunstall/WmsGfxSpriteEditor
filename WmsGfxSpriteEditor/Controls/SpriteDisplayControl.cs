@@ -4,7 +4,7 @@ using WmsGfxSpriteEditor.Sprites;
 namespace WmsGfxSpriteEditor.Controls
 {
     /// <summary>
-    /// Custom PictureBox control for displaying and interacting with sprites
+    /// Custom PictureBox control for displaying and interacting with sprites.
     /// </summary>
     public class SpriteDisplayControl : PictureBox
     {
@@ -20,31 +20,37 @@ namespace WmsGfxSpriteEditor.Controls
         private int _zoomLevelGridThreshold = 3;
 
         /// <summary>
-        /// Event fired when the mouse moves over a grid cell
+        /// Event fired when the mouse moves over a grid cell.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseMove;
 
         /// <summary>
-        /// Event fired when the mouse button is held down over a grid cell
+        /// Event fired when the mouse button is held down over a grid cell.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseDown;
 
         /// <summary>
-        /// Event fired when the mouse button is released over a grid cell
+        /// Event fired when the mouse button is released over a grid cell.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseUp;
 
         /// <summary>
-        /// Event fired when a grid cell is clicked
+        /// Event fired when a grid cell is clicked.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellClicked;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteDisplayControl"/> class.
+        /// </summary>
         public SpriteDisplayControl()
         {
             // Enable double buffering for smoother rendering
             DoubleBuffered = true;
         }
 
+        /// <summary>
+        /// Gets or sets the sprite grid renderer used for drawing the sprite.
+        /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         public ISpriteGridRenderer SpriteRenderer
@@ -54,7 +60,7 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Sprite to render
+        /// Gets or sets the sprite to render.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
@@ -70,9 +76,8 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Gets or sets the grid color
+        /// Gets or sets the grid color.
         /// </summary>
-
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         public Color GridColor
@@ -86,7 +91,7 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Gets or sets the zoom level
+        /// Gets or sets the zoom level.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
@@ -107,9 +112,8 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Get or set the "Show grid when zoom level meets or exceeds the supplied value" threshold
+        /// Gets or sets the threshold at which the grid is shown (when zoom level meets or exceeds this value).
         /// </summary>
-
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         public int ZoomLevelThreshold
@@ -119,8 +123,9 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Sets the zoom level so the sprite fits best in the given available size
+        /// Sets the zoom level so the sprite fits best in the given available size.
         /// </summary>
+        /// <param name="size">The available size to fit the sprite into.</param>
         public void Zoom(Size size)
         {
             if (size.Width <= 0 || size.Height <= 0)
@@ -141,8 +146,9 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Handles the Paint event
+        /// Handles the Paint event and draws the sprite and grid as appropriate.
         /// </summary>
+        /// <param name="pe">The paint event arguments.</param>
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
@@ -173,8 +179,9 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Handles the MouseMove event
+        /// Handles the MouseMove event and raises the <see cref="GridCellMouseMove"/> event if appropriate.
         /// </summary>
+        /// <param name="e">The mouse event arguments.</param>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -193,6 +200,10 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
+        /// <summary>
+        /// Handles the MouseDown event and raises the <see cref="GridCellMouseDown"/> event if appropriate.
+        /// </summary>
+        /// <param name="e">The mouse event arguments.</param>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -211,6 +222,10 @@ namespace WmsGfxSpriteEditor.Controls
             }
         }
 
+        /// <summary>
+        /// Handles the MouseUp event and raises the <see cref="GridCellMouseUp"/> event if appropriate.
+        /// </summary>
+        /// <param name="e">The mouse event arguments.</param>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
@@ -230,8 +245,9 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Handles the MouseClick event
+        /// Handles the MouseClick event and raises the <see cref="GridCellClicked"/> event if appropriate.
         /// </summary>
+        /// <param name="e">The mouse event arguments.</param>
         protected override void OnMouseClick(MouseEventArgs e)
         {
             base.OnMouseClick(e);
@@ -251,7 +267,7 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Updates the control size based on sprite dimensions and zoom level
+        /// Updates the control size based on sprite dimensions and zoom level.
         /// </summary>
         private void UpdateSizeForZoom()
         {

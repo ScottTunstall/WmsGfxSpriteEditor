@@ -10,7 +10,7 @@ namespace WmsGfxSpriteEditor.Dialogs
         private ContextMenuStrip _contextMenu;
         private ToolStripMenuItem _copyRgbMenuItem;
         private ToolStripMenuItem _copyHexMenuItem;
-        private IContainer components;
+        private IContainer _components;
         private readonly DefaultPaletteClipboardService _paletteService = new();
 
         public event EventHandler? SelectedColorChanged;
@@ -52,9 +52,9 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         private void InitializeComponent()
         {
-            components = new Container();
+            _components = new Container();
             _colourPickerPanel = new ColorPickerPanel();
-            _contextMenu = new ContextMenuStrip(components);
+            _contextMenu = new ContextMenuStrip(_components);
             _copyRgbMenuItem = new ToolStripMenuItem();
             _copyHexMenuItem = new ToolStripMenuItem();
             _contextMenu.SuspendLayout();
