@@ -3,7 +3,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.MAMETieDie
     /// <summary>
     /// Robotron Tie Die ROMS for MAME as of 10-July-2025
     /// </summary>
-    public class RobotronMAMETieDieRomService: RomServiceBase
+    public class RobotronMAMETieDieRomService : RomServiceBase
     {
         public override string RomSetName => RobotronRomSetNames.TieDieMAME;
 

@@ -7,15 +7,8 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084
     {
         public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo, Color[] palette)
         {
-            if (romData == null)
-            {
-                throw new ArgumentNullException(nameof(romData));
-            }
-
-            if (spriteInfo == null)
-            {
-                throw new ArgumentNullException(nameof(spriteInfo));
-            }
+            ArgumentNullException.ThrowIfNull(romData);
+            ArgumentNullException.ThrowIfNull(spriteInfo);
 
             if (palette.Length == 0)
             {
@@ -31,7 +24,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084
             int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
             Memory<byte> spriteData = romData!.AsMemory(spriteInfo.Offset, bytesToRead);
 
-            ISprite sprite= new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, palette, spriteInfo.IsLinear);
+            ISprite sprite = new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, palette, spriteInfo.IsLinear);
             return sprite;
         }
     }

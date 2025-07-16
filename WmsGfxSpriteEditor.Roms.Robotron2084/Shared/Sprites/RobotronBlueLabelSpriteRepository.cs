@@ -13,11 +13,6 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Sprites
         private readonly List<SpriteInfo> _sprites = new();
 
         /// <summary>
-        /// Gets the total number of sprites available in the repository.
-        /// </summary>
-        public int Count => _sprites.Count;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RobotronBlueLabelSpriteRepository"/> class.
         /// Automatically loads the predefined Robotron sprite data upon construction.
         /// </summary>
@@ -25,6 +20,11 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Sprites
         {
             Load();
         }
+
+        /// <summary>
+        /// Gets the total number of sprites available in the repository.
+        /// </summary>
+        public int Count => _sprites.Count;
 
         /// <summary>
         /// Gets all available sprites in the repository.

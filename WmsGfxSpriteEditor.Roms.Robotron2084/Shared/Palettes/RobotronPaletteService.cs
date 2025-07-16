@@ -40,7 +40,6 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
         /// <returns>An array of 16 colors</returns>
         public Color[] GetPalette() => _palette;
 
-
         // This code which converts bytes to RGB was ported from Sean Riddle's Williams Graphics Ripper
         private static Color ConvertColorValue(byte value)
         {
@@ -50,7 +49,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
                 red++;
             }
 
-            int green = (value & 0x38) >> 2; 
+            int green = (value & 0x38) >> 2;
             if (green > 6)
             {
                 green++;
@@ -59,7 +58,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
             int blue = ((value & 0xc0) >> 6) * 5;
 
             // Ensure values are in valid range
-            red = Math.Min(255, red << 4 );
+            red = Math.Min(255, red << 4);
             green = Math.Min(255, green << 4);
             blue = Math.Min(255, blue << 4);
 

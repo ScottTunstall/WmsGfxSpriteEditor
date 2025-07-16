@@ -1,6 +1,6 @@
 namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel
 {
-    public class RobotronBlueLabelRomService: RomServiceBase
+    public class RobotronBlueLabelRomService : RomServiceBase
     {
         public override string RomSetName => RobotronRomSetNames.BlueLabel;
 
@@ -23,7 +23,6 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.BlueLabel
             new RomFileInfo("2084_rom_11b_3005-23.c7", 0xE000, 0x1000),
             new RomFileInfo("2084_rom_12b_3005-24.e7", 0xF000, 0x1000)
         ];
-
 
         public override RomData LoadRomData(string folderPath)
         {
