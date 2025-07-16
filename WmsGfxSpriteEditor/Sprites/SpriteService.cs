@@ -14,7 +14,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void BeginSpriteDrawOp(ISprite sprite, int startX, int startY, int paletteIndex)
         {
-            _undoHelper.SnapshotPixelDataIfChanged(sprite);
+            _undoHelper.SnapshotPixelData(sprite);
             sprite.ClearPixelDataDirtyFlag();
             sprite.SetPixelByPaletteIndex(startX, startY, paletteIndex);
         }
@@ -26,8 +26,11 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void EndSpriteDrawOp(ISprite sprite)
         {
-            _undoHelper.SnapshotPixelDataIfChanged(sprite);
-            sprite.ClearPixelDataDirtyFlag();
+            if (sprite.IsPixelDataDirty)
+            {
+                _undoHelper.SnapshotPixelData(sprite);
+                sprite.ClearPixelDataDirtyFlag();
+            }
         }
 
         public void FlipSpriteHorizontal(ISprite sprite)
