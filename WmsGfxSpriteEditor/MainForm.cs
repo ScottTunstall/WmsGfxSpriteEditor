@@ -1093,6 +1093,10 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore IDE1006 // Element should begin with upper-case letter
 #pragma warning restore SA1202 // Elements should be ordered by access
 
+
+        // The properties below in the Throw() methods should sanity check themselves for correct values.
+        // When I'm developing, I may miss something so these give me peace of mind.
+
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
         private void ThrowIfNoHistory()
@@ -1113,6 +1117,8 @@ namespace WmsGfxSpriteEditor
             }
         }
 
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
         private void ThrowIfNoAvailableSprites()
         {
             if (AvailableSprites.Count == 0)
