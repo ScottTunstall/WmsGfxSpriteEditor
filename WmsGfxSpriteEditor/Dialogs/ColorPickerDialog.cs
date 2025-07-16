@@ -15,11 +15,10 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         public event EventHandler? SelectedColorChanged;
 
-        public ColorPickerDialog() 
+        public ColorPickerDialog()
         {
             InitializeComponent();
         }
-
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -40,19 +39,16 @@ namespace WmsGfxSpriteEditor.Dialogs
             set => _colourPickerPanel.SelectedPaletteIndex = value;
         }
 
-
         public void ShrinkToFit()
         {
             this.ClientSize = _colourPickerPanel.GetPreferredClientSize();
         }
-
 
         protected override void OnResize(EventArgs e)
         {
             _colourPickerPanel.Invalidate();
             base.OnResize(e);
         }
-
 
         private void InitializeComponent()
         {
@@ -63,9 +59,9 @@ namespace WmsGfxSpriteEditor.Dialogs
             _copyHexMenuItem = new ToolStripMenuItem();
             _contextMenu.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // _colourPickerPanel
-            // 
+            //
             _colourPickerPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             _colourPickerPanel.ColorBoxMargin = 4;
             _colourPickerPanel.ColorBoxSize = 24;
@@ -76,31 +72,31 @@ namespace WmsGfxSpriteEditor.Dialogs
             _colourPickerPanel.Size = new Size(284, 261);
             _colourPickerPanel.TabIndex = 0;
             _colourPickerPanel.SelectedColorChanged += OnSelectedColorChanged;
-            // 
+            //
             // _contextMenu
-            // 
+            //
             _contextMenu.Items.AddRange(new ToolStripItem[] { _copyRgbMenuItem, _copyHexMenuItem });
             _contextMenu.Name = "_contextMenu";
             _contextMenu.Size = new Size(169, 26);
-            // 
+            //
             // _copyRgbMenuItem
-            // 
+            //
             _copyRgbMenuItem.Name = "_copyRgbMenuItem";
             _copyRgbMenuItem.ShortcutKeys = Keys.Control | Keys.R;
             _copyRgbMenuItem.Size = new Size(168, 22);
             _copyRgbMenuItem.Text = "Copy RGB";
             _copyRgbMenuItem.Click += CopyRgbMenuItem_Click;
-            // 
+            //
             // _copyHexMenuItem
-            // 
+            //
             _copyHexMenuItem.Name = "_copyHexMenuItem";
             _copyHexMenuItem.ShortcutKeys = Keys.Control | Keys.H;
             _copyHexMenuItem.Size = new Size(32, 19);
             _copyHexMenuItem.Text = "Copy RGB as Hex";
             _copyHexMenuItem.Click += CopyHexMenuItem_Click;
-            // 
+            //
             // ColorPickerDialog
-            // 
+            //
             ClientSize = new Size(284, 261);
             Controls.Add(_colourPickerPanel);
             DoubleBuffered = true;
@@ -119,7 +115,7 @@ namespace WmsGfxSpriteEditor.Dialogs
             if (idx >= 0 && idx < _colourPickerPanel.Palette.Length)
             {
                 Color c = _colourPickerPanel.Palette[idx];
-                _paletteService.CopyAsRGBString(c);
+                _ = _paletteService.CopyAsRGBString(c);
             }
         }
 
@@ -129,7 +125,7 @@ namespace WmsGfxSpriteEditor.Dialogs
             if (idx >= 0 && idx < _colourPickerPanel.Palette.Length)
             {
                 Color c = _colourPickerPanel.Palette[idx];
-                _paletteService.CopyAsHexString(c);
+                _ = _paletteService.CopyAsHexString(c);
             }
         }
 

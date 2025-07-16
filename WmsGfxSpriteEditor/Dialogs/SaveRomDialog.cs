@@ -15,7 +15,9 @@ namespace WmsGfxSpriteEditor.Dialogs
             folderDialog.Description = $"Select the folder to write the {romSetName} ROM files.";
 
             if (folderDialog.ShowDialog() != DialogResult.OK)
+            {
                 return null;
+            }
 
             return folderDialog.SelectedPath;
         }
