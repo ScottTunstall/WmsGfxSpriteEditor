@@ -75,6 +75,7 @@ namespace WmsGfxSpriteEditor
         }
 
         protected int ActiveSpriteIndex { get; private set; }
+
         protected SpriteInfo? ActiveSpriteInfo { get; private set; }
 
         protected ISprite? ActiveSprite
@@ -192,6 +193,7 @@ namespace WmsGfxSpriteEditor
                     }
                 }
             }
+
             // No need to set Handled, as MagPanel prevents scrolling
         }
 
@@ -275,7 +277,9 @@ namespace WmsGfxSpriteEditor
         private void nudZoom_ValueChanged(object sender, EventArgs e)
         {
             if (_suppressControlChangeEvents)
+            {
                 return;
+            }
 
             ZoomLevel = (int)nudZoom.Value;
         }
@@ -366,7 +370,9 @@ namespace WmsGfxSpriteEditor
         private void cboSprite_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_suppressControlChangeEvents)
+            {
                 return;
+            }
 
             SelectActiveSpriteByIndex(cboSprite.SelectedIndex, false);
         }
@@ -595,7 +601,7 @@ namespace WmsGfxSpriteEditor
                     this.Location.X + (this.Width - _colorPickerDialog.Width) / 2,
                     this.Location.Y + (this.Height - _colorPickerDialog.Height) / 2
                 );
-                
+
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)

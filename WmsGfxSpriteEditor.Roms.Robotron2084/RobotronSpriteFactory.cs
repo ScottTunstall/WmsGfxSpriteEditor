@@ -7,8 +7,16 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084
     {
         public ISprite CreateSpriteFromRomData(RomData romData, SpriteInfo spriteInfo, Color[] palette)
         {
-            if (romData == null) throw new ArgumentNullException(nameof(romData));
-            if (spriteInfo == null) throw new ArgumentNullException(nameof(spriteInfo));
+            if (romData == null)
+            {
+                throw new ArgumentNullException(nameof(romData));
+            }
+
+            if (spriteInfo == null)
+            {
+                throw new ArgumentNullException(nameof(spriteInfo));
+            }
+
             if (palette.Length == 0)
             {
                 throw new ArgumentException("Value cannot be an empty collection.", nameof(palette));

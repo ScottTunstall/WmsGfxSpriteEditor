@@ -15,8 +15,8 @@ namespace WmsGfxSpriteEditor
             return romSetTypes switch
             {
                 RobotronRomSetType.BlueLabel => new SpriteEditorDependencies(new RobotronBlueLabelRomService(), new RobotronPaletteService(), new RobotronBlueLabelSpriteRepository(), new RobotronSpriteFactory(), new DefaultSpriteGridRenderer()),
-                RobotronRomSetType.TieDieWDPU => new SpriteEditorDependencies( new RobotronWDPUTieDieRomService(), new RobotronPaletteService(), new RobotronBlueLabelSpriteRepository(), new RobotronSpriteFactory(), new DefaultSpriteGridRenderer()),
-                RobotronRomSetType.TieDieMAME => new SpriteEditorDependencies( new RobotronMAMETieDieRomService(), new RobotronPaletteService(), new RobotronBlueLabelSpriteRepository(), new RobotronSpriteFactory(), new DefaultSpriteGridRenderer()),
+                RobotronRomSetType.TieDieWDPU => new SpriteEditorDependencies(new RobotronWDPUTieDieRomService(), new RobotronPaletteService(), new RobotronBlueLabelSpriteRepository(), new RobotronSpriteFactory(), new DefaultSpriteGridRenderer()),
+                RobotronRomSetType.TieDieMAME => new SpriteEditorDependencies(new RobotronMAMETieDieRomService(), new RobotronPaletteService(), new RobotronBlueLabelSpriteRepository(), new RobotronSpriteFactory(), new DefaultSpriteGridRenderer()),
                 _ => throw new NotSupportedException($"Robotron ROM set type {romSetTypes} is not supported.")
             };
         }

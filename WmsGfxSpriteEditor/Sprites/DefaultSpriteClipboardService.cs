@@ -31,7 +31,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
             new SetSpritePixelsFromBitmapCommand(_history).Execute(bitmap!, target);
         }
-        
+
         public bool HasCompatibleBitmap(ISprite target)
         {
             return TryGetCompatibleBitmap(target, out _, out _);
@@ -70,7 +70,7 @@ namespace WmsGfxSpriteEditor.Sprites
             }
             else
             {
-                // If not indexed, extract unique colours 
+                // If not indexed, extract unique colours
                 HashSet<Color> colourSet = new();
                 for (int y = 0; y < clipboardBmp.Height; y++)
                 {
@@ -80,7 +80,9 @@ namespace WmsGfxSpriteEditor.Sprites
 
                         // if there's more unique colours in the image than the target palette, the image can't be pasted
                         if (colourSet.Count > targetPaletteSet.Count)
+                        {
                             return false;
+                        }
                     }
                 }
                 imagePalette = colourSet.ToArray();
@@ -96,6 +98,5 @@ namespace WmsGfxSpriteEditor.Sprites
             palette = imagePalette;
             return true;
         }
-
     }
 }

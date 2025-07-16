@@ -46,11 +46,15 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
         {
             int red = (value & 0x7) << 1;
             if (red > 6)
+            {
                 red++;
+            }
 
             int green = (value & 0x38) >> 2; 
             if (green > 6)
+            {
                 green++;
+            }
 
             int blue = ((value & 0xc0) >> 6) * 5;
 

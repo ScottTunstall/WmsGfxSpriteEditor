@@ -4,7 +4,7 @@ namespace WmsGfxSpriteEditor.Palette
     {
         public string CopyAsRGBString(Color color)
         {
-            string asRGB =  $"{color.R},{color.G},{color.B}";
+            string asRGB = $"{color.R},{color.G},{color.B}";
             Clipboard.SetText(asRGB);
             return asRGB;
         }
