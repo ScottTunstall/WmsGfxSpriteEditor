@@ -11,11 +11,11 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
     public class RobotronPaletteService : IPaletteService
     {
         // Original color values from Robotron ROM
-        private static readonly byte[] _colorValues = new byte[]
-        {
+        private static readonly byte[] _colorValues =
+        [
             0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
             0xa4, 0xff, 0x38, 0x17, 0xcc, 0x81, 0x81, 0x07
-        };
+        ];
 
         // The actual RGB colors derived from the hardware values
         private readonly Color[] _palette;
