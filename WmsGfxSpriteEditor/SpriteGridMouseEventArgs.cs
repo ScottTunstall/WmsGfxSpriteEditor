@@ -9,11 +9,6 @@ namespace WmsGfxSpriteEditor
     public class SpriteGridMouseEventArgs: SpriteGridEventArgs
     {
         /// <summary>
-        ///  Gets which mouse button was pressed.
-        /// </summary>
-        public MouseButtons Button { get; }
-
-        /// <summary>
         ///  Gets the number of times the mouse button was pressed and released.
         /// </summary>
         public int Clicks { get; }
@@ -23,5 +18,11 @@ namespace WmsGfxSpriteEditor
             Button = button;
             Clicks = clicks;
         }
+
+        /// <summary>
+        ///  Gets which mouse button was pressed.
+        /// </summary>
+        public MouseButtons Button { get; }
+
     }
 }

@@ -8,8 +8,6 @@ namespace WmsGfxSpriteEditor
 {
     public class SpriteGridEventArgs : EventArgs
     {
-        public GridCell GridCell { get; set; }
-
         /// <summary>
         /// Initializes a new instance of the SpriteGridEventArgs class
         /// </summary>
@@ -19,5 +17,7 @@ namespace WmsGfxSpriteEditor
         {
             GridCell = new GridCell(gridX, gridY);
         }
+
+        public GridCell GridCell { get; set; }
     }
 }

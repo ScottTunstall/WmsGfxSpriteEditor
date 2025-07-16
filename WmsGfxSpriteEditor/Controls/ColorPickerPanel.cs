@@ -89,8 +89,8 @@ namespace WmsGfxSpriteEditor.Controls
             int columns = (int)Math.Ceiling(Math.Sqrt(_palette.Length));
             int rows = (int)Math.Ceiling(_palette.Length / (double)columns);
 
-            int width = ColorBoxMargin * 2 + columns * (ColorBoxSize + ColorBoxMargin);
-            int height = ColorBoxMargin * 2 + rows * (ColorBoxSize + ColorBoxMargin);
+            int width = (ColorBoxMargin * 2) + (columns * (ColorBoxSize + ColorBoxMargin));
+            int height = (ColorBoxMargin * 2) + (rows * (ColorBoxSize + ColorBoxMargin));
 
             return new Size(width, height);
         }
@@ -191,14 +191,14 @@ namespace WmsGfxSpriteEditor.Controls
             int cols = (ClientSize.Width - (ColorBoxMargin * 2)) / (ColorBoxSize + ColorBoxMargin);
             int row = index / cols;
             int col = index % cols;
-            int x = ColorBoxMargin + col * (ColorBoxSize + ColorBoxMargin);
-            int y = ColorBoxMargin + row * (ColorBoxSize + ColorBoxMargin);
+            int x = ColorBoxMargin + (col * (ColorBoxSize + ColorBoxMargin));
+            int y = ColorBoxMargin + (row * (ColorBoxSize + ColorBoxMargin));
             return new Rectangle(x, y, ColorBoxSize, ColorBoxSize);
         }
 
         private static Color GetHighlightColor(Color color)
         {
-            int brightness = (int)(color.R * 0.299 + color.G * 0.587 + color.B * 0.114);
+            int brightness = (int)((color.R * 0.299) + (color.G * 0.587) + (color.B * 0.114));
             if (brightness > 180)
             {
                 return Color.FromArgb(255, 40, 40, 40); // dark

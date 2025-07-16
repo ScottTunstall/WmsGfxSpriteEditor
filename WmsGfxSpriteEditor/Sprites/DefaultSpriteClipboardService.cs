@@ -71,7 +71,7 @@ namespace WmsGfxSpriteEditor.Sprites
             else
             {
                 // If not indexed, extract unique colours
-                HashSet<Color> colourSet = new();
+                HashSet<Color> colourSet = [];
                 for (int y = 0; y < clipboardBmp.Height; y++)
                 {
                     for (int x = 0; x < clipboardBmp.Width; x++)

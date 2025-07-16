@@ -55,6 +55,27 @@ namespace WmsGfxSpriteEditor
         private int _zoomLevel = DefaultZoomLevel;
         private int _activePaletteIndex = -1;
 
+        public MainForm()
+        {
+            _history = new History.History();
+            _spriteService = new SpriteService(_history);
+            _clipboardService = new DefaultSpriteClipboardService(_history);
+
+            InitializeComponent();
+
+            _suppressControlChangeEvents = true;
+
+            DisableEditingControls();
+
+            nudZoom.Minimum = MinZoomLevel;
+            nudZoom.Maximum = MaxZoomLevel;
+            nudZoom.Value = ZoomLevel;
+
+            _ = AddClipboardFormatListener(Handle);
+
+            _suppressControlChangeEvents = false;
+        }
+
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
 
         // User selections
@@ -128,27 +149,6 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-        public MainForm()
-        {
-            _history = new History.History();
-            _spriteService = new SpriteService(_history);
-            _clipboardService = new DefaultSpriteClipboardService(_history);
-
-            InitializeComponent();
-
-            _suppressControlChangeEvents = true;
-
-            DisableEditingControls();
-
-            nudZoom.Minimum = MinZoomLevel;
-            nudZoom.Maximum = MaxZoomLevel;
-            nudZoom.Value = ZoomLevel;
-
-            _ = AddClipboardFormatListener(this.Handle);
-
-            _suppressControlChangeEvents = false;
-        }
-
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WindowsMessages.WM_CLIPBOARDUPDATE)
@@ -161,7 +161,7 @@ namespace WmsGfxSpriteEditor
 
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
-            _ = RemoveClipboardFormatListener(this.Handle);
+            _ = RemoveClipboardFormatListener(Handle);
             base.OnFormClosed(e);
         }
 
@@ -598,8 +598,8 @@ namespace WmsGfxSpriteEditor
                 _colorPickerDialog.ShrinkToFit();
 
                 _colorPickerDialog.Location = new Point(
-                    this.Location.X + (this.Width - _colorPickerDialog.Width) / 2,
-                    this.Location.Y + (this.Height - _colorPickerDialog.Height) / 2
+                    Location.X + ((Width - _colorPickerDialog.Width) / 2),
+                    Location.Y + ((Height - _colorPickerDialog.Height) / 2)
                 );
 
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
@@ -721,14 +721,14 @@ namespace WmsGfxSpriteEditor
             SetSpriteSelectComboBox(index);
 
             ActiveSpriteIndex = index;
-            SpriteInfo spriteInfo = spriteInfos[index]!;
+            SpriteInfo spriteInfo = spriteInfos[index];
             return spriteInfo;
         }
 
         protected void SelectActiveSpriteByIndex(int index, bool syncControls = true)
         {
             ActiveSpriteIndex = index;
-            ActiveSpriteInfo = AvailableSprites[index]!;
+            ActiveSpriteInfo = AvailableSprites[index];
 
             if (syncControls)
             {
@@ -793,11 +793,9 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void SetStateFromHistory(HistoryItem item)
         {
-            switch (item.OperationType)
+            if (item.OperationType == OperationType.SpritePixelDataSnapshot)
             {
-                case OperationType.SpritePixelDataSnapshot:
-                    RestoreSpriteFromHistoryItem(item);
-                    break;
+                RestoreSpriteFromHistoryItem(item);
             }
         }
 
