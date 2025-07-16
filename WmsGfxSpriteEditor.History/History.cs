@@ -2,17 +2,20 @@ using System.Diagnostics;
 
 namespace WmsGfxSpriteEditor.History
 {
+    /// <summary>
+    /// Concrete implementation of <see cref="IHistory"/> for managing a list of history items and supporting undo/redo operations.
+    /// </summary>
     public class History : IHistory
     {
         private readonly List<HistoryItem> _historyItems = new();
 
-        /// <summary>
-        /// Points to the current item in history
-        /// </summary>
+        /// <inheritdoc/>
         public int Index { get; private set; } = -1;
 
+        /// <inheritdoc/>
         public int Count => _historyItems.Count;
 
+        /// <inheritdoc/>
         public void Add(HistoryItem item)
         {
             // If Index is not equal to the last item in the list, the user has gone back in history with the undo function.
@@ -30,13 +33,7 @@ namespace WmsGfxSpriteEditor.History
             DumpHistory();
         }
 
-        /// <summary>
-        /// Returns the last <see cref="HistoryItem"/> in the history that matches the specified predicate, searching backward from a given start index.
-        /// </summary>
-        /// <param name="predicate">A function to test each <see cref="HistoryItem"/> for a condition.</param>
-        /// <param name="startIndex">The index to start searching backward from. If less than 0, starts from the item before the current <see cref="Index"/>.</param>
-        /// <returns>The last <see cref="HistoryItem"/> that matches the predicate, or <c>null</c> if no match is found.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="startIndex"/> is 0 or greater than or equal to the number of history items.</exception>
+        /// <inheritdoc/>
         public HistoryItem? Last(Predicate<HistoryItem> predicate, int startIndex = -1)
         {
             if (startIndex < 0)
@@ -63,11 +60,14 @@ namespace WmsGfxSpriteEditor.History
             return null;
         }
 
+        /// <inheritdoc/>
         public bool CanGoBack => Index > 0;
 
+        /// <inheritdoc/>
         public bool CanGoForward => Index < (_historyItems.Count - 1);
 
-        public HistoryItem? Back()
+        /// <inheritdoc/>
+        public HistoryItem Back()
         {
             if (Index == 0)
             {
@@ -81,7 +81,8 @@ namespace WmsGfxSpriteEditor.History
             return item;
         }
 
-        public HistoryItem? Forward()
+        /// <inheritdoc/>
+        public HistoryItem Forward()
         {
             if (Index >= _historyItems.Count - 1)
             {
@@ -95,6 +96,7 @@ namespace WmsGfxSpriteEditor.History
             return item;
         }
 
+        /// <inheritdoc/>
         public void Clear()
         {
             _historyItems.Clear();
@@ -102,6 +104,9 @@ namespace WmsGfxSpriteEditor.History
             DumpHistory();
         }
 
+        /// <summary>
+        /// Writes the current history state to the debug output (only in DEBUG builds).
+        /// </summary>
         [Conditional("DEBUG")]
         private void DumpHistory()
         {
