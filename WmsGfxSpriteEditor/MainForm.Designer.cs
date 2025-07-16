@@ -68,6 +68,9 @@ namespace WmsGfxSpriteEditor
             btnShowPalette = new ToolStripButton();
             magnificationPanel = new MagnificationPanel();
             spriteDisplay = new SpriteDisplayControl();
+            toolStripMenuItem1 = new ToolStripSeparator();
+            toolStripMenuItem2 = new ToolStripSeparator();
+            closeToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
             topPanel.SuspendLayout();
@@ -89,7 +92,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFile
             // 
-            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, mnuFileSave });
+            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, toolStripMenuItem1, mnuFileSave, toolStripMenuItem2, closeToolStripMenuItem });
             mnuFile.Name = "mnuFile";
             mnuFile.ShortcutKeys = Keys.Alt | Keys.F;
             mnuFile.Size = new Size(37, 20);
@@ -107,7 +110,7 @@ namespace WmsGfxSpriteEditor
             // 
             mnuFileLoadRobotron.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotronBlueLabel, mnuFileLoadRobotronTieDieWDPU, mnuFileLoadRobotronTieDieMAME });
             mnuFileLoadRobotron.Name = "mnuFileLoadRobotron";
-            mnuFileLoadRobotron.Size = new Size(154, 22);
+            mnuFileLoadRobotron.Size = new Size(180, 22);
             mnuFileLoadRobotron.Text = "&Robotron: 2084";
             // 
             // mnuFileLoadRobotronBlueLabel
@@ -251,21 +254,21 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomToWindow.Enabled = false;
             mnuViewZoomToWindow.Name = "mnuViewZoomToWindow";
             mnuViewZoomToWindow.ShortcutKeys = Keys.Control | Keys.B;
-            mnuViewZoomToWindow.Size = new Size(222, 22);
+            mnuViewZoomToWindow.Size = new Size(208, 22);
             mnuViewZoomToWindow.Text = "Zoom to Window";
             mnuViewZoomToWindow.Click += mnuViewZoomToWindow_Click;
             // 
             // mnuViewPaletteSeparator
             // 
             mnuViewPaletteSeparator.Name = "mnuViewPaletteSeparator";
-            mnuViewPaletteSeparator.Size = new Size(219, 6);
+            mnuViewPaletteSeparator.Size = new Size(205, 6);
             // 
             // mnuViewPalette
             // 
             mnuViewPalette.Enabled = false;
             mnuViewPalette.Name = "mnuViewPalette";
             mnuViewPalette.ShortcutKeys = Keys.F8;
-            mnuViewPalette.Size = new Size(222, 22);
+            mnuViewPalette.Size = new Size(208, 22);
             mnuViewPalette.Text = "Palette";
             mnuViewPalette.Click += mnuViewPalette_Click;
             // 
@@ -512,6 +515,22 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
             spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
             // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(143, 6);
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(143, 6);
+            // 
+            // closeToolStripMenuItem
+            // 
+            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            closeToolStripMenuItem.Size = new Size(146, 22);
+            closeToolStripMenuItem.Text = "&Close";
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -593,5 +612,8 @@ namespace WmsGfxSpriteEditor
         private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
+        private ToolStripSeparator toolStripMenuItem1;
+        private ToolStripSeparator toolStripMenuItem2;
+        private ToolStripMenuItem closeToolStripMenuItem;
     }
 }
