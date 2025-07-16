@@ -13,8 +13,11 @@ public class SetSpritePixelsFromBitmapCommand
 
     public void Execute(Bitmap source, ISprite target)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
-        
+        if (source == null)
+        {
+            throw new ArgumentNullException(nameof(source));
+        }
+
         _undoHelper.ExecuteActionWithUndoRedo(target, () =>
         {
             for (int y = 0; y < source.Height; y++)
