@@ -119,22 +119,6 @@ namespace WmsGfxSpriteEditor.Controls
         }
 
         /// <summary>
-        /// Updates the control size based on sprite dimensions and zoom level
-        /// </summary>
-        private void UpdateSizeForZoom()
-        {
-            if (_sprite == null)
-            {
-                return;
-            }
-
-            if (_sprite.Width > 0 && _sprite.Height > 0)
-            {
-                this.Size = _spriteGridRenderer!.CalculateMinimumClientSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
-            }
-        }
-
-        /// <summary>
         /// Sets the zoom level so the sprite fits best in the given available size
         /// </summary>
         public void Zoom(Size size)
@@ -196,7 +180,9 @@ namespace WmsGfxSpriteEditor.Controls
             base.OnMouseMove(e);
 
             if (GridCellMouseMove == null || _zoomLevel <= 0 || _sprite == null)
+            {
                 return;
+            }
 
             GridCell pt = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
@@ -212,7 +198,9 @@ namespace WmsGfxSpriteEditor.Controls
             base.OnMouseDown(e);
 
             if (GridCellMouseDown == null || _zoomLevel <= 0 || _sprite == null)
+            {
                 return;
+            }
 
             GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
@@ -228,7 +216,9 @@ namespace WmsGfxSpriteEditor.Controls
             base.OnMouseUp(e);
 
             if (GridCellMouseUp == null || _zoomLevel <= 0 || _sprite == null)
+            {
                 return;
+            }
 
             GridCell pt = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
@@ -257,6 +247,22 @@ namespace WmsGfxSpriteEditor.Controls
             if (_sprite.IsInBounds(pt.X, pt.Y))
             {
                 GridCellClicked.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
+            }
+        }
+
+        /// <summary>
+        /// Updates the control size based on sprite dimensions and zoom level
+        /// </summary>
+        private void UpdateSizeForZoom()
+        {
+            if (_sprite == null)
+            {
+                return;
+            }
+
+            if (_sprite.Width > 0 && _sprite.Height > 0)
+            {
+                Size = _spriteGridRenderer!.CalculateMinimumClientSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
             }
         }
     }

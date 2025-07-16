@@ -7,6 +7,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             // Raise custom event for zoom
             ZoomMouseWheel?.Invoke(this, e);
+            
             // Do not call base.OnMouseWheel, so scrollbars do not move
         }
     }

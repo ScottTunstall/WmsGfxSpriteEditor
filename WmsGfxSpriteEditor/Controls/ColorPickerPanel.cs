@@ -79,7 +79,6 @@ namespace WmsGfxSpriteEditor.Controls
             set;
         }
 
-
         public Size GetPreferredClientSize()
         {
             if (_palette.Length == 0)
@@ -95,7 +94,6 @@ namespace WmsGfxSpriteEditor.Controls
 
             return new Size(width, height);
         }
-
 
         private void PictureBox_Paint(object? sender, PaintEventArgs e)
         {
@@ -140,7 +138,7 @@ namespace WmsGfxSpriteEditor.Controls
             else
             {
                 Cursor = Cursors.Default;
-                _toolTip.SetToolTip(_pictureBox, "");
+                _toolTip.SetToolTip(_pictureBox, string.Empty);
             }
         }
 
@@ -148,7 +146,7 @@ namespace WmsGfxSpriteEditor.Controls
         {
             _hoveredIndex = -1;
             Cursor = Cursors.Default;
-            _toolTip.SetToolTip(_pictureBox, "");
+            _toolTip.SetToolTip(_pictureBox, string.Empty);
             _pictureBox.Invalidate();
         }
 
@@ -164,7 +162,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private void PictureBox_MouseUp(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && ColourContextMenuStrip!=null)
+            if (e.Button == MouseButtons.Right && ColourContextMenuStrip != null)
             {
                 int idx = HitTest(e.Location);
                 if (idx >= 0 && idx < _palette.Length)
@@ -180,7 +178,9 @@ namespace WmsGfxSpriteEditor.Controls
             for (int i = 0; i < _palette.Length; i++)
             {
                 if (GetColorRect(i).Contains(location))
+                {
                     return i;
+                }
             }
 
             return -1;
@@ -188,7 +188,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private Rectangle GetColorRect(int index)
         {
-            int cols = (this.ClientSize.Width - (ColorBoxMargin * 2)) / (ColorBoxSize + ColorBoxMargin);
+            int cols = (ClientSize.Width - (ColorBoxMargin * 2)) / (ColorBoxSize + ColorBoxMargin);
             int row = index / cols;
             int col = index % cols;
             int x = ColorBoxMargin + col * (ColorBoxSize + ColorBoxMargin);
@@ -200,11 +200,17 @@ namespace WmsGfxSpriteEditor.Controls
         {
             int brightness = (int)(color.R * 0.299 + color.G * 0.587 + color.B * 0.114);
             if (brightness > 180)
+            {
                 return Color.FromArgb(255, 40, 40, 40); // dark
+            }
             else if (brightness < 75)
+            {
                 return Color.FromArgb(255, 255, 255, 255); // white
+            }
             else
+            {
                 return Color.FromArgb(255, 255, 215, 0); // gold
+            }
         }
 
         private void InitialiseComponent()
@@ -212,11 +218,11 @@ namespace WmsGfxSpriteEditor.Controls
             DoubleBuffered = true;
 
             _toolTip = new();
-            
+
             _pictureBox = new PictureBox
             {
                 Location = new Point(0, 0),
-                ClientSize = this.ClientSize,
+                ClientSize = ClientSize,
                 Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
                 BackColor = Color.Transparent,
                 SizeMode = PictureBoxSizeMode.Normal
@@ -230,7 +236,5 @@ namespace WmsGfxSpriteEditor.Controls
 
             Controls.Add(_pictureBox);
         }
-
-
     }
 }
