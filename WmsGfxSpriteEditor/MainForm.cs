@@ -48,8 +48,8 @@ namespace WmsGfxSpriteEditor
         private ColorPickerDialog? _colorPickerDialog;
 
         // Rom specific
+        private bool _romsLoaded;
         private string _romSetName = string.Empty;
-
         private RomData? _romData;
 
         private bool _suppressControlChangeEvents;
@@ -160,6 +160,29 @@ namespace WmsGfxSpriteEditor
             }
 
             base.WndProc(ref m);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (!_romsLoaded)
+            {
+                base.OnFormClosing(e);
+                return;
+            }
+
+            DialogResult result = MessageBox.Show(
+                    "Are you sure you want to close the application? Any unsaved work will be lost.",
+                    "Confirm Exit",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
+
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true; // Cancel the close operation
+            }
+
+            base.OnFormClosing(e);
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -357,17 +380,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(
-                this,
-                "Williams Graphics Sprite Editor." + Environment.NewLine +
-                Environment.NewLine +
-                "Designed and developed by Scott Tunstall." + Environment.NewLine +
-                "Sprite offsets discovered and documented by Sean Riddle." + Environment.NewLine +
-                "All rights reserved.",
-                "About Williams Graphics Sprite Editor",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.None
-            );
+            ShowAboutDialog();
         }
 
         #endregion HELP MENU EVENT HANDLERS
@@ -521,6 +534,7 @@ namespace WmsGfxSpriteEditor
             OnSpritePixelDataChanged();
 
             _suppressControlChangeEvents = false;
+            _romsLoaded = true;
 
             OnReady();
         }
@@ -724,6 +738,15 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion PALETTE MENU INVOKED FUNCS
+
+        #region HELP MENU INVOKED FUNCS
+
+        private void ShowAboutDialog()
+        {
+            new AboutDialog().ShowDialog(this);
+        }
+
+        #endregion HELP MENU INVOKED FUNCS
 
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
 

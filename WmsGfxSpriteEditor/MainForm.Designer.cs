@@ -27,7 +27,9 @@ namespace WmsGfxSpriteEditor
             mnuFileLoadRobotronBlueLabel = new ToolStripMenuItem();
             mnuFileLoadRobotronTieDieWDPU = new ToolStripMenuItem();
             mnuFileLoadRobotronTieDieMAME = new ToolStripMenuItem();
+            toolStripMenuItem1 = new ToolStripSeparator();
             mnuFileSave = new ToolStripMenuItem();
+            toolStripMenuItem2 = new ToolStripSeparator();
             mnuEdit = new ToolStripMenuItem();
             mnuEditUndo = new ToolStripMenuItem();
             mnuEditRedo = new ToolStripMenuItem();
@@ -68,9 +70,6 @@ namespace WmsGfxSpriteEditor
             btnShowPalette = new ToolStripButton();
             magnificationPanel = new MagnificationPanel();
             spriteDisplay = new SpriteDisplayControl();
-            toolStripMenuItem1 = new ToolStripSeparator();
-            toolStripMenuItem2 = new ToolStripSeparator();
-            closeToolStripMenuItem = new ToolStripMenuItem();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
             topPanel.SuspendLayout();
@@ -92,7 +91,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFile
             // 
-            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, toolStripMenuItem1, mnuFileSave, toolStripMenuItem2, closeToolStripMenuItem });
+            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, toolStripMenuItem1, mnuFileSave, toolStripMenuItem2 });
             mnuFile.Name = "mnuFile";
             mnuFile.ShortcutKeys = Keys.Alt | Keys.F;
             mnuFile.Size = new Size(37, 20);
@@ -103,7 +102,7 @@ namespace WmsGfxSpriteEditor
             mnuFileLoad.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoadRobotron });
             mnuFileLoad.Name = "mnuFileLoad";
             mnuFileLoad.ShortcutKeys = Keys.Control | Keys.O;
-            mnuFileLoad.Size = new Size(146, 22);
+            mnuFileLoad.Size = new Size(180, 22);
             mnuFileLoad.Text = "&Open";
             // 
             // mnuFileLoadRobotron
@@ -135,14 +134,24 @@ namespace WmsGfxSpriteEditor
             mnuFileLoadRobotronTieDieMAME.Text = "Tie Die (&MAME 0.265)";
             mnuFileLoadRobotronTieDieMAME.Click += mnuFileLoadRobotronTieDieMAME_Click;
             // 
+            // toolStripMenuItem1
+            // 
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(177, 6);
+            // 
             // mnuFileSave
             // 
             mnuFileSave.Enabled = false;
             mnuFileSave.Name = "mnuFileSave";
             mnuFileSave.ShortcutKeys = Keys.Control | Keys.S;
-            mnuFileSave.Size = new Size(146, 22);
+            mnuFileSave.Size = new Size(180, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
+            // 
+            // toolStripMenuItem2
+            // 
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(177, 6);
             // 
             // mnuEdit
             // 
@@ -515,22 +524,6 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
             spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
             // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(143, 6);
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(143, 6);
-            // 
-            // closeToolStripMenuItem
-            // 
-            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(146, 22);
-            closeToolStripMenuItem.Text = "&Close";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -614,6 +607,5 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripSeparator toolStripMenuItem2;
-        private ToolStripMenuItem closeToolStripMenuItem;
     }
 }
