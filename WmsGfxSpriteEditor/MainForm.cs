@@ -60,7 +60,7 @@ namespace WmsGfxSpriteEditor
         private SpriteInfo? _activeSpriteInfo;
         private ISprite? _activeSprite;
         private int _zoomLevel = DefaultZoomLevel;
-        private int _activePaletteIndex = -1;
+        private int _activePaletteIndex;
 
         public MainForm()
         {
@@ -84,21 +84,48 @@ namespace WmsGfxSpriteEditor
 #pragma warning disable SA1202 // Elements should be ordered by access
 
         // User selections
-        protected Color ActivePaletteColour { get; private set; } = Color.Black;
+
+        // Palette
+        protected Color[] ActivePalette
+        {
+            get => _palette;
+            private set
+            {
+                if (value.Length < 2)
+                {
+                    throw new ArgumentException($"{nameof(ActivePalette)} must have at least 2 colors.", nameof(value));
+                }
+
+                _palette = value;
+                OnActivePaletteChanged();
+            }
+        }
 
         protected int ActivePaletteIndex
         {
             get => _activePaletteIndex;
             set
             {
+                if (ActivePalette.Length == 0)
+                {
+                    throw new InvalidOperationException($"{nameof(ActivePalette)} must be initialised before {nameof(ActivePaletteIndex)} can be set.");
+                }
+
+                if (value < 0 || value >= ActivePalette.Length)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value), $"Active palette index must be between 0 and {ActivePalette.Length - 1}.");
+                }
+
                 if (value != _activePaletteIndex)
                 {
                     _activePaletteIndex = value;
-                    ActivePaletteColour = ActivePalette[value];
                     OnActivePaletteIndexChanged();
                 }
             }
         }
+
+        protected Color ActivePaletteColour { get; private set; } = Color.Black;
+
 
         /// <summary>
         /// The list of sprites that can be selected from the sprite dropdown.
@@ -108,6 +135,11 @@ namespace WmsGfxSpriteEditor
             get => _availableSprites;
             set
             {
+                if (value.Count == 0)
+                {
+                    throw new ArgumentException($"{nameof(value)} must not be an empty collection.");
+                }
+
                 _availableSprites = value;
                 OnAvailableSpritesChanged();
             }
@@ -164,21 +196,7 @@ namespace WmsGfxSpriteEditor
             }
         }
 
-        // Palette
-        protected Color[] ActivePalette
-        {
-            get => _palette;
-            private set
-            {
-                if (value.Length < 2)
-                {
-                    throw new ArgumentException($"{nameof(ActivePalette)} must have at least 2 colors.", nameof(value));
-                }
 
-                _palette = value;
-                OnActivePaletteChanged();
-            }
-        }
 
         protected override void WndProc(ref Message m)
         {
@@ -481,7 +499,6 @@ namespace WmsGfxSpriteEditor
 
         protected void SelectActivePaletteColour(Color selectedColour, int colourIndex)
         {
-            ActivePaletteColour = selectedColour;
             ActivePaletteIndex = colourIndex;
         }
 
@@ -562,6 +579,7 @@ namespace WmsGfxSpriteEditor
 
             List<SpriteInfo> allSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
             AvailableSprites = allSprites;
+            SelectActiveSpriteByIndex(0, true);
 
             _suppressControlChangeEvents = false;
             _romsLoaded = true;
@@ -611,7 +629,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
 
             _clipboardService!.Paste(ActiveSprite!);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         #endregion EDIT MENU INVOKED FUNCS
@@ -664,7 +682,7 @@ namespace WmsGfxSpriteEditor
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
                     {
-                        SelectActivePaletteColour(_colorPickerDialog.Palette[_colorPickerDialog.SelectedPaletteIndex], _colorPickerDialog.SelectedPaletteIndex);
+                        ActivePaletteIndex = _colorPickerDialog.SelectedPaletteIndex;
                     }
                 };
 
@@ -720,7 +738,7 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoActiveSprite();
             _spriteService!.FlipSpriteHorizontal(ActiveSprite!);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected void FlipSpriteVertical()
@@ -730,7 +748,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteService!.FlipSpriteVertical(ActiveSprite!);
 
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected void ShiftSpritePixelsLeft()
@@ -740,7 +758,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteService!.ShiftSpritePixelsLeft(ActiveSprite!);
 
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected void ShiftSpritePixelsRight()
@@ -750,7 +768,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteService!.ShiftSpritePixelsRight(ActiveSprite!);
 
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected void ShiftSpritePixelsUp()
@@ -760,7 +778,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteService!.ShiftSpritePixelsUp(ActiveSprite!);
 
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected void ShiftSpriteDown()
@@ -770,7 +788,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteService!.ShiftSpritePixelsDown(ActiveSprite!);
 
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         #endregion SPRITE MENU INVOKED FUNCS
@@ -805,19 +823,6 @@ namespace WmsGfxSpriteEditor
 
         #region SPRITE SELECT COMBO BOX INVOKED FUNCS
 
-        protected SpriteInfo SetSpriteSelectDropdown(List<SpriteInfo> spriteInfos, int index = 0)
-        {
-            cboSprite.DataSource = null;
-            cboSprite.DisplayMember = "ToString";
-            cboSprite.ValueMember = "Offset";
-            cboSprite.DataSource = spriteInfos;
-
-            SetSpriteSelectComboBox(index);
-
-            SpriteInfo spriteInfo = spriteInfos[index];
-            return spriteInfo;
-        }
-
         protected void SelectActiveSpriteByIndex(int index, bool syncControls = true)
         {
             ActiveSpriteInfo = AvailableSprites[index];
@@ -846,7 +851,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoSpriteService();
 
             _spriteService!.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
@@ -855,7 +860,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoSpriteService();
 
             _spriteService!.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         protected virtual void EndSpriteDrawOp()
@@ -864,7 +869,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoSpriteService();
 
             _spriteService!.EndSpriteDrawOp(ActiveSprite!);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         #endregion SPRITE GRID INVOKED FUNCS
@@ -885,7 +890,7 @@ namespace WmsGfxSpriteEditor
 
             new UpdateRomDataFromPixelDataCommand(_romData!).Execute(offset, item.PixelData!);
             SelectActiveSpriteByIndex(item.SpriteIndex, true);
-            OnSpritePixelDataChanged();
+            OnSpritePixelsMaybeChanged();
         }
 
         #endregion HISTORY
@@ -961,13 +966,14 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnActivePaletteChanged()
         {
-            bool havePalette = ActivePalette.Length > 1;
-            mnuViewPalette.Enabled = havePalette;
-            btnShowPalette.Enabled = havePalette;
+            mnuViewPalette.Enabled = true;
+            btnShowPalette.Enabled = true;
+            ActivePaletteIndex = 0;
         }
 
         protected virtual void OnActivePaletteIndexChanged()
         {
+            ActivePaletteColour = ActivePalette[ActivePaletteIndex];
         }
 
         protected virtual void OnColourPickerDialogShown()
@@ -986,8 +992,7 @@ namespace WmsGfxSpriteEditor
             cboSprite.ValueMember = "Offset";
             cboSprite.DataSource = AvailableSprites;
             cboSprite.Enabled = AvailableSprites.Count > 0;
-
-            SelectActiveSpriteByIndex(0, true);
+            SelectActiveSpriteByIndex(0, true); // safety measure to ensure we have a valid sprite selected
         }
 
         protected virtual void OnActiveSpriteInfoChanged()
@@ -1044,14 +1049,14 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.Visible = haveSprite;
             if (haveSprite)
             {
-                OnSpritePixelDataChanged();
+                OnSpritePixelsMaybeChanged();
             }
         }
 
         /// <summary>
         /// Called when the sprite pixel data has changed.
         /// </summary>
-        protected virtual void OnSpritePixelDataChanged()
+        protected virtual void OnSpritePixelsMaybeChanged()
         {
             ThrowIfNoHistory();
 
