@@ -492,15 +492,6 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE EDITOR EVENT HANDLERS
 
-        #region PALETTE FUNCS
-
-        protected void SelectActivePaletteColour(Color selectedColour, int colourIndex)
-        {
-            ActivePaletteIndex = colourIndex;
-        }
-
-        #endregion PALETTE FUNCS
-
         #region FILE MENU INVOKED FUNCS
 
         protected void BrowseForRobotronRom(string label, RobotronRomSetType romSetType)
