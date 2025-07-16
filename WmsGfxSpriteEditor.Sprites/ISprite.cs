@@ -54,7 +54,5 @@ namespace WmsGfxSpriteEditor.Sprites
         UInt128 GetPixelDataHash();
 
         Bitmap CreateBitmapFromSprite();
-
-
     }
 }

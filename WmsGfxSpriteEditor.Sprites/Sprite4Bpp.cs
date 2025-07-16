@@ -113,52 +113,48 @@ namespace WmsGfxSpriteEditor.Sprites
                 return;
             }
 
-            byte[] newSpriteData = new byte[PixelData.Span.Length];
-            
-            int sourceOffset = 0;
+            // Flip by swapping columns using SetPixelByPaletteIndex
             for (int y = 0; y < Height; y++)
             {
-                int destOffset = sourceOffset + WidthInBytes - 1;
-                for (int x = 0; x < WidthInBytes; x++)
+                for (int x = 0; x < Width / 2; x++)
                 {
-                    byte leftByte = PixelData.Span[sourceOffset + x];
-                    byte swapped = leftByte.SwapNibbles();
-                    newSpriteData[destOffset--] = swapped;
+                    int oppositeX = Width - 1 - x;
+                    int leftPalette = GetPaletteIndexFromPixel(x, y);
+                    int rightPalette = GetPaletteIndexFromPixel(oppositeX, y);
+                    // Swap
+                    SetPixelByPaletteIndex(x, y, rightPalette);
+                    SetPixelByPaletteIndex(oppositeX, y, leftPalette);
                 }
-
-                sourceOffset += WidthInBytes;
             }
-
-            newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
         }
 
         public void YFlip()
         {
             // No need to flip a 1px high sprite
-            if (Height <= 1) 
+            if (Height <= 1)
             {
                 return;
             }
 
-            byte[] newSpriteData = new byte[PixelData.Span.Length];
-            int sourceOffset = 0;
-            int destOffset = PixelData.Span.Length - WidthInBytes;
-            for (int y = 0; y < Height; y++)
+            // Flip by swapping rows using SetPixelByPaletteIndex
+            for (int y = 0; y < Height / 2; y++)
             {
-                Span<byte> source = PixelData.Span.Slice(sourceOffset, WidthInBytes);
-                Span<byte> destination = newSpriteData.AsSpan(destOffset, WidthInBytes);
-                source.CopyTo(destination);
-                sourceOffset += WidthInBytes;
-                destOffset -= WidthInBytes;
+                int oppositeY = Height - 1 - y;
+                for (int x = 0; x < Width; x++)
+                {
+                    int topPalette = GetPaletteIndexFromPixel(x, y);
+                    int bottomPalette = GetPaletteIndexFromPixel(x, oppositeY);
+                    // Swap
+                    SetPixelByPaletteIndex(x, y, bottomPalette);
+                    SetPixelByPaletteIndex(x, oppositeY, topPalette);
+                }
             }
-
-            newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
         }
 
         public void ShiftPixelsUp()
         {
+            UInt128 oldHash = GetPixelDataHash();
+
             byte[] newSpriteData = new byte[PixelData.Span.Length];
             if (Height > 1)
             {
@@ -168,11 +164,16 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
+            
+            UInt128 newHash = GetPixelDataHash();
+
+            IsPixelDataDirty = oldHash != newHash;
         }
 
         public void ShiftPixelsDown()
         {
+            UInt128 oldHash = GetPixelDataHash();
+
             byte[] newSpriteData = new byte[PixelData.Span.Length];
             if (Height > 1)
             {
@@ -182,11 +183,16 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
+
+            UInt128 newHash = GetPixelDataHash();
+
+            IsPixelDataDirty = oldHash != newHash;
         }
 
         public void ShiftPixelsLeft()
         {
+            UInt128 oldHash = GetPixelDataHash();
+
             byte[] newSpriteData = new byte[PixelData.Span.Length];
 
             if (Width > 1)
@@ -214,11 +220,16 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
+
+            UInt128 newHash = GetPixelDataHash();
+
+            IsPixelDataDirty = oldHash != newHash;
         }
 
         public void ShiftPixelsRight()
         {
+            UInt128 oldHash = GetPixelDataHash();
+
             byte[] newSpriteData = new byte[PixelData.Span.Length];
 
             if (Width > 1)
@@ -246,7 +257,10 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             newSpriteData.CopyTo(PixelData.Span);
-            IsPixelDataDirty = true;
+
+            UInt128 newHash = GetPixelDataHash();
+
+            IsPixelDataDirty = oldHash != newHash;
         }
 
         public Bitmap CreateBitmapFromSprite()
