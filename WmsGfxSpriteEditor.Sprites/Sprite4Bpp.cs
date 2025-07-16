@@ -153,21 +153,25 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void ShiftPixelsUp()
         {
-            UInt128 oldHash = GetPixelDataHash();
-
-            byte[] newSpriteData = new byte[PixelData.Span.Length];
             if (Height > 1)
             {
-                Span<byte> source = PixelData.Span.Slice(WidthInBytes);
-                Span<byte> destination = newSpriteData.AsSpan(0, PixelData.Span.Length - WidthInBytes);
-                source.CopyTo(destination);
+                // Shift all rows up by copying the row below
+                for (int y = 0; y < Height - 1; y++)
+                {
+                    for (int x = 0; x < Width; x++)
+                    {
+                        int belowPalette = GetPaletteIndexFromPixel(x, y + 1);
+                        SetPixelByPaletteIndex(x, y, belowPalette);
+                    }
+                }
             }
 
-            newSpriteData.CopyTo(PixelData.Span);
-            
-            UInt128 newHash = GetPixelDataHash();
-
-            IsPixelDataDirty = oldHash != newHash;
+            // Set the bottom row to palette index 0
+            int lastRow = Height - 1;
+            for (int x = 0; x < Width; x++)
+            {
+                SetPixelByPaletteIndex(x, lastRow, 0);
+            }
         }
 
         public void ShiftPixelsDown()
