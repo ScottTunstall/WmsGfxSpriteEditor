@@ -20,6 +20,15 @@ namespace WmsGfxSpriteEditor.Controls
         private int _zoomLevelGridThreshold = 3;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="SpriteDisplayControl"/> class.
+        /// </summary>
+        public SpriteDisplayControl()
+        {
+            // Enable double buffering for smoother rendering
+            DoubleBuffered = true;
+        }
+
+        /// <summary>
         /// Event fired when the mouse moves over a grid cell.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellMouseMove;
@@ -38,15 +47,6 @@ namespace WmsGfxSpriteEditor.Controls
         /// Event fired when a grid cell is clicked.
         /// </summary>
         public event EventHandler<SpriteGridMouseEventArgs>? GridCellClicked;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SpriteDisplayControl"/> class.
-        /// </summary>
-        public SpriteDisplayControl()
-        {
-            // Enable double buffering for smoother rendering
-            DoubleBuffered = true;
-        }
 
         /// <summary>
         /// Gets or sets the sprite grid renderer used for drawing the sprite.

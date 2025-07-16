@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace WmsGfxSpriteEditor
 {
-    public class SpriteGridMouseEventArgs: SpriteGridEventArgs
+    public class SpriteGridMouseEventArgs : SpriteGridEventArgs
     {
-        /// <summary>
-        ///  Gets the number of times the mouse button was pressed and released.
-        /// </summary>
-        public int Clicks { get; }
-
         public SpriteGridMouseEventArgs(MouseButtons button, int clicks, int gridX, int gridY) : base(gridX, gridY)
         {
             Button = button;
@@ -20,9 +15,13 @@ namespace WmsGfxSpriteEditor
         }
 
         /// <summary>
+        ///  Gets the number of times the mouse button was pressed and released.
+        /// </summary>
+        public int Clicks { get; }
+
+        /// <summary>
         ///  Gets which mouse button was pressed.
         /// </summary>
         public MouseButtons Button { get; }
-
     }
 }

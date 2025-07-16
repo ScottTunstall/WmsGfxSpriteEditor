@@ -14,7 +14,6 @@ namespace WmsGfxSpriteEditor.Sprites
         {
             _undoHelper.SnapshotPixelDataIfChanged(sprite);
             sprite.ClearPixelDataDirtyFlag();
-            // Draw the initial pixel
             sprite.SetPixelByPaletteIndex(startX, startY, paletteIndex);
         }
 

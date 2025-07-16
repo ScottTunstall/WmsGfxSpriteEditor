@@ -16,7 +16,7 @@ namespace WmsGfxSpriteEditor.Sprites
         {
             if (x >= clientSize.Width || y >= clientSize.Height)
             {
-                return new GridCell(); // Out of bounds
+                return default; // Out of bounds
             }
 
             // Calculate grid coordinates based on mouse position and zoom level
@@ -32,10 +32,7 @@ namespace WmsGfxSpriteEditor.Sprites
         /// <param name="sprite">The sprite to render.</param>
         /// <param name="cellSize">The size of each cell in pixels.</param>
         /// <param name="clientArea">The area to render in.</param>
-        public void RenderSpriteWithoutGrid(Graphics graphics,
-            ISprite sprite,
-            int cellSize,
-            Rectangle clientArea)
+        public void RenderSpriteWithoutGrid(Graphics graphics, ISprite sprite, int cellSize, Rectangle clientArea)
         {
             ArgumentNullException.ThrowIfNull(sprite);
 
@@ -72,11 +69,7 @@ namespace WmsGfxSpriteEditor.Sprites
         /// <param name="cellSize">The size of each cell in pixels.</param>
         /// <param name="gridColour">The color of the grid lines.</param>
         /// <param name="clientArea">The area to render in.</param>
-        public void RenderSpriteWithGrid(Graphics graphics,
-            ISprite sprite,
-            int cellSize,
-            Color gridColour,
-            Rectangle clientArea)
+        public void RenderSpriteWithGrid(Graphics graphics, ISprite sprite, int cellSize, Color gridColour, Rectangle clientArea)
         {
             // If we have no sprite data, exit without rendering anything
             if (sprite.PixelData.Length == 0)

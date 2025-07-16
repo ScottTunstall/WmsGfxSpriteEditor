@@ -24,22 +24,24 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore SYSLIB1054
 
         // Consts
+#pragma warning disable SA1201 // Elements should appear in the correct order
         private const int MinZoomLevel = 1;
+#pragma warning restore SA1201 // Elements should appear in the correct order
 
         private const int MaxZoomLevel = 32;
         private const int DefaultZoomLevel = 3;
 
         private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
 
-        // Service dependencies
+        // Service dependencies (I may inject these in future. No need just now.)
         private IRomService? _romService;
 
-        private readonly IHistory _history;
+        private IHistory? _history;
         private ISpriteGridRenderer? _spriteRenderer;
         private ISpriteFactory? _spriteFactory;
-        private readonly ISpriteService _spriteService;
-        private readonly ISpriteClipboardService _clipboardService;
-        private readonly IPaletteClipboardService _paletteService = new DefaultPaletteClipboardService();
+        private ISpriteService? _spriteService;
+        private ISpriteClipboardService? _clipboardService;
+        private IPaletteClipboardService? _paletteService;
 
         // Dialogs
         private ColorPickerDialog? _colorPickerDialog;
@@ -57,10 +59,6 @@ namespace WmsGfxSpriteEditor
 
         public MainForm()
         {
-            _history = new History.History();
-            _spriteService = new SpriteService(_history);
-            _clipboardService = new DefaultSpriteClipboardService(_history);
-
             InitializeComponent();
 
             _suppressControlChangeEvents = true;
@@ -75,6 +73,10 @@ namespace WmsGfxSpriteEditor
 
             _suppressControlChangeEvents = false;
         }
+
+        // This code will need to be refactored. The individual sections defined by regions will need to be extracted to separate classes
+        // For now - disable the warning about ordering of elements
+#pragma warning disable SA1202 // Elements should be ordered by access
 
         protected IReadOnlyList<SpriteInfo> AvailableSprites { get; private set; } = [];
 
@@ -196,6 +198,10 @@ namespace WmsGfxSpriteEditor
 
             // No need to set Handled, as MagPanel prevents scrolling
         }
+
+#pragma warning disable IDE1006 // Element should begin with upper-case letter
+#pragma warning disable SA1124 // Do not use regions
+#pragma warning disable SA1300 // Element should begin with upper-case letter
 
         #region FILE MENU EVENT HANDLERS
 
@@ -483,12 +489,15 @@ namespace WmsGfxSpriteEditor
         {
             _suppressControlChangeEvents = true;
 
-            _history.Clear();
-
             _romSetName = romSetName;
 
             _romData?.Dispose();
             _romData = romData;
+
+            _history = new History.History();
+            _spriteService = new SpriteService(_history);
+            _clipboardService = new DefaultSpriteClipboardService(_history);
+            _paletteService = new DefaultPaletteClipboardService();
 
             _romService = editorDependencies.RomService;
             _spriteFactory = editorDependencies.SpriteFactory;
@@ -496,7 +505,7 @@ namespace WmsGfxSpriteEditor
 
             _spriteRenderer = editorDependencies.SpriteRenderer;
 
-            List<SpriteInfo> allSprites = editorDependencies.SpriteRepository.GetAllSprites().ToList();
+            List<SpriteInfo> allSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
             SpriteInfo spriteInfo = SetSpriteSelectDropdown(allSprites);
             ActiveSpriteInfo = spriteInfo;
 
@@ -521,7 +530,9 @@ namespace WmsGfxSpriteEditor
 
         protected void Undo()
         {
-            if (!_history.CanGoBack)
+            ThrowIfNoHistory();
+
+            if (!_history!.CanGoBack)
             {
                 throw new InvalidOperationException("No history item to undo.");
             }
@@ -532,7 +543,9 @@ namespace WmsGfxSpriteEditor
 
         protected void Redo()
         {
-            if (!_history.CanGoForward)
+            ThrowIfNoHistory();
+
+            if (!_history!.CanGoForward)
             {
                 throw new InvalidOperationException("No history item to redo.");
             }
@@ -606,8 +619,7 @@ namespace WmsGfxSpriteEditor
                 {
                     if (_colorPickerDialog.SelectedPaletteIndex >= 0)
                     {
-                        SelectActivePaletteColour(_colorPickerDialog.Palette[_colorPickerDialog.SelectedPaletteIndex],
-                            _colorPickerDialog.SelectedPaletteIndex);
+                        SelectActivePaletteColour(_colorPickerDialog.Palette[_colorPickerDialog.SelectedPaletteIndex], _colorPickerDialog.SelectedPaletteIndex);
                     }
                 };
 
@@ -642,51 +654,53 @@ namespace WmsGfxSpriteEditor
         protected void FlipSpriteHorizontal()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.FlipSpriteHorizontal(ActiveSprite!);
+            _spriteService!.FlipSpriteHorizontal(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void FlipSpriteVertical()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.FlipSpriteVertical(ActiveSprite!);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.FlipSpriteVertical(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsLeft()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.ShiftSpritePixelsLeft(ActiveSprite!);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.ShiftSpritePixelsLeft(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsRight()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.ShiftSpritePixelsRight(ActiveSprite!);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.ShiftSpritePixelsRight(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpritePixelsUp()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.ShiftSpritePixelsUp(ActiveSprite!);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.ShiftSpritePixelsUp(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
         protected void ShiftSpriteDown()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.ShiftSpritePixelsDown(ActiveSprite!);
-            OnSpritePixelDataChanged();
-        }
+            ThrowIfNoSpriteService();
 
-        private void ThrowIfNoActiveSprite()
-        {
-            if (ActiveSprite == null)
-            {
-                throw new InvalidOperationException("Operation cannot be performed without an active sprite");
-            }
+            _spriteService!.ShiftSpritePixelsDown(ActiveSprite!);
+            OnSpritePixelDataChanged();
         }
 
         #endregion SPRITE MENU INVOKED FUNCS
@@ -695,13 +709,16 @@ namespace WmsGfxSpriteEditor
 
         protected string CopyActivePaletteColourAsHex()
         {
-            string hex = _paletteService.CopyAsHexString(ActivePaletteColour);
+            ThrowIfNoPaletteService();
+
+            string hex = _paletteService!.CopyAsHexString(ActivePaletteColour);
             return hex;
         }
 
         protected string CopyActivePaletteColourAsRGB()
         {
-            string rgb = _paletteService.CopyAsRGBString(ActivePaletteColour);
+            ThrowIfNoPaletteService();
+            string rgb = _paletteService!.CopyAsRGBString(ActivePaletteColour);
             return rgb;
         }
 
@@ -769,21 +786,27 @@ namespace WmsGfxSpriteEditor
         protected virtual void BeginSpriteDrawOp(int startX, int startY, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            _spriteService.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void ContinueSpriteDrawOp(int x, int y, int paletteIndex)
         {
             ThrowIfNoActiveSprite();
-            _spriteService.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
             OnSpritePixelDataChanged();
         }
 
         protected virtual void EndSpriteDrawOp()
         {
             ThrowIfNoActiveSprite();
-            _spriteService.EndSpriteDrawOp(ActiveSprite!);
+            ThrowIfNoSpriteService();
+
+            _spriteService!.EndSpriteDrawOp(ActiveSprite!);
             OnSpritePixelDataChanged();
         }
 
@@ -873,18 +896,19 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnClipboardChanged()
         {
+            ThrowIfNoClipboardService();
+
             if (ActiveSprite == null)
             {
                 mnuEditPaste.Enabled = false;
                 return;
             }
 
-            mnuEditPaste.Enabled = _clipboardService.HasCompatibleBitmap(ActiveSprite!);
+            mnuEditPaste.Enabled = _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
         }
 
         protected virtual void OnActivePaletteIndexChanged()
         {
-            //pnlPalette.SelectedPaletteIndex = ActivePaletteIndex;
         }
 
         protected virtual void OnColourPickerShown()
@@ -903,7 +927,7 @@ namespace WmsGfxSpriteEditor
 
             // Edit menu
             mnuEditCopy.Enabled = haveSprite;
-            mnuEditPaste.Enabled = haveSprite && _clipboardService.HasCompatibleBitmap(ActiveSprite!);
+            mnuEditPaste.Enabled = haveSprite && _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
 
             // View menu
             mnuViewZoomIn.Enabled = haveSprite;
@@ -929,7 +953,10 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnSpritePixelDataChanged()
         {
-            mnuEditUndo.Enabled = _history.CanGoBack;
+            ThrowIfNoActiveSprite();
+            ThrowIfNoHistory();
+
+            mnuEditUndo.Enabled = _history!.CanGoBack;
             mnuEditRedo.Enabled = _history.CanGoForward;
 
             spriteDisplay.Invalidate();
@@ -954,5 +981,51 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion ROM
+
+#pragma warning restore SA1300 // Element should begin with upper-case letter
+#pragma warning restore SA1202 // Elements should be ordered by access
+#pragma warning restore SA1124 // Do not use regions
+#pragma warning restore IDE1006 // Element should begin with upper-case letter
+#pragma warning restore SA1202 // Elements should be ordered by access
+
+        private void ThrowIfNoHistory()
+        {
+            if (_history == null)
+            {
+                throw new InvalidOperationException($"{nameof(_history)} is null.");
+            }
+        }
+
+        private void ThrowIfNoClipboardService()
+        {
+            if (_clipboardService == null)
+            {
+                throw new InvalidOperationException($"{nameof(_clipboardService)} is null.");
+            }
+        }
+
+        private void ThrowIfNoActiveSprite()
+        {
+            if (ActiveSprite == null)
+            {
+                throw new InvalidOperationException("Operation cannot be performed without an active sprite");
+            }
+        }
+
+        private void ThrowIfNoSpriteService()
+        {
+            if (_spriteService == null)
+            {
+                throw new InvalidOperationException($"{nameof(_spriteService)} is null.");
+            }
+        }
+
+        private void ThrowIfNoPaletteService()
+        {
+            if (_paletteService == null)
+            {
+                throw new InvalidOperationException($"{nameof(_paletteService)} is null.");
+            }
+        }
     }
 }

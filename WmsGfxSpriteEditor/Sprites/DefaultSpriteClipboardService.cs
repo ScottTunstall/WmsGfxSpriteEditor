@@ -85,6 +85,7 @@ namespace WmsGfxSpriteEditor.Sprites
                         }
                     }
                 }
+
                 imagePalette = colourSet.ToArray();
             }
 

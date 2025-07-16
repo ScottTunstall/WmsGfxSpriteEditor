@@ -6,29 +6,26 @@ namespace WmsGfxSpriteEditor.Dialogs
 {
     public class ColorPickerDialog : Form
     {
+        private readonly DefaultPaletteClipboardService _paletteService = new();
         private ColorPickerPanel _colourPickerPanel;
         private ContextMenuStrip _contextMenu;
         private ToolStripMenuItem _copyRgbMenuItem;
         private ToolStripMenuItem _copyHexMenuItem;
         private IContainer _components;
-        private readonly DefaultPaletteClipboardService _paletteService = new();
-
-        public event EventHandler? SelectedColorChanged;
 
         public ColorPickerDialog()
         {
             InitializeComponent();
         }
 
+        public event EventHandler? SelectedColorChanged;
+
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Color[] Palette
         {
             get => _colourPickerPanel.Palette;
-            set
-            {
-                _colourPickerPanel.Palette = value;
-            }
+            set => _colourPickerPanel.Palette = value;
         }
 
         [Browsable(false)]
@@ -41,7 +38,7 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         public void ShrinkToFit()
         {
-            this.ClientSize = _colourPickerPanel.GetPreferredClientSize();
+            ClientSize = _colourPickerPanel.GetPreferredClientSize();
         }
 
         protected override void OnResize(EventArgs e)

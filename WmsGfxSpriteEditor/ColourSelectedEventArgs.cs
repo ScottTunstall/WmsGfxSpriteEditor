@@ -12,16 +12,6 @@ namespace WmsGfxSpriteEditor
     public class ColourSelectedEventArgs : EventArgs
     {
         /// <summary>
-        /// Gets the selected colour (Color to our American cousins)
-        /// </summary>
-        public Color SelectedColour { get; }
-
-        /// <summary>
-        /// Gets the index of the selected color in the palette
-        /// </summary>
-        public int ColourIndex { get; }
-
-        /// <summary>
         /// Initializes a new instance of the ColorSelectedEventArgs class
         /// </summary>
         /// <param name="selectedColour">The selected colour</param>
@@ -31,5 +21,15 @@ namespace WmsGfxSpriteEditor
             SelectedColour = selectedColour;
             ColourIndex = colourIndex;
         }
+
+        /// <summary>
+        /// Gets the selected colour (Color to our American cousins)
+        /// </summary>
+        public Color SelectedColour { get; }
+
+        /// <summary>
+        /// Gets the index of the selected color in the palette
+        /// </summary>
+        public int ColourIndex { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace WmsGfxSpriteEditor.Dialogs
             {
                 throw new ArgumentException("Value cannot be an empty collection.", nameof(missingRomFiles));
             }
-            
+
             StringBuilder sb = new("MISSING FILES:");
             sb.Append(Environment.NewLine);
             sb.Append(Environment.NewLine);
