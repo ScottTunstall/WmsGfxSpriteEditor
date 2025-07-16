@@ -135,23 +135,25 @@ csharp_style_prefer_local_over_anonymous_function = true:suggestion
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = suggestion
 
-# Disable StyleCop SA1633 (file header requirement)
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1200.severity = none
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1309.severity = none
 dotnet_diagnostic.SA1000.severity = none
 dotnet_diagnostic.SA1009.severity = none
 dotnet_diagnostic.SA1010.severity = none
+dotnet_diagnostic.SA1011.severity = none
+dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1111.severity = none
 dotnet_diagnostic.SA1118.severity = warning
-dotnet_diagnostic.SA1120.severity = warning
+dotnet_diagnostic.SA1120.severity = none
 dotnet_diagnostic.SA1128.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1206.severity = none
+dotnet_diagnostic.SA1309.severity = none
 dotnet_diagnostic.SA1413.severity = none
 dotnet_diagnostic.SA1500.severity = none
 dotnet_diagnostic.SA1513.severity = none
 dotnet_diagnostic.SA1515.severity = none
 dotnet_diagnostic.SA1629.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1636.severity = none
 
 csharp_space_around_binary_operators = before_and_after
 csharp_style_prefer_index_operator = true:suggestion
