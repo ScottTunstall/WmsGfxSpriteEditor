@@ -126,7 +126,6 @@ namespace WmsGfxSpriteEditor
 
         protected Color ActivePaletteColour { get; private set; } = Color.Black;
 
-
         /// <summary>
         /// The list of sprites that can be selected from the sprite dropdown.
         /// </summary>
@@ -195,8 +194,6 @@ namespace WmsGfxSpriteEditor
                 }
             }
         }
-
-
 
         protected override void WndProc(ref Message m)
         {
@@ -316,7 +313,7 @@ namespace WmsGfxSpriteEditor
 
         private void mnuEditPaste_Click(object sender, EventArgs e)
         {
-            CopyClipboardToSprite();
+            PasteSprite();
         }
 
         #endregion EDIT MENU EVENT HANDLERS
@@ -624,7 +621,7 @@ namespace WmsGfxSpriteEditor
             _clipboardService!.Copy(ActiveSprite!);
         }
 
-        protected void CopyClipboardToSprite()
+        protected void PasteSprite()
         {
             ThrowIfNoActiveSprite();
 
@@ -1093,10 +1090,8 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore IDE1006 // Element should begin with upper-case letter
 #pragma warning restore SA1202 // Elements should be ordered by access
 
-
         // The properties below in the Throw() methods should sanity check themselves for correct values.
         // When I'm developing, I may miss something so these give me peace of mind.
-
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
         private void ThrowIfNoHistory()
