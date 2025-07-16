@@ -1,4 +1,5 @@
 using System.Drawing.Imaging;
+using WmsGfxSpriteEditor.History;
 using WmsGfxSpriteEditor.Sprites.Commands;
 
 namespace WmsGfxSpriteEditor.Sprites

@@ -1,3 +1,5 @@
+using WmsGfxSpriteEditor.History;
+
 namespace WmsGfxSpriteEditor.Sprites
 {
     public class SpriteService : ISpriteService
