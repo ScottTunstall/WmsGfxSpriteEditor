@@ -114,6 +114,7 @@ namespace WmsGfxSpriteEditor.Sprites
             }
 
             // Flip by swapping columns using SetPixelByPaletteIndex
+            // We do this because we want the dirty flag to be set if the pixel data is changed
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width / 2; x++)
