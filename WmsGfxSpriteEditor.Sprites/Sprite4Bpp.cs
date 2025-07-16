@@ -22,7 +22,7 @@ namespace WmsGfxSpriteEditor.Sprites
                 throw new ArgumentException($"Pixel data length {pixelData.Length} does not match expected size {widthInBytes * height} for width {widthInBytes} and height {height}.");
             }
 
-            SpriteIndex = spriteIndex; 
+            SpriteIndex = spriteIndex;
             PixelData = pixelData;
             WidthInBytes = widthInBytes;
             Height = height;
@@ -198,76 +198,47 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void ShiftPixelsLeft()
         {
-            UInt128 oldHash = GetPixelDataHash();
-
-            byte[] newSpriteData = new byte[PixelData.Span.Length];
-
             if (Width > 1)
             {
-                int sourceOffset = 0;
+                // Shift all columns left by copying the column to the right
                 for (int y = 0; y < Height; y++)
                 {
-                    int destOffset = sourceOffset;
-                    // Shift each byte left by one pixel (nibble)
-                    for (int x = 0; x < WidthInBytes - 1; x++)
+                    for (int x = 0; x < Width - 1; x++)
                     {
-                        byte leftByte = PixelData.Span[sourceOffset + x];
-                        byte rightByte = PixelData.Span[sourceOffset + x + 1];
-                        byte upperNibble = (byte)(leftByte << 4);
-                        byte lowerNibble = (byte)(rightByte >> 4);
-
-                        byte shifted = (byte)(upperNibble | lowerNibble);
-                        newSpriteData[destOffset++] = shifted;
+                        int rightPalette = GetPaletteIndexFromPixel(x + 1, y);
+                        SetPixelByPaletteIndex(x, y, rightPalette);
                     }
-                    // Handle the last byte in the row
-                    byte lastByte = PixelData.Span[sourceOffset + WidthInBytes - 1];
-                    newSpriteData[destOffset] = (byte)(lastByte << 4);
-                    sourceOffset += WidthInBytes;
                 }
             }
 
-            newSpriteData.CopyTo(PixelData.Span);
-
-            UInt128 newHash = GetPixelDataHash();
-
-            IsPixelDataDirty = oldHash != newHash;
+            // Set the rightmost column to palette index 0
+            int lastCol = Width - 1;
+            for (int y = 0; y < Height; y++)
+            {
+                SetPixelByPaletteIndex(lastCol, y, 0);
+            }
         }
 
         public void ShiftPixelsRight()
         {
-            UInt128 oldHash = GetPixelDataHash();
-
-            byte[] newSpriteData = new byte[PixelData.Span.Length];
-
             if (Width > 1)
             {
-                int sourceOffset = 0;
+                // Shift all columns right by copying the column to the left
                 for (int y = 0; y < Height; y++)
                 {
-                    int destOffset = sourceOffset + WidthInBytes - 1;
-                    // Shift each byte right by one pixel (nibble)
-                    for (int x = WidthInBytes - 1; x > 0; x--)
+                    for (int x = Width - 1; x > 0; x--)
                     {
-                        byte leftByte = PixelData.Span[sourceOffset + x - 1];
-                        byte rightByte = PixelData.Span[sourceOffset + x];
-                        byte upperNibble = (byte)(leftByte << 4);
-                        byte lowerNibble = (byte)(rightByte >> 4);
-                        byte shifted = (byte)(upperNibble | lowerNibble);
-                        newSpriteData[destOffset--] = shifted;
+                        int leftPalette = GetPaletteIndexFromPixel(x - 1, y);
+                        SetPixelByPaletteIndex(x, y, leftPalette);
                     }
-
-                    // Handle the first byte in the row
-                    byte firstByte = PixelData.Span[sourceOffset];
-                    newSpriteData[destOffset] = (byte)(firstByte >> 4);
-                    sourceOffset += WidthInBytes;
                 }
             }
 
-            newSpriteData.CopyTo(PixelData.Span);
-
-            UInt128 newHash = GetPixelDataHash();
-
-            IsPixelDataDirty = oldHash != newHash;
+            // Set the leftmost column to palette index 0
+            for (int y = 0; y < Height; y++)
+            {
+                SetPixelByPaletteIndex(0, y, 0);
+            }
         }
 
         public Bitmap CreateBitmapFromSprite()
@@ -286,7 +257,6 @@ namespace WmsGfxSpriteEditor.Sprites
 
             return bmp;
         }
-
 
         public byte[] ClonePixelData()
         {
