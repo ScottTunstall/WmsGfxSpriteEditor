@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.Versioning;
 using System.Security.Cryptography;
 
 namespace WmsGfxSpriteEditor.Sprites
@@ -8,9 +9,6 @@ namespace WmsGfxSpriteEditor.Sprites
     /// </summary>
     public class Sprite4Bpp : ISprite
     {
-        private Sprite4Bpp()
-        { }
-
         public Sprite4Bpp(int spriteIndex, Memory<byte> pixelData, int widthInBytes, int height, Color[] palette, bool isLinear = true)
         {
             ArgumentOutOfRangeException.ThrowIfNegative(spriteIndex);
@@ -33,13 +31,21 @@ namespace WmsGfxSpriteEditor.Sprites
         public int BitsPerPixel => 4;
 
         public int SpriteIndex { get; }
+
         public Memory<byte> PixelData { get; }
+
         public object Tag { get; set; } = default!;
+
         public int Width => WidthInBytes * 2; // Each byte contains 2 pixels
+
         public int WidthInBytes { get; }
+
         public int Height { get; }
+
         public Size Size => new(Width, Height);
+
         public Color[] Palette { get; }
+
         public bool IsLinear { get; }
 
         /// <summary>
@@ -62,7 +68,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public int GetPaletteIndexFromPixel(int x, int y)
         {
-            int offset = y * WidthInBytes + (x / 2);
+            int offset = (y * WidthInBytes) + (x / 2);
             byte pixelByte = PixelData.Span[offset];
             if (x % 2 == 0)
             {
@@ -78,7 +84,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public void SetPixelByPaletteIndex(int x, int y, int paletteIndex)
         {
-            int offset = y * WidthInBytes + (x / 2);
+            int offset = (y * WidthInBytes) + (x / 2);
             paletteIndex &= 0x0F; // Ensure palette index is within bounds (0-15)
             Span<byte> span = PixelData.Span;
 
@@ -242,6 +248,7 @@ namespace WmsGfxSpriteEditor.Sprites
             }
         }
 
+        [SupportedOSPlatform("windows")]
         public Bitmap CreateBitmapFromSprite()
         {
             Bitmap bmp = new(Width, Height);
