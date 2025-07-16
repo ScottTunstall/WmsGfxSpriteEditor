@@ -135,6 +135,12 @@ csharp_style_prefer_local_over_anonymous_function = true:suggestion
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = suggestion
 
+# Disable StyleCop SA1633 (file header requirement)
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SA1309.severity = none
+      
 [*.{cs,vb}]
 #### Naming styles ####
 

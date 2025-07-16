@@ -1,0 +1,32 @@
+{
+  "settings": {
+    "documentationRules": {
+      "fileHeaderTemplate": "",
+      "xmlHeader": false
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace",
+      "systemUsingDirectivesFirst": true
+    },
+    "namingRules": {
+      "allowUnderscorePrefix": true,
+      "includeInferredTupleElementNames": true,
+      "allowedHungarianPrefixes": [],
+      "rules": [
+        {
+          "name": "FieldNamesMustNotBeginWithUnderscore",
+          "enabled": false
+        }
+      ]
+    },
+    "readabilityRules": {
+      "prefixLocalCallsWithThis": false
+    },
+    "rules": {
+      "SA1101": false,
+      "SA1200": false,
+      "SA1309": false,
+      "SA1633": false
+    }
+  }
+}
