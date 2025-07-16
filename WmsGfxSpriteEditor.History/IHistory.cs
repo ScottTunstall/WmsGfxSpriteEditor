@@ -1,6 +1,4 @@
-using WmsGfxSpriteEditor.History;
-
-namespace WmsGfxSpriteEditor
+namespace WmsGfxSpriteEditor.History
 {
     public interface IHistory
     {
