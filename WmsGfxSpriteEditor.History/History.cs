@@ -16,6 +16,12 @@ namespace WmsGfxSpriteEditor.History
         public int Count => _historyItems.Count;
 
         /// <inheritdoc/>
+        public bool CanGoBack => Index > 0;
+
+        /// <inheritdoc/>
+        public bool CanGoForward => Index < (_historyItems.Count - 1);
+
+        /// <inheritdoc/>
         public void Add(HistoryItem item)
         {
             // If Index is not equal to the last item in the list, the user has gone back in history with the undo function.
@@ -59,12 +65,6 @@ namespace WmsGfxSpriteEditor.History
 
             return null;
         }
-
-        /// <inheritdoc/>
-        public bool CanGoBack => Index > 0;
-
-        /// <inheritdoc/>
-        public bool CanGoForward => Index < (_historyItems.Count - 1);
 
         /// <inheritdoc/>
         public HistoryItem Back()

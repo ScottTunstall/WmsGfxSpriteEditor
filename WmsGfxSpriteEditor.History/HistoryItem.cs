@@ -12,15 +12,15 @@ namespace WmsGfxSpriteEditor.History
         public required int SpriteIndex { get; init; }
         public byte[]? PixelData { get; set; }
         public UInt128? PixelDataHash { get; set; }
-        
+
         public static HistoryItem CreateSpritePixelDataChangedHistoryItem(byte[] pixelDataBeforeChangeMade, UInt128 hash, int spriteIndex)
         {
             return new HistoryItem()
             {
                 OperationType = OperationType.SpritePixelDataSnapshot,
-                SpriteIndex= spriteIndex,
+                SpriteIndex = spriteIndex,
                 PixelData = pixelDataBeforeChangeMade,
-                PixelDataHash = hash,
+                PixelDataHash = hash
             };
         }
     }

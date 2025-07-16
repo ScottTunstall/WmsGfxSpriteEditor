@@ -52,8 +52,6 @@ namespace WmsGfxSpriteEditor.History
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="startIndex"/> is 0 or greater than or equal to the number of history items.</exception>
         HistoryItem? Last(Predicate<HistoryItem> predicate, int startIndex = -1);
 
-
-
         /// <summary>
         /// Clears all history items.
         /// </summary>
