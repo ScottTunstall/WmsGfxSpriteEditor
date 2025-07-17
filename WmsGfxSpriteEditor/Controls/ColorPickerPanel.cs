@@ -23,7 +23,6 @@ namespace WmsGfxSpriteEditor.Controls
 
         public event EventHandler? SelectedColorChanged;
 
-        
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         public Color[] Palette
@@ -141,7 +140,7 @@ namespace WmsGfxSpriteEditor.Controls
             }
             else
             {
-                Cursor = System.Windows.Forms.Cursors.Default; ;
+                Cursor = System.Windows.Forms.Cursors.Default;
                 _toolTip.SetToolTip(_pictureBox, string.Empty);
             }
         }
@@ -149,7 +148,7 @@ namespace WmsGfxSpriteEditor.Controls
         private void PictureBox_MouseLeave(object? sender, EventArgs e)
         {
             _hoveredIndex = -1;
-            Cursor = System.Windows.Forms.Cursors.Default; 
+            Cursor = System.Windows.Forms.Cursors.Default;
             _toolTip.SetToolTip(_pictureBox, string.Empty);
             _pictureBox.Invalidate();
         }
@@ -245,7 +244,5 @@ namespace WmsGfxSpriteEditor.Controls
 
             Controls.Add(_pictureBox);
         }
-
-
     }
 }

@@ -7,7 +7,7 @@ namespace WmsGfxSpriteEditor.Cursors
             Bitmap bmp = new Bitmap(size, size);
             using (Graphics g = Graphics.FromImage(bmp))
             {
-                g.Clear(Color.Transparent); 
+                g.Clear(Color.Transparent);
                 using (Pen pen = new Pen(colour, 1))
                 {
                     g.DrawLine(pen, size / 2, 0, size / 2, size); // vertical line
