@@ -38,6 +38,9 @@ namespace WmsGfxSpriteEditor
             mnuViewPaletteSeparator = new ToolStripSeparator();
             mnuViewPalette = new ToolStripMenuItem();
             mnuSprite = new ToolStripMenuItem();
+            mnuSpriteGotoNextSprite = new ToolStripMenuItem();
+            mnuSpriteGoToPreviousSprite = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripSeparator();
             mnuSpriteFlipHorizontal = new ToolStripMenuItem();
             mnuSpriteFlipVertical = new ToolStripMenuItem();
             mnuSpriteSeparator = new ToolStripSeparator();
@@ -51,6 +54,42 @@ namespace WmsGfxSpriteEditor
             StatusLabel = new ToolStripStatusLabel();
             Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
+            btnZoomOut = new ToolStripButton()
+            {
+                Text = "-",
+                DisplayStyle = ToolStripItemDisplayStyle.Text,
+                ToolTipText = "Zoom Out"
+            };
+            btnZoomOut.Click += mnuViewZoomOut_Click;
+
+            trackerZoom = new TrackBar()
+            {
+                Minimum = 1,
+                Maximum = 32,
+                Value = 3,
+                TickStyle = TickStyle.None,
+                Size = new Size(100, 18)
+            };
+            
+            trackerZoomHost = new ToolStripControlHost(trackerZoom)
+            {
+                Alignment = ToolStripItemAlignment.Right,
+                AutoSize = false,
+                Size = new Size(100, 22)
+            };
+
+            btnZoomIn = new ToolStripButton()
+            {
+                Text = "+",
+                DisplayStyle = ToolStripItemDisplayStyle.Text,
+                ToolTipText = "Zoom In"
+            };
+            btnZoomIn.Click += mnuViewZoomIn_Click;
+
+            statusStrip.Items.Add(btnZoomOut);
+            statusStrip.Items.Add(trackerZoomHost);
+            statusStrip.Items.Add(btnZoomIn);
+
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
             lblSprite = new Label();
@@ -61,9 +100,6 @@ namespace WmsGfxSpriteEditor
             btnShowPalette = new ToolStripButton();
             magnificationPanel = new MagnificationPanel();
             spriteDisplay = new SpriteDisplayControl();
-            mnuSpriteGotoNextSprite = new ToolStripMenuItem();
-            mnuSpriteGoToPreviousSprite = new ToolStripMenuItem();
-            toolStripMenuItem3 = new ToolStripSeparator();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
             topPanel.SuspendLayout();
@@ -161,7 +197,7 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = false;
             mnuEditUndo.Name = "mnuEditUndo";
             mnuEditUndo.ShortcutKeys = Keys.Control | Keys.Z;
-            mnuEditUndo.Size = new Size(180, 22);
+            mnuEditUndo.Size = new Size(144, 22);
             mnuEditUndo.Text = "&Undo";
             mnuEditUndo.Click += mnuEditUndo_Click;
             // 
@@ -170,21 +206,21 @@ namespace WmsGfxSpriteEditor
             mnuEditRedo.Enabled = false;
             mnuEditRedo.Name = "mnuEditRedo";
             mnuEditRedo.ShortcutKeys = Keys.Control | Keys.Y;
-            mnuEditRedo.Size = new Size(180, 22);
+            mnuEditRedo.Size = new Size(144, 22);
             mnuEditRedo.Text = "&Redo";
             mnuEditRedo.Click += mnuEditRedo_Click;
             // 
             // mnuEditSeparator
             // 
             mnuEditSeparator.Name = "mnuEditSeparator";
-            mnuEditSeparator.Size = new Size(177, 6);
+            mnuEditSeparator.Size = new Size(141, 6);
             // 
             // mnuEditCopy
             // 
             mnuEditCopy.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySprite, mnuCopySelectedColour });
             mnuEditCopy.Enabled = false;
             mnuEditCopy.Name = "mnuEditCopy";
-            mnuEditCopy.Size = new Size(180, 22);
+            mnuEditCopy.Size = new Size(144, 22);
             mnuEditCopy.Text = "&Copy";
             // 
             // mnuCopySprite
@@ -221,7 +257,7 @@ namespace WmsGfxSpriteEditor
             mnuEditPaste.Enabled = false;
             mnuEditPaste.Name = "mnuEditPaste";
             mnuEditPaste.ShortcutKeys = Keys.Control | Keys.V;
-            mnuEditPaste.Size = new Size(180, 22);
+            mnuEditPaste.Size = new Size(144, 22);
             mnuEditPaste.Text = "&Paste";
             mnuEditPaste.Click += mnuEditPaste_Click;
             // 
@@ -285,6 +321,29 @@ namespace WmsGfxSpriteEditor
             mnuSprite.ShortcutKeys = Keys.Alt | Keys.S;
             mnuSprite.Size = new Size(49, 20);
             mnuSprite.Text = "&Sprite";
+            // 
+            // mnuSpriteGotoNextSprite
+            // 
+            mnuSpriteGotoNextSprite.Enabled = false;
+            mnuSpriteGotoNextSprite.Name = "mnuSpriteGotoNextSprite";
+            mnuSpriteGotoNextSprite.ShortcutKeys = Keys.Control | Keys.Down;
+            mnuSpriteGotoNextSprite.Size = new Size(276, 22);
+            mnuSpriteGotoNextSprite.Text = "&Next";
+            mnuSpriteGotoNextSprite.Click += mnuSpriteGotoNextSprite_Click;
+            // 
+            // mnuSpriteGoToPreviousSprite
+            // 
+            mnuSpriteGoToPreviousSprite.Enabled = false;
+            mnuSpriteGoToPreviousSprite.Name = "mnuSpriteGoToPreviousSprite";
+            mnuSpriteGoToPreviousSprite.ShortcutKeys = Keys.Control | Keys.Up;
+            mnuSpriteGoToPreviousSprite.Size = new Size(276, 22);
+            mnuSpriteGoToPreviousSprite.Text = "&Previous";
+            mnuSpriteGoToPreviousSprite.Click += mnuSpriteGoToPreviousSprite_Click;
+            // 
+            // toolStripMenuItem3
+            // 
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(273, 6);
             // 
             // mnuSpriteFlipHorizontal
             // 
@@ -363,7 +422,7 @@ namespace WmsGfxSpriteEditor
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel });
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, trackerZoomHost, btnZoomIn });
             statusStrip.Location = new Point(0, 523);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(882, 24);
@@ -378,7 +437,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(707, 19);
+            Spacer.Size = new Size(528, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -388,6 +447,26 @@ namespace WmsGfxSpriteEditor
             CoordinatesLabel.Name = "CoordinatesLabel";
             CoordinatesLabel.Size = new Size(50, 19);
             CoordinatesLabel.Text = "X: - Y: -";
+            // 
+            // btnZoomOut
+            // 
+            btnZoomOut.Name = "btnZoomOut";
+            btnZoomOut.Size = new Size(23, 22);
+            btnZoomOut.Click += mnuViewZoomIn_Click;
+            // 
+            // trackerZoom
+            // 
+            trackerZoom.Maximum = 32;
+            trackerZoom.Minimum = 1;
+            trackerZoom.Name = "trackerZoom";
+            trackerZoom.Size = new Size(100, 18);
+            trackerZoom.Value = 1;
+            // 
+            // btnZoomIn
+            // 
+            btnZoomIn.Name = "btnZoomIn";
+            btnZoomIn.Size = new Size(23, 22);
+            btnZoomIn.Click += mnuViewZoomOut_Click;
             // 
             // topPanel
             // 
@@ -504,7 +583,7 @@ namespace WmsGfxSpriteEditor
             magnificationPanel.ZoomMouseWheel += MagnificationPanel_MouseWheel;
             // 
             // spriteDisplay
-            //
+            // 
             spriteDisplay.BackColor = Color.LightGray;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);
@@ -519,29 +598,6 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridCellMouseMove += spriteDisplay_GridCellMouseMove;
             spriteDisplay.GridCellMouseDown += spriteDisplay_GridCellMouseDown;
             spriteDisplay.GridCellMouseUp += spriteDisplay_GridCellMouseUp;
-            // 
-            // mnuSpriteGotoNextSprite
-            // 
-            mnuSpriteGotoNextSprite.Enabled = false;
-            mnuSpriteGotoNextSprite.Name = "mnuSpriteGotoNextSprite";
-            mnuSpriteGotoNextSprite.ShortcutKeys = Keys.Control | Keys.Down;
-            mnuSpriteGotoNextSprite.Size = new Size(276, 22);
-            mnuSpriteGotoNextSprite.Text = "&Next";
-            mnuSpriteGotoNextSprite.Click += mnuSpriteGotoNextSprite_Click;
-            // 
-            // mnuSpriteGoToPreviousSprite
-            // 
-            mnuSpriteGoToPreviousSprite.Enabled = false;
-            mnuSpriteGoToPreviousSprite.Name = "mnuSpriteGoToPreviousSprite";
-            mnuSpriteGoToPreviousSprite.ShortcutKeys = Keys.Control | Keys.Up;
-            mnuSpriteGoToPreviousSprite.Size = new Size(276, 22);
-            mnuSpriteGoToPreviousSprite.Text = "&Previous";
-            mnuSpriteGoToPreviousSprite.Click += mnuSpriteGoToPreviousSprite_Click;
-            // 
-            // toolStripMenuItem3
-            // 
-            toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new Size(273, 6);
             // 
             // MainForm
             // 
@@ -621,6 +677,10 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySprite;
         private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
+        private ToolStripButton btnZoomOut;
+        private TrackBar trackerZoom;
+        private ToolStripControlHost trackerZoomHost;
+        private ToolStripButton btnZoomIn;
         private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;

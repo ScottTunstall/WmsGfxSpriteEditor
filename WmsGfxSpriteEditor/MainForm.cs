@@ -34,7 +34,6 @@ namespace WmsGfxSpriteEditor
         private const int MaxZoomLevel = 32;
         private const int DefaultZoomLevel = 3;
 
-        private Cursor _cursor = default!;
         private Color _gridColor = Color.Gray;
 
         // Service dependencies (I may inject these in future. No need just now.)
@@ -76,6 +75,10 @@ namespace WmsGfxSpriteEditor
             nudZoom.Minimum = MinZoomLevel;
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
+
+            trackerZoom.Minimum = MinZoomLevel;
+            trackerZoom.Maximum = MaxZoomLevel;
+            trackerZoom.Value = ZoomLevel;
 
             _ = AddClipboardFormatListener(Handle);
 
@@ -974,6 +977,11 @@ namespace WmsGfxSpriteEditor
             if (nudZoom.Value != ZoomLevel)
             {
                 nudZoom.Value = ZoomLevel;
+            }
+
+            if (trackerZoom.Value != ZoomLevel)
+            {
+                trackerZoom.Value = ZoomLevel;
             }
 
             spriteDisplay.ZoomLevel = ZoomLevel;
