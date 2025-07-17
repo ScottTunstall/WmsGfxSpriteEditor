@@ -191,12 +191,12 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell pt = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (_sprite.IsInBounds(pt.X, pt.Y))
+            if (_sprite.IsInBounds(cell.X, cell.Y))
             {
-                GridCellMouseMove.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
+                GridCellMouseMove.Invoke(this, new(e.Button, e.Clicks, cell.X, cell.Y));
             }
         }
 
@@ -235,12 +235,12 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell pt = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (_sprite.IsInBounds(pt.X, pt.Y))
+            if (_sprite.IsInBounds(cell.X, cell.Y))
             {
-                GridCellMouseUp.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
+                GridCellMouseUp.Invoke(this, new(e.Button, e.Clicks, cell.X, cell.Y));
             }
         }
 
@@ -257,12 +257,12 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell pt = _spriteGridRenderer!.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = _spriteGridRenderer!.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
-            if (_sprite.IsInBounds(pt.X, pt.Y))
+            if (_sprite.IsInBounds(cell.X, cell.Y))
             {
-                GridCellClicked.Invoke(this, new(e.Button, e.Clicks, pt.X, pt.Y));
+                GridCellClicked.Invoke(this, new(e.Button, e.Clicks, cell.X, cell.Y));
             }
         }
 
