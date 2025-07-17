@@ -24,7 +24,7 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Color[] Palette
+        public required Color[] Palette
         {
             get => _colourPickerPanel.Palette;
             set => _colourPickerPanel.Palette = value;
@@ -32,7 +32,7 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public int SelectedPaletteIndex
+        public required int SelectedPaletteIndex
         {
             get => _colourPickerPanel.SelectedPaletteIndex;
             set => _colourPickerPanel.SelectedPaletteIndex = value;
