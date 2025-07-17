@@ -6,15 +6,6 @@ namespace WmsGfxSpriteEditor
     {
         private System.ComponentModel.IContainer components = null;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && (components != null))
-            {
-                components.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
         #region Windows Form Designer generated code
 
         private void InitializeComponent()
@@ -513,7 +504,7 @@ namespace WmsGfxSpriteEditor
             magnificationPanel.ZoomMouseWheel += MagnificationPanel_MouseWheel;
             // 
             // spriteDisplay
-            // 
+            //
             spriteDisplay.BackColor = Color.LightGray;
             spriteDisplay.GridColor = Color.FromArgb(80, 80, 80);
             spriteDisplay.Location = new Point(0, 0);

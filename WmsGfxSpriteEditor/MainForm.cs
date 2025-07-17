@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WmsGfxSpriteEditor.Cursors;
 using WmsGfxSpriteEditor.Dialogs;
 using WmsGfxSpriteEditor.Extensions;
 using WmsGfxSpriteEditor.History;
@@ -33,7 +34,8 @@ namespace WmsGfxSpriteEditor
         private const int MaxZoomLevel = 32;
         private const int DefaultZoomLevel = 3;
 
-        private readonly Color _gridColor = Color.FromArgb(80, 80, 80);
+        private Cursor _cursor = default!;
+        private Color _gridColor = Color.Gray;
 
         // Service dependencies (I may inject these in future. No need just now.)
         private IRomService? _romService;
@@ -70,6 +72,7 @@ namespace WmsGfxSpriteEditor
 
             DisableEditingControls();
 
+            spriteDisplay.Cursor = CrosshairCursor.CreateCrosshair(Color.White);
             nudZoom.Minimum = MinZoomLevel;
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
@@ -238,6 +241,32 @@ namespace WmsGfxSpriteEditor
         {
             base.OnResize(e);
             spriteDisplay.Invalidate();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (disposing && (components != null))
+                {
+                    components.Dispose();
+                }
+
+                // Dispose ColorPickerDialog if it exists and is not already disposed
+                if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
+                {
+                    _colorPickerDialog.Dispose();
+                }
+                _colorPickerDialog = null;
+
+                // Dispose RomData if it exists
+                if (_romData != null)
+                {
+                    _romData.Dispose();
+                    _romData = null;
+                }
+            }
+            base.Dispose(disposing);
         }
 
         private void MagnificationPanel_MouseWheel(object? sender, MouseEventArgs e)
