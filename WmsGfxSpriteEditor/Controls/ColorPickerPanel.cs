@@ -7,8 +7,9 @@ namespace WmsGfxSpriteEditor.Controls
         private Color[] _palette = [];
         private int _selectedPaletteIndex = -1;
         private int _hoveredIndex = -1;
-        private ToolTip _toolTip = new();
-        private PictureBox _pictureBox = new();
+
+        private ToolTip _toolTip;
+        private PictureBox _pictureBox;
 
         public ColorPickerPanel()
         {
@@ -22,6 +23,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         public event EventHandler? SelectedColorChanged;
 
+        
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
         public Color[] Palette
@@ -122,14 +124,16 @@ namespace WmsGfxSpriteEditor.Controls
         private void PictureBox_MouseMove(object? sender, MouseEventArgs e)
         {
             int idx = HitTest(e.Location);
+
             if (idx != _hoveredIndex)
             {
                 _hoveredIndex = idx;
                 _pictureBox.Invalidate();
             }
+
             if (idx >= 0 && idx < _palette.Length)
             {
-                Cursor = Cursors.Hand;
+                Cursor = System.Windows.Forms.Cursors.Hand;
                 Color c = _palette[idx];
                 string hex = $"#{c.R:X2}{c.G:X2}{c.B:X2}";
                 string dec = $"R:{c.R}, G:{c.G}, B:{c.B}";
@@ -137,7 +141,7 @@ namespace WmsGfxSpriteEditor.Controls
             }
             else
             {
-                Cursor = Cursors.Default;
+                Cursor = System.Windows.Forms.Cursors.Default; ;
                 _toolTip.SetToolTip(_pictureBox, string.Empty);
             }
         }
@@ -145,7 +149,7 @@ namespace WmsGfxSpriteEditor.Controls
         private void PictureBox_MouseLeave(object? sender, EventArgs e)
         {
             _hoveredIndex = -1;
-            Cursor = Cursors.Default;
+            Cursor = System.Windows.Forms.Cursors.Default; 
             _toolTip.SetToolTip(_pictureBox, string.Empty);
             _pictureBox.Invalidate();
         }
@@ -219,7 +223,10 @@ namespace WmsGfxSpriteEditor.Controls
         {
             DoubleBuffered = true;
 
-            _toolTip = new();
+            _toolTip = new()
+            {
+                ShowAlways = true
+            };
 
             _pictureBox = new PictureBox
             {
@@ -238,5 +245,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             Controls.Add(_pictureBox);
         }
+
+
     }
 }
