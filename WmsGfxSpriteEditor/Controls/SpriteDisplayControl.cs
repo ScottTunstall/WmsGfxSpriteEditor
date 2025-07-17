@@ -15,7 +15,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         private ISprite? _sprite;
 
-        private Color _gridColor = Color.FromArgb(80, 80, 80);
+        private Color _gridColor = Color.Gray;
         private int _zoomLevel = 1;
         private int _zoomLevelGridThreshold = 3;
 
