@@ -76,9 +76,9 @@ namespace WmsGfxSpriteEditor
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
 
-            trackerZoom.Minimum = MinZoomLevel;
-            trackerZoom.Maximum = MaxZoomLevel;
-            trackerZoom.Value = ZoomLevel;
+            toolStripTrackBar.Minimum = MinZoomLevel;
+            toolStripTrackBar.Maximum = MaxZoomLevel;
+            toolStripTrackBar.Value = ZoomLevel;
 
             _ = AddClipboardFormatListener(Handle);
 
@@ -983,9 +983,9 @@ namespace WmsGfxSpriteEditor
                 nudZoom.Value = ZoomLevel;
             }
 
-            if (trackerZoom.Value != ZoomLevel)
+            if (toolStripTrackBar.Value != ZoomLevel)
             {
-                trackerZoom.Value = ZoomLevel;
+                toolStripTrackBar.Value = ZoomLevel;
             }
 
             spriteDisplay.ZoomLevel = ZoomLevel;

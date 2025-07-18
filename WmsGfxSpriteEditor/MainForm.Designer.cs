@@ -55,8 +55,7 @@ namespace WmsGfxSpriteEditor
             Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
             btnZoomOut = new ToolStripButton();
-            trackerZoom = new TrackBar();
-            trackerZoomHost = new ToolStripControlHost(trackerZoom);
+            toolStripTrackBar = new ToolStripTrackBar();
             btnZoomIn = new ToolStripButton();
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
@@ -70,6 +69,7 @@ namespace WmsGfxSpriteEditor
             spriteDisplay = new SpriteDisplayControl();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)toolStripTrackBar.TrackBar).BeginInit();
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
@@ -390,7 +390,8 @@ namespace WmsGfxSpriteEditor
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, trackerZoomHost, btnZoomIn });
+            statusStrip.AutoSize = false;
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, toolStripTrackBar, btnZoomIn });
             statusStrip.Location = new Point(0, 523);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(882, 24);
@@ -399,13 +400,13 @@ namespace WmsGfxSpriteEditor
             // StatusLabel
             // 
             StatusLabel.Name = "StatusLabel";
-            StatusLabel.Size = new Size(110, 42);
+            StatusLabel.Size = new Size(110, 19);
             StatusLabel.Text = "No ROMset loaded.";
             // 
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(530, 42);
+            Spacer.Size = new Size(561, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -413,39 +414,48 @@ namespace WmsGfxSpriteEditor
             CoordinatesLabel.Alignment = ToolStripItemAlignment.Right;
             CoordinatesLabel.BorderSides = ToolStripStatusLabelBorderSides.Left;
             CoordinatesLabel.Name = "CoordinatesLabel";
-            CoordinatesLabel.Size = new Size(50, 42);
+            CoordinatesLabel.Size = new Size(50, 19);
             CoordinatesLabel.Text = "X: - Y: -";
             // 
             // btnZoomOut
             // 
+            btnZoomOut.AutoSize = false;
+            btnZoomOut.Enabled = false;
             btnZoomOut.Image = (Image)resources.GetObject("btnZoomOut.Image");
+            btnZoomOut.ImageScaling = ToolStripItemImageScaling.None;
             btnZoomOut.Name = "btnZoomOut";
             btnZoomOut.Size = new Size(23, 22);
             btnZoomOut.Click += mnuViewZoomOut_Click;
-
-
             // 
-            // trackerZoomHost
+            // toolStripTrackBar
             // 
-            trackerZoomHost.Alignment = ToolStripItemAlignment.Right;
-            trackerZoomHost.AutoSize = false;
-            trackerZoomHost.Size = new Size(100, 22);
-
-            //
-            // trackerZoom
+            toolStripTrackBar.Alignment = ToolStripItemAlignment.Right;
+            toolStripTrackBar.AutoSize = false;
+            toolStripTrackBar.Enabled = false;
+            toolStripTrackBar.Name = "toolStripTrackBar";
+            toolStripTrackBar.Size = new Size(100, 22);
+            toolStripTrackBar.TickStyle = TickStyle.BottomRight;
             // 
-            trackerZoom.Maximum = 32;
-            trackerZoom.Minimum = 1;
-            trackerZoom.Name = "trackerZoom";
-            trackerZoom.Size = new Size(100, 18);
-            trackerZoom.Value = 1;
-
+            // toolStripTrackBar
+            // 
+            toolStripTrackBar.TrackBar.Enabled = false;
+            toolStripTrackBar.TrackBar.Location = new Point(745, 2);
+            toolStripTrackBar.TrackBar.Maximum = 32;
+            toolStripTrackBar.TrackBar.Minimum = 1;
+            toolStripTrackBar.TrackBar.Name = "toolStripTrackBar";
+            toolStripTrackBar.TrackBar.Size = new Size(100, 22);
+            toolStripTrackBar.TrackBar.TabIndex = 0;
+            toolStripTrackBar.TrackBar.Value = 10;
+            toolStripTrackBar.Value = 10;
             // 
             // btnZoomIn
             // 
+            btnZoomIn.AutoSize = false;
+            btnZoomIn.Enabled = false;
             btnZoomIn.Image = (Image)resources.GetObject("btnZoomIn.Image");
+            btnZoomIn.ImageScaling = ToolStripItemImageScaling.None;
             btnZoomIn.Name = "btnZoomIn";
-            btnZoomIn.Size = new Size(23, 45);
+            btnZoomIn.Size = new Size(23, 22);
             btnZoomIn.Click += mnuViewZoomIn_Click;
             // 
             // topPanel
@@ -597,6 +607,7 @@ namespace WmsGfxSpriteEditor
             menuStrip.PerformLayout();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)toolStripTrackBar.TrackBar).EndInit();
             topPanel.ResumeLayout(false);
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
@@ -657,9 +668,8 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySprite;
         private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
-        private ToolStripButton btnZoomOut;
-        private TrackBar trackerZoom;
         private ToolStripButton btnZoomIn;
+        private ToolStripButton btnZoomOut;
         private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
@@ -668,6 +678,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteGotoNextSprite;
         private ToolStripMenuItem mnuSpriteGoToPreviousSprite;
         private ToolStripSeparator toolStripMenuItem3;
-        private ToolStripControlHost trackerZoomHost;
+        private ToolStripTrackBar toolStripTrackBar;
     }
 }
