@@ -76,9 +76,9 @@ namespace WmsGfxSpriteEditor
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
 
-            toolStripTrackBar.Minimum = MinZoomLevel;
-            toolStripTrackBar.Maximum = MaxZoomLevel;
-            toolStripTrackBar.Value = ZoomLevel;
+            toolStripZoomTrackBar.Minimum = MinZoomLevel;
+            toolStripZoomTrackBar.Maximum = MaxZoomLevel;
+            toolStripZoomTrackBar.Value = ZoomLevel;
 
             _ = AddClipboardFormatListener(Handle);
 
@@ -528,6 +528,20 @@ namespace WmsGfxSpriteEditor
 
         #endregion SPRITE EDITOR EVENT HANDLERS
 
+        #region STATUS BAR EVENT HANDLERS
+
+        private void toolStripTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            if (_suppressControlChangeEvents)
+            {
+                return;
+            }
+
+            ZoomLevel = toolStripZoomTrackBar.Value;
+        }
+
+        #endregion
+
         #region FILE MENU INVOKED FUNCS
 
         protected void BrowseForRobotronRom(string label, RobotronRomSetType romSetType)
@@ -952,6 +966,8 @@ namespace WmsGfxSpriteEditor
         protected virtual void OnReady()
         {
             mnuFileSave.Enabled = true;
+            cboSprite.Enabled = true;
+            spriteDisplay.Visible = true;
         }
 
         protected virtual void OnClipboardChanged()
@@ -969,10 +985,10 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnZoomLevelChanged()
         {
-            bool haveSprite = ActiveSprite != null;
+            ThrowIfNoActiveSprite();
 
-            mnuViewZoomIn.Enabled = haveSprite && ZoomLevel < nudZoom.Maximum;
-            mnuViewZoomOut.Enabled = haveSprite && ZoomLevel > nudZoom.Minimum;
+            mnuViewZoomIn.Enabled = ZoomLevel < nudZoom.Maximum;
+            mnuViewZoomOut.Enabled = ZoomLevel > nudZoom.Minimum;
 
             bool oldValue = _suppressControlChangeEvents;
 
@@ -983,9 +999,9 @@ namespace WmsGfxSpriteEditor
                 nudZoom.Value = ZoomLevel;
             }
 
-            if (toolStripTrackBar.Value != ZoomLevel)
+            if (toolStripZoomTrackBar.Value != ZoomLevel)
             {
-                toolStripTrackBar.Value = ZoomLevel;
+                toolStripZoomTrackBar.Value = ZoomLevel;
             }
 
             spriteDisplay.ZoomLevel = ZoomLevel;
@@ -1028,7 +1044,7 @@ namespace WmsGfxSpriteEditor
         {
             bool haveSpriteInfo = ActiveSpriteInfo != null;
             int spriteIndex = haveSpriteInfo ? ActiveSpriteInfo!.Index : -1;
-
+            
             // Sprite menu
             mnuSpriteGoToPreviousSprite.Enabled = spriteIndex > 0;
             mnuSpriteGotoNextSprite.Enabled = spriteIndex < AvailableSprites.Count - 1;
@@ -1072,6 +1088,9 @@ namespace WmsGfxSpriteEditor
 
             // Zoom control
             nudZoom.Enabled = haveSprite;
+
+            // Trackbar control
+            toolStripZoomTrackBar.Enabled = haveSprite;
 
             // Sprite grid
             spriteDisplay.Sprite = ActiveSprite;

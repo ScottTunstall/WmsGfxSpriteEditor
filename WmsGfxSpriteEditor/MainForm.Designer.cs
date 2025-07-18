@@ -55,7 +55,7 @@ namespace WmsGfxSpriteEditor
             Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
             btnZoomOut = new ToolStripButton();
-            toolStripTrackBar = new ToolStripTrackBar();
+            toolStripZoomTrackBar = new ToolStripTrackBar();
             btnZoomIn = new ToolStripButton();
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
@@ -69,7 +69,7 @@ namespace WmsGfxSpriteEditor
             spriteDisplay = new SpriteDisplayControl();
             menuStrip.SuspendLayout();
             statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)toolStripTrackBar.TrackBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)toolStripZoomTrackBar.TrackBar).BeginInit();
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
@@ -391,7 +391,7 @@ namespace WmsGfxSpriteEditor
             // statusStrip
             // 
             statusStrip.AutoSize = false;
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, toolStripTrackBar, btnZoomIn });
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, toolStripZoomTrackBar, btnZoomIn });
             statusStrip.Location = new Point(0, 523);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(882, 24);
@@ -427,26 +427,27 @@ namespace WmsGfxSpriteEditor
             btnZoomOut.Size = new Size(23, 22);
             btnZoomOut.Click += mnuViewZoomOut_Click;
             // 
-            // toolStripTrackBar
+            // toolStripZoomTrackBar
             // 
-            toolStripTrackBar.Alignment = ToolStripItemAlignment.Right;
-            toolStripTrackBar.AutoSize = false;
-            toolStripTrackBar.Enabled = false;
-            toolStripTrackBar.Name = "toolStripTrackBar";
-            toolStripTrackBar.Size = new Size(100, 22);
-            toolStripTrackBar.TickStyle = TickStyle.BottomRight;
+            toolStripZoomTrackBar.Alignment = ToolStripItemAlignment.Right;
+            toolStripZoomTrackBar.AutoSize = false;
+            toolStripZoomTrackBar.Enabled = false;
+            toolStripZoomTrackBar.Name = "toolStripZoomTrackBar";
+            toolStripZoomTrackBar.Size = new Size(100, 22);
+            toolStripZoomTrackBar.TickStyle = TickStyle.BottomRight;
             // 
-            // toolStripTrackBar
+            // toolStripZoomTrackBar
             // 
-            toolStripTrackBar.TrackBar.Enabled = false;
-            toolStripTrackBar.TrackBar.Location = new Point(745, 2);
-            toolStripTrackBar.TrackBar.Maximum = 32;
-            toolStripTrackBar.TrackBar.Minimum = 1;
-            toolStripTrackBar.TrackBar.Name = "toolStripTrackBar";
-            toolStripTrackBar.TrackBar.Size = new Size(100, 22);
-            toolStripTrackBar.TrackBar.TabIndex = 0;
-            toolStripTrackBar.TrackBar.Value = 10;
-            toolStripTrackBar.Value = 10;
+            toolStripZoomTrackBar.TrackBar.Enabled = false;
+            toolStripZoomTrackBar.TrackBar.Location = new Point(745, 2);
+            toolStripZoomTrackBar.TrackBar.Maximum = 32;
+            toolStripZoomTrackBar.TrackBar.Minimum = 1;
+            toolStripZoomTrackBar.TrackBar.Name = "toolStripTrackBar";
+            toolStripZoomTrackBar.TrackBar.Size = new Size(100, 22);
+            toolStripZoomTrackBar.TrackBar.TabIndex = 0;
+            toolStripZoomTrackBar.TrackBar.Value = 10;
+            toolStripZoomTrackBar.Value = 10;
+            toolStripZoomTrackBar.ValueChanged += toolStripTrackBar_ValueChanged;
             // 
             // btnZoomIn
             // 
@@ -607,7 +608,7 @@ namespace WmsGfxSpriteEditor
             menuStrip.PerformLayout();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)toolStripTrackBar.TrackBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)toolStripZoomTrackBar.TrackBar).EndInit();
             topPanel.ResumeLayout(false);
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
@@ -678,6 +679,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteGotoNextSprite;
         private ToolStripMenuItem mnuSpriteGoToPreviousSprite;
         private ToolStripSeparator toolStripMenuItem3;
-        private ToolStripTrackBar toolStripTrackBar;
+        private ToolStripTrackBar toolStripZoomTrackBar;
     }
 }
