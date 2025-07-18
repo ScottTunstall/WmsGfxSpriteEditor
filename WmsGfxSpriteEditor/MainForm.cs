@@ -540,7 +540,7 @@ namespace WmsGfxSpriteEditor
             ZoomLevel = toolStripZoomTrackBar.Value;
         }
 
-        #endregion
+        #endregion STATUS BAR EVENT HANDLERS
 
         #region FILE MENU INVOKED FUNCS
 
@@ -987,8 +987,13 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoActiveSprite();
 
+            // Zoom menu items
             mnuViewZoomIn.Enabled = ZoomLevel < nudZoom.Maximum;
             mnuViewZoomOut.Enabled = ZoomLevel > nudZoom.Minimum;
+
+            // Zoom buttons on status strip
+            btnZoomIn.Enabled = ZoomLevel < MaxZoomLevel;
+            btnZoomOut.Enabled = ZoomLevel > MinZoomLevel;
 
             bool oldValue = _suppressControlChangeEvents;
 
@@ -1044,7 +1049,7 @@ namespace WmsGfxSpriteEditor
         {
             bool haveSpriteInfo = ActiveSpriteInfo != null;
             int spriteIndex = haveSpriteInfo ? ActiveSpriteInfo!.Index : -1;
-            
+
             // Sprite menu
             mnuSpriteGoToPreviousSprite.Enabled = spriteIndex > 0;
             mnuSpriteGotoNextSprite.Enabled = spriteIndex < AvailableSprites.Count - 1;
@@ -1089,8 +1094,10 @@ namespace WmsGfxSpriteEditor
             // Zoom control
             nudZoom.Enabled = haveSprite;
 
-            // Trackbar control
+            // Trackbar zoom control
             toolStripZoomTrackBar.Enabled = haveSprite;
+            btnZoomIn.Enabled = haveSprite && ZoomLevel < MaxZoomLevel;
+            btnZoomOut.Enabled = haveSprite && ZoomLevel > MinZoomLevel;
 
             // Sprite grid
             spriteDisplay.Sprite = ActiveSprite;

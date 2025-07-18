@@ -406,7 +406,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(561, 19);
+            Spacer.Size = new Size(530, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -425,6 +425,7 @@ namespace WmsGfxSpriteEditor
             btnZoomOut.ImageScaling = ToolStripItemImageScaling.None;
             btnZoomOut.Name = "btnZoomOut";
             btnZoomOut.Size = new Size(23, 22);
+            btnZoomOut.ToolTipText = "Zoom out";
             btnZoomOut.Click += mnuViewZoomOut_Click;
             // 
             // toolStripZoomTrackBar
@@ -439,7 +440,7 @@ namespace WmsGfxSpriteEditor
             // toolStripZoomTrackBar
             // 
             toolStripZoomTrackBar.TrackBar.Enabled = false;
-            toolStripZoomTrackBar.TrackBar.Location = new Point(745, 2);
+            toolStripZoomTrackBar.TrackBar.Location = new Point(714, 2);
             toolStripZoomTrackBar.TrackBar.Maximum = 32;
             toolStripZoomTrackBar.TrackBar.Minimum = 1;
             toolStripZoomTrackBar.TrackBar.Name = "toolStripTrackBar";
@@ -457,6 +458,7 @@ namespace WmsGfxSpriteEditor
             btnZoomIn.ImageScaling = ToolStripItemImageScaling.None;
             btnZoomIn.Name = "btnZoomIn";
             btnZoomIn.Size = new Size(23, 22);
+            btnZoomIn.ToolTipText = "Zoom In";
             btnZoomIn.Click += mnuViewZoomIn_Click;
             // 
             // topPanel
