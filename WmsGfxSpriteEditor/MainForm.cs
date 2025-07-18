@@ -99,7 +99,7 @@ namespace WmsGfxSpriteEditor
             {
                 if (value.Length < 2)
                 {
-                    throw new ArgumentException($"{nameof(ActivePalette)} must have at least 2 colors.", nameof(value));
+                    throw new ArgumentException($"{nameof(ActivePalette)} must have at least 2 colours.", nameof(value));
                 }
 
                 _palette = value;
@@ -255,14 +255,12 @@ namespace WmsGfxSpriteEditor
                     components.Dispose();
                 }
 
-                // Dispose ColorPickerDialog if it exists and is not already disposed
                 if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
                 {
                     _colorPickerDialog.Dispose();
                 }
                 _colorPickerDialog = null;
 
-                // Dispose RomData if it exists
                 if (_romData != null)
                 {
                     _romData.Dispose();
@@ -270,32 +268,6 @@ namespace WmsGfxSpriteEditor
                 }
             }
             base.Dispose(disposing);
-        }
-
-        private void MagnificationPanel_MouseWheel(object? sender, MouseEventArgs e)
-        {
-            if (ActiveSprite != null)
-            {
-                if ((ModifierKeys & Keys.Control) == Keys.Control)
-                {
-                    if (e.Delta > 0)
-                    {
-                        if (ZoomLevel < MaxZoomLevel)
-                        {
-                            ZoomLevel++;
-                        }
-                    }
-                    else if (e.Delta < 0)
-                    {
-                        if (ZoomLevel > MinZoomLevel)
-                        {
-                            ZoomLevel--;
-                        }
-                    }
-                }
-            }
-
-            // No need to set Handled, as MagPanel prevents scrolling
         }
 
 #pragma warning disable IDE1006 // Element should begin with upper-case letter
@@ -492,6 +464,38 @@ namespace WmsGfxSpriteEditor
         }
 
         #endregion TOOLSTRIP EVENT HANDLERS
+
+        #region MAGNIFICATION PANEL EVENT HANDLERS
+
+        private void MagnificationPanel_MouseWheel(object? sender, MouseEventArgs e)
+        {
+            if (ActiveSprite == null)
+            {
+                return;
+            }
+
+            if ((ModifierKeys & Keys.Control) != Keys.Control)
+            {
+                return;
+            }
+
+            if (e.Delta > 0)
+            {
+                if (ZoomLevel < MaxZoomLevel)
+                {
+                    ZoomLevel++;
+                }
+            }
+            else if (e.Delta < 0)
+            {
+                if (ZoomLevel > MinZoomLevel)
+                {
+                    ZoomLevel--;
+                }
+            }
+        }
+
+        #endregion MAGNIFICATION PANEL EVENT HANDLERS
 
         #region SPRITE EDITOR EVENT HANDLERS
 
@@ -1079,7 +1083,7 @@ namespace WmsGfxSpriteEditor
         }
 
         /// <summary>
-        /// Called when the sprite pixel data has changed.
+        /// Called when the sprite pixel data may have changed.
         /// </summary>
         protected virtual void OnSpritePixelsMaybeChanged()
         {

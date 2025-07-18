@@ -54,42 +54,10 @@ namespace WmsGfxSpriteEditor
             StatusLabel = new ToolStripStatusLabel();
             Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
-            btnZoomOut = new ToolStripButton()
-            {
-                Text = "-",
-                DisplayStyle = ToolStripItemDisplayStyle.Text,
-                ToolTipText = "Zoom Out"
-            };
-            btnZoomOut.Click += mnuViewZoomOut_Click;
-
-            trackerZoom = new TrackBar()
-            {
-                Minimum = 1,
-                Maximum = 32,
-                Value = 3,
-                TickStyle = TickStyle.None,
-                Size = new Size(100, 18)
-            };
-            
-            trackerZoomHost = new ToolStripControlHost(trackerZoom)
-            {
-                Alignment = ToolStripItemAlignment.Right,
-                AutoSize = false,
-                Size = new Size(100, 22)
-            };
-
-            btnZoomIn = new ToolStripButton()
-            {
-                Text = "+",
-                DisplayStyle = ToolStripItemDisplayStyle.Text,
-                ToolTipText = "Zoom In"
-            };
-            btnZoomIn.Click += mnuViewZoomIn_Click;
-
-            statusStrip.Items.Add(btnZoomOut);
-            statusStrip.Items.Add(trackerZoomHost);
-            statusStrip.Items.Add(btnZoomIn);
-
+            btnZoomOut = new ToolStripButton();
+            trackerZoom = new TrackBar();
+            trackerZoomHost = new ToolStripControlHost(trackerZoom);
+            btnZoomIn = new ToolStripButton();
             topPanel = new Panel();
             tableLayoutPanel = new TableLayoutPanel();
             lblSprite = new Label();
@@ -431,13 +399,13 @@ namespace WmsGfxSpriteEditor
             // StatusLabel
             // 
             StatusLabel.Name = "StatusLabel";
-            StatusLabel.Size = new Size(110, 19);
+            StatusLabel.Size = new Size(110, 42);
             StatusLabel.Text = "No ROMset loaded.";
             // 
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(528, 19);
+            Spacer.Size = new Size(530, 42);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -445,15 +413,25 @@ namespace WmsGfxSpriteEditor
             CoordinatesLabel.Alignment = ToolStripItemAlignment.Right;
             CoordinatesLabel.BorderSides = ToolStripStatusLabelBorderSides.Left;
             CoordinatesLabel.Name = "CoordinatesLabel";
-            CoordinatesLabel.Size = new Size(50, 19);
+            CoordinatesLabel.Size = new Size(50, 42);
             CoordinatesLabel.Text = "X: - Y: -";
             // 
             // btnZoomOut
             // 
+            btnZoomOut.Image = (Image)resources.GetObject("btnZoomOut.Image");
             btnZoomOut.Name = "btnZoomOut";
             btnZoomOut.Size = new Size(23, 22);
-            btnZoomOut.Click += mnuViewZoomIn_Click;
+            btnZoomOut.Click += mnuViewZoomOut_Click;
+
+
             // 
+            // trackerZoomHost
+            // 
+            trackerZoomHost.Alignment = ToolStripItemAlignment.Right;
+            trackerZoomHost.AutoSize = false;
+            trackerZoomHost.Size = new Size(100, 22);
+
+            //
             // trackerZoom
             // 
             trackerZoom.Maximum = 32;
@@ -461,12 +439,14 @@ namespace WmsGfxSpriteEditor
             trackerZoom.Name = "trackerZoom";
             trackerZoom.Size = new Size(100, 18);
             trackerZoom.Value = 1;
+
             // 
             // btnZoomIn
             // 
+            btnZoomIn.Image = (Image)resources.GetObject("btnZoomIn.Image");
             btnZoomIn.Name = "btnZoomIn";
-            btnZoomIn.Size = new Size(23, 22);
-            btnZoomIn.Click += mnuViewZoomOut_Click;
+            btnZoomIn.Size = new Size(23, 45);
+            btnZoomIn.Click += mnuViewZoomIn_Click;
             // 
             // topPanel
             // 
@@ -679,7 +659,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripButton btnShowPalette;
         private ToolStripButton btnZoomOut;
         private TrackBar trackerZoom;
-        private ToolStripControlHost trackerZoomHost;
         private ToolStripButton btnZoomIn;
         private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
@@ -689,5 +668,6 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteGotoNextSprite;
         private ToolStripMenuItem mnuSpriteGoToPreviousSprite;
         private ToolStripSeparator toolStripMenuItem3;
+        private ToolStripControlHost trackerZoomHost;
     }
 }
