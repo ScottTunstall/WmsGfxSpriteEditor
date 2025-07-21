@@ -15,14 +15,14 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
         // Original color values from Robotron ROM - as supplied by Sean Riddle
         // and present in my disassembly at $DA51.
 
-        //private static readonly byte[] _colorValues =
-        //[
-        //    0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
-        //    0xa4, 0xff, 0x38, 0x17, 0xcc, 0x81, 0x81, 0x07
-        //];
+        // private static readonly byte[] _colorValues =
+        // [
+        //     0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
+        //     0xa4, 0xff, 0x38, 0x17, 0xcc, 0x81, 0x81, 0x07
+        // ];
 
-        // Modified to prevent duplicates, which would break the clipboard|paste functionality in the sprite editor.
-        // Colour index 10 (zero based index) onwards are used for colour cycling in game.
+        // Modified to prevent duplicate colours, which would break the clipboard|paste functionality in the sprite editor.
+        // NB: Colour index 10 (zero based index) onwards are used for colour cycling in game.
         private static readonly byte[] _colorValues =
         [
             0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
