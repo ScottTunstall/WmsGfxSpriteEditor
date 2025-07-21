@@ -1,5 +1,6 @@
 namespace WmsGfxSpriteEditor.Cursors
 {
+    // AI GENERATED CODE
     internal class CrosshairCursor
     {
         public static Cursor CreateCrosshair(Color colour, Color outlineColour, int size = 12)
