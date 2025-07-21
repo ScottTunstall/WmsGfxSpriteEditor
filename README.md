@@ -22,8 +22,8 @@
    - Blue Label
    - Tie Die WDPU
    - Tie Die MAME
-3. Browse to the folder containing your ROM files and select it.
-4. The editor will audit and load the ROM data.
+3. Browse to the folder containing your ROM files and select it. Refer to the  appendices for a list of the files that need to be present for each version.
+4. The editor will audit and load the ROM data. 
 
 ---
 
