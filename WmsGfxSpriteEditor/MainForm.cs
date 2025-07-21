@@ -72,9 +72,6 @@ namespace WmsGfxSpriteEditor
             DisableEditingControls();
 
             spriteDisplay.Cursor = CrosshairCursor.CreateCrosshair(Color.White, Color.Black, 12);
-            nudZoom.Minimum = MinZoomLevel;
-            nudZoom.Maximum = MaxZoomLevel;
-            nudZoom.Value = ZoomLevel;
 
             toolStripZoomTrackBar.Minimum = MinZoomLevel;
             toolStripZoomTrackBar.Maximum = MaxZoomLevel;
@@ -351,16 +348,6 @@ namespace WmsGfxSpriteEditor
         private void mnuViewPalette_Click(object sender, EventArgs e)
         {
             ShowColourPickerDialog();
-        }
-
-        private void nudZoom_ValueChanged(object sender, EventArgs e)
-        {
-            if (_suppressControlChangeEvents)
-            {
-                return;
-            }
-
-            ZoomLevel = (int)nudZoom.Value;
         }
 
         #endregion VIEW MENU EVENT HANDLERS
@@ -720,10 +707,7 @@ namespace WmsGfxSpriteEditor
 
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
                 {
-                    if (_colorPickerDialog.SelectedPaletteIndex >= 0)
-                    {
-                        ActivePaletteIndex = _colorPickerDialog.SelectedPaletteIndex;
-                    }
+                    ActivePaletteIndex = _colorPickerDialog.SelectedPaletteIndex;
                 };
 
                 _colorPickerDialog.Shown += (s, args) =>
@@ -987,6 +971,8 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnActivePaletteChanged()
         {
+            ThrowIfNoActivePalette();
+
             mnuViewPalette.Enabled = true;
             btnShowPalette.Enabled = true;
             ActivePaletteIndex = 0;
@@ -994,16 +980,22 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnActivePaletteIndexChanged()
         {
+            ThrowIfNoActivePalette();
+
             ActivePaletteColour = ActivePalette[ActivePaletteIndex];
         }
 
         protected virtual void OnColourPickerDialogShown()
         {
+            ThrowIfNoActivePalette();
+
             btnShowPalette.Checked = true;
         }
 
         protected virtual void OnColourPickerDialogHidden()
         {
+            ThrowIfNoActivePalette();
+
             btnShowPalette.Checked = false;
         }
 
@@ -1044,6 +1036,7 @@ namespace WmsGfxSpriteEditor
 
             // Edit menu
             mnuEditCopy.Enabled = haveSprite;
+            mnuCopySprite.Enabled = haveSprite;
             mnuEditPaste.Enabled = haveSprite && _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
             mnuEdit.Enabled = mnuEdit.DropDownItems.Any(item => item.Enabled);
 
@@ -1061,9 +1054,6 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftLeft.Enabled = haveSprite;
             mnuSpriteShiftRight.Enabled = haveSprite;
             mnuSprite.Enabled = mnuSprite.DropDownItems.Any(item => item.Enabled);
-
-            // Zoom control
-            nudZoom.Enabled = haveSprite;
 
             // Trackbar zoom control
             toolStripZoomTrackBar.Enabled = haveSprite;
@@ -1093,8 +1083,8 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
 
             // Zoom menu items
-            mnuViewZoomIn.Enabled = ZoomLevel < nudZoom.Maximum;
-            mnuViewZoomOut.Enabled = ZoomLevel > nudZoom.Minimum;
+            mnuViewZoomIn.Enabled = ZoomLevel < MaxZoomLevel;
+            mnuViewZoomOut.Enabled = ZoomLevel > MinZoomLevel;
 
             // Zoom buttons on status strip
             btnZoomIn.Enabled = ZoomLevel < MaxZoomLevel;
@@ -1103,11 +1093,6 @@ namespace WmsGfxSpriteEditor
             bool oldValue = _suppressControlChangeEvents;
 
             _suppressControlChangeEvents = true;
-
-            if (nudZoom.Value != ZoomLevel)
-            {
-                nudZoom.Value = ZoomLevel;
-            }
 
             if (toolStripZoomTrackBar.Value != ZoomLevel)
             {
@@ -1126,7 +1111,7 @@ namespace WmsGfxSpriteEditor
             cboSprite.Enabled = false;
             cboSprite.DataSource = null;
             cboSprite.SelectedIndex = -1;
-            nudZoom.Enabled = false;
+
             spriteDisplay.Visible = false;
         }
 
@@ -1187,6 +1172,16 @@ namespace WmsGfxSpriteEditor
             if (ActiveSprite == null)
             {
                 throw new InvalidOperationException("Operation cannot be performed without an active sprite");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
+        private void ThrowIfNoActivePalette()
+        {
+            if (ActivePalette.Length < 2)
+            {
+                throw new InvalidOperationException("Operation cannot be performed without an active palette");
             }
         }
 

@@ -61,8 +61,6 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel = new TableLayoutPanel();
             lblSprite = new Label();
             cboSprite = new ComboBox();
-            lblZoom = new Label();
-            nudZoom = new NumericUpDown();
             toolStripQuickAccess = new ToolStrip();
             btnShowPalette = new ToolStripButton();
             magnificationPanel = new MagnificationPanel();
@@ -72,7 +70,6 @@ namespace WmsGfxSpriteEditor
             ((System.ComponentModel.ISupportInitialize)toolStripZoomTrackBar.TrackBar).BeginInit();
             topPanel.SuspendLayout();
             tableLayoutPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)nudZoom).BeginInit();
             toolStripQuickAccess.SuspendLayout();
             magnificationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)spriteDisplay).BeginInit();
@@ -188,6 +185,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuCopySprite
             // 
+            mnuCopySprite.Enabled = false;
             mnuCopySprite.Name = "mnuCopySprite";
             mnuCopySprite.ShortcutKeys = Keys.Control | Keys.C;
             mnuCopySprite.Size = new Size(157, 22);
@@ -197,12 +195,14 @@ namespace WmsGfxSpriteEditor
             // mnuCopySelectedColour
             // 
             mnuCopySelectedColour.DropDownItems.AddRange(new ToolStripItem[] { mnuCopySelectedColourHex, mnuCopySelectedColourRgb });
+            mnuCopySelectedColour.Enabled = false;
             mnuCopySelectedColour.Name = "mnuCopySelectedColour";
             mnuCopySelectedColour.Size = new Size(157, 22);
             mnuCopySelectedColour.Text = "Selected Colour";
             // 
             // mnuCopySelectedColourHex
             // 
+            mnuCopySelectedColourHex.Enabled = false;
             mnuCopySelectedColourHex.Name = "mnuCopySelectedColourHex";
             mnuCopySelectedColourHex.Size = new Size(96, 22);
             mnuCopySelectedColourHex.Text = "&Hex";
@@ -210,6 +210,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuCopySelectedColourRgb
             // 
+            mnuCopySelectedColourRgb.Enabled = false;
             mnuCopySelectedColourRgb.Name = "mnuCopySelectedColourRgb";
             mnuCopySelectedColourRgb.Size = new Size(96, 22);
             mnuCopySelectedColourRgb.Text = "&RGB";
@@ -401,7 +402,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(526, 19);
+            Spacer.Size = new Size(557, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -442,7 +443,7 @@ namespace WmsGfxSpriteEditor
             // toolStripZoomTrackBar
             // 
             toolStripZoomTrackBar.TrackBar.Enabled = false;
-            toolStripZoomTrackBar.TrackBar.Location = new Point(714, 2);
+            toolStripZoomTrackBar.TrackBar.Location = new Point(745, 2);
             toolStripZoomTrackBar.TrackBar.Maximum = 32;
             toolStripZoomTrackBar.TrackBar.Minimum = 1;
             toolStripZoomTrackBar.TrackBar.Name = "toolStripTrackBar";
@@ -483,8 +484,6 @@ namespace WmsGfxSpriteEditor
             tableLayoutPanel.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel.Controls.Add(lblSprite, 0, 0);
             tableLayoutPanel.Controls.Add(cboSprite, 1, 0);
-            tableLayoutPanel.Controls.Add(lblZoom, 2, 0);
-            tableLayoutPanel.Controls.Add(nudZoom, 3, 0);
             tableLayoutPanel.Controls.Add(toolStripQuickAccess, 5, 0);
             tableLayoutPanel.Dock = DockStyle.Fill;
             tableLayoutPanel.Location = new Point(0, 0);
@@ -517,30 +516,6 @@ namespace WmsGfxSpriteEditor
             cboSprite.Size = new Size(277, 23);
             cboSprite.TabIndex = 1;
             cboSprite.SelectedIndexChanged += cboSprite_SelectedIndexChanged;
-            // 
-            // lblZoom
-            // 
-            lblZoom.AutoSize = true;
-            lblZoom.Dock = DockStyle.Fill;
-            lblZoom.Location = new Point(332, 0);
-            lblZoom.Name = "lblZoom";
-            lblZoom.Size = new Size(42, 40);
-            lblZoom.TabIndex = 2;
-            lblZoom.Text = "Zoom:";
-            lblZoom.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // nudZoom
-            // 
-            nudZoom.Enabled = false;
-            nudZoom.Location = new Point(380, 8);
-            nudZoom.Margin = new Padding(3, 8, 3, 3);
-            nudZoom.Maximum = new decimal(new int[] { 32, 0, 0, 0 });
-            nudZoom.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            nudZoom.Name = "nudZoom";
-            nudZoom.Size = new Size(76, 23);
-            nudZoom.TabIndex = 3;
-            nudZoom.Value = new decimal(new int[] { 10, 0, 0, 0 });
-            nudZoom.ValueChanged += nudZoom_ValueChanged;
             // 
             // toolStripQuickAccess
             // 
@@ -616,7 +591,6 @@ namespace WmsGfxSpriteEditor
             topPanel.ResumeLayout(false);
             tableLayoutPanel.ResumeLayout(false);
             tableLayoutPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)nudZoom).EndInit();
             toolStripQuickAccess.ResumeLayout(false);
             toolStripQuickAccess.PerformLayout();
             magnificationPanel.ResumeLayout(false);
@@ -669,8 +643,6 @@ namespace WmsGfxSpriteEditor
         private TableLayoutPanel tableLayoutPanel;
         private Label lblSprite;
         private ComboBox cboSprite;
-        private Label lblZoom;
-        private NumericUpDown nudZoom;
         private ToolStripMenuItem mnuCopySelectedColour;
         private ToolStripMenuItem mnuCopySelectedColourHex;
         private ToolStripMenuItem mnuCopySelectedColourRgb;
