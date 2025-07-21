@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+using System.Drawing;
+using System.Runtime.Versioning;
+using WmsGfxSpriteEditor.History;
 
 namespace WmsGfxSpriteEditor.Sprites.Commands;
 
@@ -11,12 +13,10 @@ public class SetSpritePixelsFromBitmapCommand
         _undoHelper = new UndoableSpriteHelper(history);
     }
 
+    [SupportedOSPlatform("windows")]
     public void Execute(Bitmap source, ISprite target)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
+        ArgumentNullException.ThrowIfNull(source);
 
         _undoHelper.ExecuteActionWithUndoRedo(target, () =>
         {
@@ -25,12 +25,12 @@ public class SetSpritePixelsFromBitmapCommand
                 for (int x = 0; x < source.Width; x++)
                 {
                     Color pixelColor = source.GetPixel(x, y);
+
+                    // Careful - if the palette has duplicates this may select the wrong colour index!
                     int paletteIndex = Array.IndexOf(target.Palette, pixelColor);
-                    target.SetPixelByPaletteIndex(x,y, paletteIndex);
+                    target.SetPixelByPaletteIndex(x, y, paletteIndex);
                 }
             }
-        } );
+        });
     }
 }
-    
-
