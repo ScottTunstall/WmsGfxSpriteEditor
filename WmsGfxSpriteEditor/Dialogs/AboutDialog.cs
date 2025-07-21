@@ -1,4 +1,4 @@
-﻿namespace WmsGfxSpriteEditor.Dialogs
+namespace WmsGfxSpriteEditor.Dialogs
 {
     internal class AboutDialog
     {
@@ -9,7 +9,7 @@
                 "Williams Graphics Sprite Editor." + Environment.NewLine +
                 Environment.NewLine +
                 "Designed and developed by Scott Tunstall." + Environment.NewLine +
-                "Sprite offsets discovered and documented by Sean Riddle." + Environment.NewLine +
+                "Sprite offsets and colour palette discovered and documented by Sean Riddle." + Environment.NewLine +
                 "All rights reserved.",
                 "About Williams Graphics Sprite Editor",
                 MessageBoxButtons.OK,
