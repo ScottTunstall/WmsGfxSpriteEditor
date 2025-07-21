@@ -77,8 +77,6 @@ namespace WmsGfxSpriteEditor
             toolStripZoomTrackBar.Maximum = MaxZoomLevel;
             toolStripZoomTrackBar.Value = ZoomLevel;
 
-            ZoomLabel.Text = $"{ZoomLevel}x";
-
             _ = AddClipboardFormatListener(Handle);
 
             _suppressControlChangeEvents = false;
@@ -1065,6 +1063,13 @@ namespace WmsGfxSpriteEditor
             toolStripZoomTrackBar.Enabled = haveSprite;
             btnZoomIn.Enabled = haveSprite && ZoomLevel < MaxZoomLevel;
             btnZoomOut.Enabled = haveSprite && ZoomLevel > MinZoomLevel;
+
+            // Coordinate label on status bar
+            CoordinatesLabel.Enabled = haveSprite;
+
+            // Zoom label on status bar
+            ZoomLabel.Enabled = haveSprite;
+            ZoomLabel.Text = haveSprite ? $"{ZoomLevel}x" : string.Empty;
 
             // Sprite grid
             spriteDisplay.Sprite = ActiveSprite;
