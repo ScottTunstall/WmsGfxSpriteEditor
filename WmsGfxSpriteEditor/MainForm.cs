@@ -962,7 +962,7 @@ namespace WmsGfxSpriteEditor
 
         #endregion STATUS BAR
 
-        // Called when the sprite is ready to be edited. Override this method to perform any additional setup.
+        // Called when the ROM is loaded and sprites can be edited. Override this method to perform any additional setup.
         protected virtual void OnReady()
         {
             mnuFileSave.Enabled = true;
@@ -981,37 +981,6 @@ namespace WmsGfxSpriteEditor
             }
 
             mnuEditPaste.Enabled = _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
-        }
-
-        protected virtual void OnZoomLevelChanged()
-        {
-            ThrowIfNoActiveSprite();
-
-            // Zoom menu items
-            mnuViewZoomIn.Enabled = ZoomLevel < nudZoom.Maximum;
-            mnuViewZoomOut.Enabled = ZoomLevel > nudZoom.Minimum;
-
-            // Zoom buttons on status strip
-            btnZoomIn.Enabled = ZoomLevel < MaxZoomLevel;
-            btnZoomOut.Enabled = ZoomLevel > MinZoomLevel;
-
-            bool oldValue = _suppressControlChangeEvents;
-
-            _suppressControlChangeEvents = true;
-
-            if (nudZoom.Value != ZoomLevel)
-            {
-                nudZoom.Value = ZoomLevel;
-            }
-
-            if (toolStripZoomTrackBar.Value != ZoomLevel)
-            {
-                toolStripZoomTrackBar.Value = ZoomLevel;
-            }
-
-            spriteDisplay.ZoomLevel = ZoomLevel;
-            _suppressControlChangeEvents = oldValue;
-            spriteDisplay.Invalidate();
         }
 
         protected virtual void OnActivePaletteChanged()
@@ -1102,10 +1071,6 @@ namespace WmsGfxSpriteEditor
             // Sprite grid
             spriteDisplay.Sprite = ActiveSprite;
             spriteDisplay.Visible = haveSprite;
-            if (haveSprite)
-            {
-                OnSpritePixelsMaybeChanged();
-            }
         }
 
         /// <summary>
@@ -1118,6 +1083,37 @@ namespace WmsGfxSpriteEditor
             mnuEditUndo.Enabled = _history!.CanGoBack;
             mnuEditRedo.Enabled = _history.CanGoForward;
 
+            spriteDisplay.Invalidate();
+        }
+
+        protected virtual void OnZoomLevelChanged()
+        {
+            ThrowIfNoActiveSprite();
+
+            // Zoom menu items
+            mnuViewZoomIn.Enabled = ZoomLevel < nudZoom.Maximum;
+            mnuViewZoomOut.Enabled = ZoomLevel > nudZoom.Minimum;
+
+            // Zoom buttons on status strip
+            btnZoomIn.Enabled = ZoomLevel < MaxZoomLevel;
+            btnZoomOut.Enabled = ZoomLevel > MinZoomLevel;
+
+            bool oldValue = _suppressControlChangeEvents;
+
+            _suppressControlChangeEvents = true;
+
+            if (nudZoom.Value != ZoomLevel)
+            {
+                nudZoom.Value = ZoomLevel;
+            }
+
+            if (toolStripZoomTrackBar.Value != ZoomLevel)
+            {
+                toolStripZoomTrackBar.Value = ZoomLevel;
+            }
+
+            spriteDisplay.ZoomLevel = ZoomLevel;
+            _suppressControlChangeEvents = oldValue;
             spriteDisplay.Invalidate();
         }
 
