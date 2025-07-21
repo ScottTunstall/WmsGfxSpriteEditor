@@ -92,7 +92,7 @@
 ---
 
 ## Feedback & Support
-For questions or feedback, please contact the developer or visit the [project repository](https://github.com/ScottTunstall/WmsGfxSpriteEditor
+For questions or feedback, please contact the developer.
 
 
 
