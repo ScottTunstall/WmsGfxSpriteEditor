@@ -1,7 +1,7 @@
 # WmsGfxSpriteEditor User Guide
 
 ## Overview
-**WmsGfxSpriteEditor** is a Windows application for viewing and editing sprite graphics in classic arcade ROMs, with a focus on Williams/Midway games like *Robotron: 2084*. It provides tools for sprite manipulation, palette editing, and ROM management.
+**WmsGfxSpriteEditor** is a Windows application for viewing and editing sprite graphics in classic arcade game *Robotron: 2084*. It provides basic tools for sprite manipulation, palette editing, and ROM management.
 
 ---
 
