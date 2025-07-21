@@ -20,7 +20,6 @@ namespace WmsGfxSpriteEditor
             mnuFileLoadRobotronTieDieMAME = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripSeparator();
             mnuFileSave = new ToolStripMenuItem();
-            toolStripMenuItem2 = new ToolStripSeparator();
             mnuEdit = new ToolStripMenuItem();
             mnuEditUndo = new ToolStripMenuItem();
             mnuEditRedo = new ToolStripMenuItem();
@@ -54,6 +53,7 @@ namespace WmsGfxSpriteEditor
             StatusLabel = new ToolStripStatusLabel();
             Spacer = new ToolStripStatusLabel();
             CoordinatesLabel = new ToolStripStatusLabel();
+            ZoomLabel = new ToolStripStatusLabel();
             btnZoomOut = new ToolStripButton();
             toolStripZoomTrackBar = new ToolStripTrackBar();
             btnZoomIn = new ToolStripButton();
@@ -89,7 +89,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuFile
             // 
-            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, toolStripMenuItem1, mnuFileSave, toolStripMenuItem2 });
+            mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mnuFileLoad, toolStripMenuItem1, mnuFileSave });
             mnuFile.Name = "mnuFile";
             mnuFile.ShortcutKeys = Keys.Alt | Keys.F;
             mnuFile.Size = new Size(37, 20);
@@ -145,11 +145,6 @@ namespace WmsGfxSpriteEditor
             mnuFileSave.Size = new Size(146, 22);
             mnuFileSave.Text = "&Save";
             mnuFileSave.Click += mnuFileSave_Click;
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(143, 6);
             // 
             // mnuEdit
             // 
@@ -391,7 +386,7 @@ namespace WmsGfxSpriteEditor
             // statusStrip
             // 
             statusStrip.AutoSize = false;
-            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, btnZoomOut, toolStripZoomTrackBar, btnZoomIn });
+            statusStrip.Items.AddRange(new ToolStripItem[] { StatusLabel, Spacer, CoordinatesLabel, ZoomLabel, btnZoomOut, toolStripZoomTrackBar, btnZoomIn });
             statusStrip.Location = new Point(0, 523);
             statusStrip.Name = "statusStrip";
             statusStrip.Size = new Size(882, 24);
@@ -406,7 +401,7 @@ namespace WmsGfxSpriteEditor
             // Spacer
             // 
             Spacer.Name = "Spacer";
-            Spacer.Size = new Size(530, 19);
+            Spacer.Size = new Size(526, 19);
             Spacer.Spring = true;
             // 
             // CoordinatesLabel
@@ -416,6 +411,13 @@ namespace WmsGfxSpriteEditor
             CoordinatesLabel.Name = "CoordinatesLabel";
             CoordinatesLabel.Size = new Size(50, 19);
             CoordinatesLabel.Text = "X: - Y: -";
+            // 
+            // ZoomLabel
+            // 
+            ZoomLabel.Alignment = ToolStripItemAlignment.Right;
+            ZoomLabel.BorderSides = ToolStripStatusLabelBorderSides.Left;
+            ZoomLabel.Name = "ZoomLabel";
+            ZoomLabel.Size = new Size(4, 19);
             // 
             // btnZoomOut
             // 
@@ -659,6 +661,10 @@ namespace WmsGfxSpriteEditor
         private ToolStripStatusLabel StatusLabel;
         private ToolStripStatusLabel Spacer;
         private ToolStripStatusLabel CoordinatesLabel;
+        private ToolStripStatusLabel ZoomLabel;
+        private ToolStripButton btnZoomOut;
+        private ToolStripTrackBar toolStripZoomTrackBar;
+        private ToolStripButton btnZoomIn;
         private Panel topPanel;
         private TableLayoutPanel tableLayoutPanel;
         private Label lblSprite;
@@ -671,16 +677,12 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuCopySprite;
         private ToolStrip toolStripQuickAccess;
         private ToolStripButton btnShowPalette;
-        private ToolStripButton btnZoomIn;
-        private ToolStripButton btnZoomOut;
         private MagnificationPanel magnificationPanel;
         private SpriteDisplayControl spriteDisplay;
         private ToolStripMenuItem mnuFileLoadRobotronTieDieMAME;
         private ToolStripSeparator toolStripMenuItem1;
-        private ToolStripSeparator toolStripMenuItem2;
         private ToolStripMenuItem mnuSpriteGotoNextSprite;
         private ToolStripMenuItem mnuSpriteGoToPreviousSprite;
         private ToolStripSeparator toolStripMenuItem3;
-        private ToolStripTrackBar toolStripZoomTrackBar;
     }
 }

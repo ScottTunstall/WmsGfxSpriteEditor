@@ -71,7 +71,7 @@ namespace WmsGfxSpriteEditor
 
             DisableEditingControls();
 
-            spriteDisplay.Cursor = CrosshairCursor.CreateCrosshair(Color.White);
+            spriteDisplay.Cursor = CrosshairCursor.CreateCrosshair(Color.White, Color.Black, 12);
             nudZoom.Minimum = MinZoomLevel;
             nudZoom.Maximum = MaxZoomLevel;
             nudZoom.Value = ZoomLevel;
@@ -79,6 +79,8 @@ namespace WmsGfxSpriteEditor
             toolStripZoomTrackBar.Minimum = MinZoomLevel;
             toolStripZoomTrackBar.Maximum = MaxZoomLevel;
             toolStripZoomTrackBar.Value = ZoomLevel;
+
+            ZoomLabel.Text = $"{ZoomLevel}x";
 
             _ = AddClipboardFormatListener(Handle);
 
@@ -222,11 +224,11 @@ namespace WmsGfxSpriteEditor
             DialogResult result = MessageBox.Show(
                     "Are you sure you want to close the application? Any unsaved work will be lost.",
                     "Confirm Exit",
-                    MessageBoxButtons.YesNo,
+                    MessageBoxButtons.YesNoCancel,
                     MessageBoxIcon.Warning
                 );
 
-            if (result == DialogResult.No)
+            if (result != DialogResult.Yes)
             {
                 e.Cancel = true; // Cancel the close operation
             }
@@ -1111,6 +1113,8 @@ namespace WmsGfxSpriteEditor
             {
                 toolStripZoomTrackBar.Value = ZoomLevel;
             }
+
+            ZoomLabel.Text = $"{ZoomLevel}x";
 
             spriteDisplay.ZoomLevel = ZoomLevel;
             _suppressControlChangeEvents = oldValue;
