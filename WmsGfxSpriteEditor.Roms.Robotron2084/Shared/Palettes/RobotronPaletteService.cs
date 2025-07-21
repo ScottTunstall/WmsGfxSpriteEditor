@@ -27,10 +27,9 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
         [
             0x00, 0x07, 0x17, 0xc7, 0x1f, 0x3f, 0x38, 0xc0,
             0xa4, 0xff,
-            // Cycling colours
+            // Cycling colours that I can't really map, so given unique values
             0xc4, 0xf4, 0xcc, 0x81, 0x45, 0x2f
         ];
-
 
         // The actual RGB colors derived from the hardware values
         private readonly Color[] _palette;
@@ -58,21 +57,21 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Palettes
         // This code which converts bytes to RGB was ported from Sean Riddle's Williams Graphics Ripper
         private static Color ConvertColorValue(byte value)
         {
-            // The red component is stored in bits 0-2 
+            // The red component is stored in bits 0-2
             int red = (value & 0x7) << 1;
             if (red > 6)
             {
                 red++;
             }
 
-            // The green component is stored in bits 3-5 
+            // The green component is stored in bits 3-5
             int green = (value & 0x38) >> 2;
             if (green > 6)
             {
                 green++;
             }
 
-            // The blue component is stored in the top 2 bits 
+            // The blue component is stored in the top 2 bits
             int blue = ((value & 0xc0) >> 6) * 5;
 
             // Ensure values are in valid range
