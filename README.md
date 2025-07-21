@@ -1,27 +1,98 @@
-# Williams Graphics Sprite Editor
+# WmsGfxSpriteEditor User Guide
 
-Sprite editor for Robotron. I MIGHT extend this for other williams games, but to be honest I only play Robotron.
+## Overview
+**WmsGfxSpriteEditor** is a Windows application for viewing and editing sprite graphics in classic arcade ROMs, with a focus on Williams/Midway games like *Robotron: 2084*. It provides tools for sprite manipulation, palette editing, and ROM management.
 
+---
 
-## Setup
+## Getting Started
 
-Download the installer from the RELEASES section on this page then run it. If you don't have .NET 8 installed, you will be asked to install it. .NET 8 framework is a Microsoft product and the application cannot run without it installed.
+### Installation
+1. Download and run the installer (`WmsGfxSpriteEditor.Setup.exe`).
+2. Follow the on-screen instructions to complete installation.
 
-## Extract Robotron ROMs to a folder
+### Launching the Application
+- Open **WmsGfxSpriteEditor** from your Start Menu or desktop shortcut.
 
-The sprite editor supports THREE versions of Robotron:
+---
 
-* Blue Label (MAME, as of July 2025)
-* Windows Defender Players Unite (WDPU) Facebook group Tie Die ROMs (curated by Jim Bowley)
-* Tie Die ROMS which MAME July 2025+ supports.
+## Loading ROMs
+1. Go to `File > Load Robotron ROMs`.
+2. Choose the ROM set type:
+   - Blue Label
+   - Tie Die WDPU
+   - Tie Die MAME
+3. Browse to the folder containing your ROM files and select it.
+4. The editor will audit and load the ROM data.
 
-Extract (unzip) the ROMs for the version you with to edit to a folder on your computer.
+---
 
-## Load ROMs into the application
+## Sprite Editing
 
+### Selecting a Sprite
+- Use the sprite dropdown at the top to select a sprite to view or edit.
 
+### Editing Tools
+- **Draw**: Click on the sprite grid to change pixel colors using the selected palette color.
+- **Undo/Redo**: Use the Edit menu or toolbar to undo or redo changes.
+- **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard.
+- **Flip/Shift**: Use the Sprite menu to flip or shift the sprite horizontally/vertically.
 
-## Begin Editing
+### Zoom
+- Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window.
+- The current zoom level is displayed in the status bar.
+
+---
+
+## Palette Editing
+- Click the palette button or use `View > Palette` to open the palette editor.
+- Select a color to use for drawing.
+- Right-click a color for options to copy its RGB or Hex value.
+
+---
+
+## Saving Changes
+- Use `File > Save` to write your changes back to the ROM files.
+
+---
+
+## Clipboard Support
+- The editor supports copying and pasting sprites and palette colors using the system clipboard.
+
+---
+
+## Status Bar
+- Displays the current sprite, coordinates, and zoom level.
+
+---
+
+## Help
+- For information about the application, go to `Help > About`.
+
+---
+
+## Keyboard Shortcuts
+
+| Action         | Shortcut      |
+|----------------|---------------|
+| Undo           | Ctrl+Z        |
+| Redo           | Ctrl+Y        |
+| Copy           | Ctrl+C        |
+| Paste          | Ctrl+V        |
+| Zoom In        | Ctrl+Plus     |
+| Zoom Out       | Ctrl+Minus    |
+| Show Palette   | Ctrl+P        |
+
+---
+
+## Troubleshooting
+- If ROM files are missing or invalid, a dialog will list the missing files.
+- Ensure you have the correct ROM set for your selected game/version.
+
+---
+
+## Feedback & Support
+For questions or feedback, please contact the developer or visit the [project repository](https://github.com/ScottTunstall/WmsGfxSpriteEditor
 
 
 
