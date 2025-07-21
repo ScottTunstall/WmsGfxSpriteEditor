@@ -61,7 +61,7 @@ namespace WmsGfxSpriteEditor
         private SpriteInfo? _activeSpriteInfo;
         private ISprite? _activeSprite;
         private int _zoomLevel = DefaultZoomLevel;
-        private int _activePaletteIndex;
+        private int _activePaletteIndex = -1;
 
         public MainForm()
         {
@@ -975,12 +975,18 @@ namespace WmsGfxSpriteEditor
 
             mnuViewPalette.Enabled = true;
             btnShowPalette.Enabled = true;
+
             ActivePaletteIndex = 0;
         }
 
         protected virtual void OnActivePaletteIndexChanged()
         {
             ThrowIfNoActivePalette();
+            ThrowIfActivePaletteIndexInvalid();
+
+            mnuCopySelectedColour.Enabled = true;
+            mnuCopySelectedColourHex.Enabled = true;
+            mnuCopySelectedColourRgb.Enabled = true;
 
             ActivePaletteColour = ActivePalette[ActivePaletteIndex];
         }
@@ -1137,7 +1143,7 @@ namespace WmsGfxSpriteEditor
         // When I'm developing, I may miss something so these give me peace of mind.
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoHistory()
+        protected void ThrowIfNoHistory()
         {
             if (_history == null)
             {
@@ -1147,7 +1153,7 @@ namespace WmsGfxSpriteEditor
 
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoClipboardService()
+        protected void ThrowIfNoClipboardService()
         {
             if (_clipboardService == null)
             {
@@ -1157,37 +1163,17 @@ namespace WmsGfxSpriteEditor
 
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoAvailableSprites()
+        protected void ThrowIfNoPaletteService()
         {
-            if (AvailableSprites.Count == 0)
+            if (_paletteService == null)
             {
-                throw new InvalidOperationException("No sprites available to select.");
+                throw new InvalidOperationException($"{nameof(_paletteService)} is null.");
             }
         }
 
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoActiveSprite()
-        {
-            if (ActiveSprite == null)
-            {
-                throw new InvalidOperationException("Operation cannot be performed without an active sprite");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoActivePalette()
-        {
-            if (ActivePalette.Length < 2)
-            {
-                throw new InvalidOperationException("Operation cannot be performed without an active palette");
-            }
-        }
-
-        [Conditional("DEBUG")]
-        [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoSpriteService()
+        protected void ThrowIfNoSpriteService()
         {
             if (_spriteService == null)
             {
@@ -1197,11 +1183,41 @@ namespace WmsGfxSpriteEditor
 
         [Conditional("DEBUG")]
         [Conditional("PRODBUGFIX")]
-        private void ThrowIfNoPaletteService()
+        protected void ThrowIfNoAvailableSprites()
         {
-            if (_paletteService == null)
+            if (AvailableSprites.Count == 0)
             {
-                throw new InvalidOperationException($"{nameof(_paletteService)} is null.");
+                throw new InvalidOperationException("No sprites available to select.");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
+        protected void ThrowIfNoActiveSprite()
+        {
+            if (ActiveSprite == null)
+            {
+                throw new InvalidOperationException("Operation cannot be performed without an active sprite");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
+        protected void ThrowIfNoActivePalette()
+        {
+            if (ActivePalette.Length < 2)
+            {
+                throw new InvalidOperationException("Operation cannot be performed without an active palette");
+            }
+        }
+
+        [Conditional("DEBUG")]
+        [Conditional("PRODBUGFIX")]
+        protected void ThrowIfActivePaletteIndexInvalid()
+        {
+            if (ActivePaletteIndex < 0 || ActivePaletteIndex >= ActivePalette.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(ActivePaletteIndex), "Active palette index is out of range.");
             }
         }
     }
