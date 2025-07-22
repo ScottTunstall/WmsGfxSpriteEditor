@@ -39,15 +39,15 @@
 ### Editing Tools
 - **Draw**: Click on the sprite grid to change pixel colors using the selected palette color.
 - **Undo/Redo**: Use the Edit menu or toolbar to undo or redo changes.
-- **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard. **Only images the same size or smaller, with exactly the same RGB colours, can be pasted from the clipboard** 
+- **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard. **NOTE: Only images the same size or smaller, with exactly the same RGB colours, can be pasted from the clipboard.** 
 - **Flip/Shift**: Use the Sprite menu to flip or shift the sprite horizontally/vertically.
 
-**You may be much faster copying a sprite to the clipboard then editing it in an app like Paint.NET and pasting it back into the sprite editor app, than using the inbuilt editing tools**
+**NB: You may be much faster copying a sprite to the clipboard, editing it in an app like Paint.NET and pasting it back into the sprite editor app, than using the inbuilt editing tools.**
 
 ### Zoom
-- Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window. **You can also use CTRL+ MouseWheel for this.**
+- Use the `View` menu Zoom In | Zoom Out or the zoom controls in the status bar to zoom in/out the sprite. **NOTE: You can also use CTRL+ the Mouse Wheel for this.**
 - The current zoom level is displayed in the status bar.
-- The `View` menu includes an **Auto Zoom To Window** option. When enabled, the editor will automatically zoom to fit the sprite whenever you change the active sprite. This can be toggled on or off, and is accessible via the shortcut `Ctrl+Shift+B`.
+- The `View` menu includes an **Auto Zoom To Window** option. When enabled, the editor will automatically zoom to fit the sprite whenever you change the active sprite. This ensures you can always see the full sprite. This can be toggled on or off, and is accessible via the shortcut `Ctrl+Shift+B`.
 
 ---
 
