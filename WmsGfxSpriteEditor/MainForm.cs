@@ -36,6 +36,15 @@ namespace WmsGfxSpriteEditor
 
         private Color _gridColor = Color.Gray;
 
+        private bool _suppressControlChangeEvents;
+        private Color[] _palette = default!;
+        private IReadOnlyList<SpriteInfo> _availableSprites = [];
+        private SpriteInfo? _activeSpriteInfo;
+        private ISprite? _activeSprite;
+        private int _zoomLevel = DefaultZoomLevel;
+        private int _activePaletteIndex = -1;
+        private string _romSetName = string.Empty;
+
         // Service dependencies (I may inject these in future. No need just now.)
         protected IHistory? History { get; private set; }
 
@@ -50,7 +59,7 @@ namespace WmsGfxSpriteEditor
         private ColorPickerDialog? _colorPickerDialog;
 
         // Rom specific
-        public bool IsRomsetLoaded { get; private set; }
+        protected bool IsRomsetLoaded { get; private set; }
 
         protected string RomSetName
         {
@@ -63,15 +72,6 @@ namespace WmsGfxSpriteEditor
         }
 
         protected RomData? RomData { get; private set; }
-
-        private bool _suppressControlChangeEvents;
-        private Color[] _palette = default!;
-        private IReadOnlyList<SpriteInfo> _availableSprites = [];
-        private SpriteInfo? _activeSpriteInfo;
-        private ISprite? _activeSprite;
-        private int _zoomLevel = DefaultZoomLevel;
-        private int _activePaletteIndex = -1;
-        private string _romSetName = string.Empty;
 
         public MainForm()
         {
