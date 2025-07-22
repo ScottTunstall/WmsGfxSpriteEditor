@@ -57,8 +57,13 @@
 ---
 
 ## Saving Changes
-- Use `File > Save` to write your changes back to the ROM files. Zip your files back up, in the folder structure came in, then copy the zip to the MAME ROM directory.
+- Use `File > Save` to write your changes back to the ROM files. 
 
+
+-## Running edited ROMs with MAME 
+
+- **Replace** the files in the Robotron ROM zip files with the corresponding edited ones.
+- Start MAME and load the game as before. **Ignore** any checksum error warnings.
 ---
 
 ## Clipboard Support
