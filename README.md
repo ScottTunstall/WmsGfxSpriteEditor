@@ -90,7 +90,7 @@
 |------------------------|------------------|
 | Undo                   | Ctrl+Z           |
 | Redo                   | Ctrl+Y           |
-| Copy                   | Ctrl+C           |
+| Copy Sprite            | Ctrl+C           |
 | Paste                  | Ctrl+V           |
 | Zoom In                | Ctrl+Plus        |
 | Zoom Out               | Ctrl+Minus       |
