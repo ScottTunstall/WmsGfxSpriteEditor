@@ -52,7 +52,16 @@ namespace WmsGfxSpriteEditor
         // Rom specific
         public bool IsRomsetLoaded { get; private set; }
 
-        protected string RomSetName { get; private set; } = string.Empty;
+        protected string RomSetName
+        {
+            get => _romSetName;
+            private set
+            {
+                _romSetName = value;
+                OnRomSetNameChanged();
+            }
+        }
+
         protected RomData? RomData { get; private set; }
 
         private bool _suppressControlChangeEvents;
@@ -62,6 +71,7 @@ namespace WmsGfxSpriteEditor
         private ISprite? _activeSprite;
         private int _zoomLevel = DefaultZoomLevel;
         private int _activePaletteIndex = -1;
+        private string _romSetName = string.Empty;
 
         public MainForm()
         {
@@ -70,6 +80,8 @@ namespace WmsGfxSpriteEditor
             _suppressControlChangeEvents = true;
 
             DisableEditingControls();
+
+            Text = $"{Constants.AppTitle} - {Constants.NoRomsetLoaded}";
 
             spriteDisplay.Cursor = CrosshairCursor.CreateCrosshair(Color.White, Color.Black, 12);
 
@@ -605,7 +617,12 @@ namespace WmsGfxSpriteEditor
             List<SpriteInfo> allSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
             AvailableSprites = allSprites;
 
+            mnuFileSave.Enabled = true;
+            cboSprite.Enabled = true;
+            spriteDisplay.Visible = true;
+
             _suppressControlChangeEvents = false;
+
             IsRomsetLoaded = true;
 
             OnReadyToEdit();
@@ -948,9 +965,6 @@ namespace WmsGfxSpriteEditor
         // Called when the ROM is loaded and sprites can be edited. Override this method to perform any additional setup.
         protected virtual void OnReadyToEdit()
         {
-            mnuFileSave.Enabled = true;
-            cboSprite.Enabled = true;
-            spriteDisplay.Visible = true;
         }
 
         protected virtual void OnClipboardChanged()
@@ -970,6 +984,11 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoClipboardService();
 
             mnuEditPaste.Enabled = ClipboardService!.HasCompatibleBitmap(ActiveSprite!);
+        }
+
+        protected virtual void OnRomSetNameChanged()
+        {
+            Text = $"{Constants.AppTitle} - {RomSetName}";
         }
 
         protected virtual void OnActivePaletteChanged()
