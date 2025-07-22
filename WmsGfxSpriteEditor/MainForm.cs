@@ -45,41 +45,14 @@ namespace WmsGfxSpriteEditor
         private int _activePaletteIndex = -1;
         private string _romSetName = string.Empty;
 
-        // Service dependencies (I may inject these in future. No need just now.)
-        protected IHistory? History { get; private set; }
-
-        protected IRomService? RomService { get; private set; }
-        protected ISpriteGridRenderer? SpriteRenderer { get; private set; }
-        protected ISpriteFactory? SpriteFactory { get; private set; }
-        protected ISpriteService? SpriteService { get; private set; }
-        protected ISpriteClipboardService? ClipboardService { get; private set; }
-        protected IPaletteClipboardService? PaletteService { get; private set; }
-
         // Dialogs
         private ColorPickerDialog? _colorPickerDialog;
-
-        // Rom specific
-        protected bool IsRomsetLoaded { get; private set; }
-
-        protected string RomSetName
-        {
-            get => _romSetName;
-            private set
-            {
-                _romSetName = value;
-                OnRomSetNameChanged();
-            }
-        }
-
-        protected RomData? RomData { get; private set; }
 
         public MainForm()
         {
             InitializeComponent();
 
             _suppressControlChangeEvents = true;
-
-            DisableEditingControls();
 
             Text = $"{Constants.AppTitle} - {Constants.NoRomsetLoaded}";
 
@@ -94,11 +67,39 @@ namespace WmsGfxSpriteEditor
             _suppressControlChangeEvents = false;
         }
 
+        // Service dependencies (I may inject these in future. No need just now.)
+        protected IHistory? History { get; private set; }
+
+        protected IRomService? RomService { get; private set; }
+
+        protected ISpriteGridRenderer? SpriteRenderer { get; private set; }
+
+        protected ISpriteFactory? SpriteFactory { get; private set; }
+
+        protected ISpriteService? SpriteService { get; private set; }
+
+        protected ISpriteClipboardService? ClipboardService { get; private set; }
+
+        protected IPaletteClipboardService? PaletteService { get; private set; }
+
         // This code will need to be refactored. The individual sections defined by regions will need to be extracted to separate classes.
         // For now - disable the warning about ordering of elements
 #pragma warning disable SA1202 // Elements should be ordered by access
 
         // User selections
+        protected bool IsRomsetLoaded { get; private set; }
+
+        protected string RomSetName
+        {
+            get => _romSetName;
+            private set
+            {
+                _romSetName = value;
+                OnRomSetNameChanged();
+            }
+        }
+
+        protected RomData? RomData { get; private set; }
 
         // Palette
         protected Color[] ActivePalette
@@ -360,6 +361,14 @@ namespace WmsGfxSpriteEditor
             ShowColourPickerDialog();
         }
 
+        private void mnuViewAutoZoomToWindow_Click(object sender, EventArgs e)
+        {
+            if (mnuViewAutoZoomToWindow.Checked)
+            {
+                ZoomToFit();
+            }
+        }
+
         #endregion VIEW MENU EVENT HANDLERS
 
         #region SPRITE MENU EVENT HANDLERS
@@ -433,6 +442,22 @@ namespace WmsGfxSpriteEditor
         #endregion PALETTE MENU EVENT HANDLERS
 
         #region HELP MENU EVENT HANDLERS
+
+        private void mnuHelpViewHelp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = Constants.HelpUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unable to open help URL.\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void mnuHelpAbout_Click(object sender, EventArgs e)
         {
@@ -1072,6 +1097,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomIn.Enabled = haveSprite && ZoomLevel < MaxZoomLevel;
             mnuViewZoomOut.Enabled = haveSprite && ZoomLevel > MinZoomLevel;
             mnuViewZoomToWindow.Enabled = haveSprite;
+            mnuViewAutoZoomToWindow.Enabled = haveSprite;
             mnuView.Enabled = mnuView.DropDownItems.Any(item => item.Enabled);
 
             // Sprite menu
@@ -1098,6 +1124,12 @@ namespace WmsGfxSpriteEditor
             // Sprite grid
             spriteDisplay.Sprite = ActiveSprite;
             spriteDisplay.Visible = haveSprite;
+
+            // Auto zoom if enabled
+            if (haveSprite && mnuViewAutoZoomToWindow.Checked)
+            {
+                ZoomToFit();
+            }
         }
 
         /// <summary>
@@ -1167,6 +1199,8 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore SA1124 // Do not use regions
 #pragma warning restore IDE1006 // Element should begin with upper-case letter
 #pragma warning restore SA1202 // Elements should be ordered by access
+
+#pragma warning disable SA1202
 
         // The properties below in the Throw() methods should sanity check themselves for correct values.
         // When I'm developing, I may miss something so these give me peace of mind.
@@ -1250,4 +1284,6 @@ namespace WmsGfxSpriteEditor
             }
         }
     }
+
+#pragma warning restore SA1202 // Elements should be ordered by access
 }

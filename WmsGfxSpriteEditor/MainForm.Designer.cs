@@ -34,6 +34,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomIn = new ToolStripMenuItem();
             mnuViewZoomOut = new ToolStripMenuItem();
             mnuViewZoomToWindow = new ToolStripMenuItem();
+            mnuViewAutoZoomToWindow = new ToolStripMenuItem();
             mnuViewPaletteSeparator = new ToolStripSeparator();
             mnuViewPalette = new ToolStripMenuItem();
             mnuSprite = new ToolStripMenuItem();
@@ -48,6 +49,7 @@ namespace WmsGfxSpriteEditor
             mnuSpriteShiftUp = new ToolStripMenuItem();
             mnuSpriteShiftDown = new ToolStripMenuItem();
             mnuHelp = new ToolStripMenuItem();
+            mnuHelpViewHelp = new ToolStripMenuItem();
             mnuHelpAbout = new ToolStripMenuItem();
             statusStrip = new StatusStrip();
             StatusLabel = new ToolStripStatusLabel();
@@ -227,7 +229,7 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuView
             // 
-            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewZoomToWindow, mnuViewPaletteSeparator, mnuViewPalette });
+            mnuView.DropDownItems.AddRange(new ToolStripItem[] { mnuViewZoomIn, mnuViewZoomOut, mnuViewZoomToWindow, mnuViewAutoZoomToWindow, mnuViewPaletteSeparator, mnuViewPalette });
             mnuView.Enabled = false;
             mnuView.Name = "mnuView";
             mnuView.ShortcutKeys = Keys.Alt | Keys.V;
@@ -240,7 +242,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomIn.Name = "mnuViewZoomIn";
             mnuViewZoomIn.ShortcutKeyDisplayString = "Ctrl ++";
             mnuViewZoomIn.ShortcutKeys = Keys.Control | Keys.Oemplus;
-            mnuViewZoomIn.Size = new Size(208, 22);
+            mnuViewZoomIn.Size = new Size(271, 22);
             mnuViewZoomIn.Text = "Zoom &In";
             mnuViewZoomIn.Click += mnuViewZoomIn_Click;
             // 
@@ -250,7 +252,7 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomOut.Name = "mnuViewZoomOut";
             mnuViewZoomOut.ShortcutKeyDisplayString = "Ctrl +-";
             mnuViewZoomOut.ShortcutKeys = Keys.Control | Keys.OemMinus;
-            mnuViewZoomOut.Size = new Size(208, 22);
+            mnuViewZoomOut.Size = new Size(271, 22);
             mnuViewZoomOut.Text = "Zoom &Out";
             mnuViewZoomOut.Click += mnuViewZoomOut_Click;
             // 
@@ -259,21 +261,31 @@ namespace WmsGfxSpriteEditor
             mnuViewZoomToWindow.Enabled = false;
             mnuViewZoomToWindow.Name = "mnuViewZoomToWindow";
             mnuViewZoomToWindow.ShortcutKeys = Keys.Control | Keys.B;
-            mnuViewZoomToWindow.Size = new Size(208, 22);
+            mnuViewZoomToWindow.Size = new Size(271, 22);
             mnuViewZoomToWindow.Text = "Zoom to Window";
             mnuViewZoomToWindow.Click += mnuViewZoomToWindow_Click;
+            // 
+            // mnuViewAutoZoomToWindow
+            // 
+            mnuViewAutoZoomToWindow.CheckOnClick = true;
+            mnuViewAutoZoomToWindow.Enabled = false;
+            mnuViewAutoZoomToWindow.Name = "mnuViewAutoZoomToWindow";
+            mnuViewAutoZoomToWindow.ShortcutKeys = Keys.Control | Keys.Shift | Keys.B;
+            mnuViewAutoZoomToWindow.Size = new Size(271, 22);
+            mnuViewAutoZoomToWindow.Text = "Auto Zoom To Window";
+            mnuViewAutoZoomToWindow.Click += mnuViewAutoZoomToWindow_Click;
             // 
             // mnuViewPaletteSeparator
             // 
             mnuViewPaletteSeparator.Name = "mnuViewPaletteSeparator";
-            mnuViewPaletteSeparator.Size = new Size(205, 6);
+            mnuViewPaletteSeparator.Size = new Size(268, 6);
             // 
             // mnuViewPalette
             // 
             mnuViewPalette.Enabled = false;
             mnuViewPalette.Name = "mnuViewPalette";
             mnuViewPalette.ShortcutKeys = Keys.F8;
-            mnuViewPalette.Size = new Size(208, 22);
+            mnuViewPalette.Size = new Size(271, 22);
             mnuViewPalette.Text = "Palette";
             mnuViewPalette.Click += mnuViewPalette_Click;
             // 
@@ -370,18 +382,26 @@ namespace WmsGfxSpriteEditor
             // 
             // mnuHelp
             // 
-            mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuHelpAbout });
+            mnuHelp.DropDownItems.AddRange(new ToolStripItem[] { mnuHelpViewHelp, mnuHelpAbout });
             mnuHelp.Name = "mnuHelp";
             mnuHelp.ShortcutKeys = Keys.Alt | Keys.H;
             mnuHelp.Size = new Size(44, 20);
             mnuHelp.Text = "&Help";
             // 
+            // mnuHelpViewHelp
+            // 
+            mnuHelpViewHelp.Name = "mnuHelpViewHelp";
+            mnuHelpViewHelp.ShortcutKeys = Keys.F1;
+            mnuHelpViewHelp.Size = new Size(162, 22);
+            mnuHelpViewHelp.Text = "View &Help";
+            mnuHelpViewHelp.Click += mnuHelpViewHelp_Click;
+            // 
             // mnuHelpAbout
             // 
             mnuHelpAbout.Name = "mnuHelpAbout";
-            mnuHelpAbout.ShortcutKeys = Keys.F1;
-            mnuHelpAbout.Size = new Size(135, 22);
-            mnuHelpAbout.Text = "About...";
+            mnuHelpAbout.ShortcutKeys = Keys.Control | Keys.F1;
+            mnuHelpAbout.Size = new Size(162, 22);
+            mnuHelpAbout.Text = "&About...";
             mnuHelpAbout.Click += mnuHelpAbout_Click;
             // 
             // statusStrip
@@ -619,6 +639,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuViewZoomIn;
         private ToolStripMenuItem mnuViewZoomOut;
         private ToolStripMenuItem mnuViewZoomToWindow;
+        private ToolStripMenuItem mnuViewAutoZoomToWindow;
         private ToolStripSeparator mnuViewPaletteSeparator;
         private ToolStripMenuItem mnuViewPalette;
         private ToolStripMenuItem mnuSprite;
@@ -630,6 +651,7 @@ namespace WmsGfxSpriteEditor
         private ToolStripMenuItem mnuSpriteShiftUp;
         private ToolStripMenuItem mnuSpriteShiftDown;
         private ToolStripMenuItem mnuHelp;
+        private ToolStripMenuItem mnuHelpViewHelp;
         private ToolStripMenuItem mnuHelpAbout;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel StatusLabel;
