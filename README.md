@@ -8,7 +8,7 @@
 ## Getting Started
 
 ### Installation
-1. Download and run the installer (`WmsGfxSpriteEditor.Setup.exe`).
+1. Download and run the installer (`Setup.exe`).
 2. Follow the on-screen instructions to complete installation.
 
 ## Extract ROMs to be edited to a folder
