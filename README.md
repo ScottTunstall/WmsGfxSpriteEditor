@@ -43,7 +43,7 @@
 - **Flip/Shift**: Use the Sprite menu to flip or shift the sprite horizontally/vertically.
 
 ### Zoom
-- Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window.
+- Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window. **You can also use CTRL+ MouseWheel for this.**
 - The current zoom level is displayed in the status bar.
 - The `View` menu includes an **Auto Zoom To Window** option. When enabled, the editor will automatically zoom to fit the sprite whenever you change the active sprite. This can be toggled on or off, and is accessible via the shortcut `Ctrl+Shift+B`.
 
