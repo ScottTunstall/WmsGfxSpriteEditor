@@ -1,7 +1,7 @@
 # WmsGfxSpriteEditor User Guide
 
 ## Overview
-**WmsGfxSpriteEditor** is a Windows application for viewing and editing sprite graphics in classic arcade game *Robotron: 2084*. It provides basic tools for sprite manipulation, palette editing, and ROM management.
+**WmsGfxSpriteEditor** (short for Williams Graphics Sprite Editor) is a Windows application for viewing and editing sprite graphics in classic arcade game *Robotron: 2084*. It provides basic tools for sprite manipulation, palette editing, and ROM management.
 
 ---
 
@@ -10,6 +10,10 @@
 ### Installation
 1. Download and run the installer (`WmsGfxSpriteEditor.Setup.exe`).
 2. Follow the on-screen instructions to complete installation.
+
+## Extract ROMs to be edited to a folder
+
+1. Extract the Robotron ROMs you wish to edit to a folder. Please see Appendices for what the files should look like.
 
 ### Launching the Application
 - Open **WmsGfxSpriteEditor** from your Start Menu or desktop shortcut.
@@ -94,7 +98,7 @@
 ---
 
 ## Feedback & Support
-For questions or feedback, please contact the developer.
+For questions or feedback, please contact the developer at scott.tunstall@ntlworld.com.
 
 
 
