@@ -39,8 +39,10 @@
 ### Editing Tools
 - **Draw**: Click on the sprite grid to change pixel colors using the selected palette color.
 - **Undo/Redo**: Use the Edit menu or toolbar to undo or redo changes.
-- **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard.
+- **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard. **Only images the same size or smaller, with exactly the same RGB colours, can be pasted from the clipboard** 
 - **Flip/Shift**: Use the Sprite menu to flip or shift the sprite horizontally/vertically.
+
+**You may be much faster copying a sprite to the clipboard then editing it in an app like Paint.NET and pasting it back into the sprite editor app, than using the inbuilt editing tools**
 
 ### Zoom
 - Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window. **You can also use CTRL+ MouseWheel for this.**
@@ -53,6 +55,7 @@
 - Click the palette button or use `View > Palette` to open the palette editor.
 - Select a color to use for drawing.
 - Right-click a color for options to copy its RGB or Hex value.
+- If you are going to use a paint app to edit the sprites before pasting them back in, use Windows' inbuilt Snipping Tool to take a copy of the colour palette. That way you can paste that across too, and use it with the colour dropper.
 
 ---
 
@@ -67,7 +70,7 @@
 ---
 
 ## Clipboard Support
-- The editor supports copying and pasting sprites and palette colors using the system clipboard.
+- The editor supports copying and pasting sprites and palette colors using the system clipboard. 
 
 ---
 
