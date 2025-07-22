@@ -41,6 +41,7 @@
 ### Zoom
 - Use the zoom controls in the status bar or the `View` menu to zoom in/out or fit the sprite to the window.
 - The current zoom level is displayed in the status bar.
+- The `View` menu includes an **Auto Zoom To Window** option. When enabled, the editor will automatically zoom to fit the sprite whenever you change the active sprite. This can be toggled on or off, and is accessible via the shortcut `Ctrl+Shift+B`.
 
 ---
 
@@ -52,7 +53,7 @@
 ---
 
 ## Saving Changes
-- Use `File > Save` to write your changes back to the ROM files.
+- Use `File > Save` to write your changes back to the ROM files. Zip your files back up, in the folder structure came in, then copy the zip to the MAME ROM directory.
 
 ---
 
@@ -73,15 +74,16 @@
 
 ## Keyboard Shortcuts
 
-| Action         | Shortcut      |
-|----------------|---------------|
-| Undo           | Ctrl+Z        |
-| Redo           | Ctrl+Y        |
-| Copy           | Ctrl+C        |
-| Paste          | Ctrl+V        |
-| Zoom In        | Ctrl+Plus     |
-| Zoom Out       | Ctrl+Minus    |
-| Show Palette   | Ctrl+P        |
+| Action                 | Shortcut         |
+|------------------------|------------------|
+| Undo                   | Ctrl+Z           |
+| Redo                   | Ctrl+Y           |
+| Copy                   | Ctrl+C           |
+| Paste                  | Ctrl+V           |
+| Zoom In                | Ctrl+Plus        |
+| Zoom Out               | Ctrl+Minus       |
+| Show Palette           | Ctrl+P           |
+| Auto Zoom To Window    | Ctrl+Shift+B |
 
 ---
 
@@ -110,6 +112,10 @@ For questions or feedback, please contact the developer.
 ### Required Tie-die ROM (MAME) files
 
 <img width="618" height="455" alt="image" src="https://github.com/user-attachments/assets/6e15538b-613d-4409-9d57-7abfdb028a19" />
+
+
+
+
 
 
 
