@@ -94,8 +94,8 @@
 | Paste                  | Ctrl+V           |
 | Zoom In                | Ctrl+Plus        |
 | Zoom Out               | Ctrl+Minus       |
-| Show Palette           | Ctrl+P           |
-| Auto Zoom To Window    | Ctrl+Shift+B |
+| Auto Zoom To Window    | Ctrl+Shift+B     |
+| Show Palette           | F8               |
 
 ---
 
