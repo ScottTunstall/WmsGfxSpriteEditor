@@ -37,23 +37,23 @@ namespace WmsGfxSpriteEditor
         private Color _gridColor = Color.Gray;
 
         // Service dependencies (I may inject these in future. No need just now.)
-        private IRomService? _romService;
+        protected IHistory? History { get; private set; }
 
-        private IHistory? _history;
-        private ISpriteGridRenderer? _spriteRenderer;
-        private ISpriteFactory? _spriteFactory;
-        private ISpriteService? _spriteService;
-        private ISpriteClipboardService? _clipboardService;
-        private IPaletteClipboardService? _paletteService;
+        protected IRomService? RomService { get; private set; }
+        protected ISpriteGridRenderer? SpriteRenderer { get; private set; }
+        protected ISpriteFactory? SpriteFactory { get; private set; }
+        protected ISpriteService? SpriteService { get; private set; }
+        protected ISpriteClipboardService? ClipboardService { get; private set; }
+        protected IPaletteClipboardService? PaletteService { get; private set; }
 
         // Dialogs
         private ColorPickerDialog? _colorPickerDialog;
 
         // Rom specific
-        private bool _romsLoaded;
+        public bool IsRomsetLoaded { get; private set; }
 
-        private string _romSetName = string.Empty;
-        private RomData? _romData;
+        protected string RomSetName { get; private set; } = string.Empty;
+        protected RomData? RomData { get; private set; }
 
         private bool _suppressControlChangeEvents;
         private Color[] _palette = default!;
@@ -210,7 +210,7 @@ namespace WmsGfxSpriteEditor
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (!_romsLoaded)
+            if (!IsRomsetLoaded)
             {
                 base.OnFormClosing(e);
                 return;
@@ -258,10 +258,10 @@ namespace WmsGfxSpriteEditor
                 }
                 _colorPickerDialog = null;
 
-                if (_romData != null)
+                if (RomData != null)
                 {
-                    _romData.Dispose();
-                    _romData = null;
+                    RomData.Dispose();
+                    RomData = null;
                 }
             }
             base.Dispose(disposing);
@@ -568,48 +568,47 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void SaveRomData()
         {
-            string? directory = new SaveRomDialog().BrowseForFolder(_romSetName);
+            string? directory = new SaveRomDialog().BrowseForFolder(RomSetName);
             if (directory == null)
             {
                 return;
             }
 
-            _romService!.SaveRomData(_romData!, directory);
+            RomService!.SaveRomData(RomData!, directory);
 
-            new InformationDialog().ShowDialog($"Saved {_romSetName} ROM files successfully.", "Success", this);
+            new InformationDialog().ShowDialog($"Saved {RomSetName} ROM files successfully.", "Success", this);
         }
 
         protected virtual void OnBeginEdit(string romSetName, RomData romData, SpriteEditorDependencies editorDependencies)
         {
             _suppressControlChangeEvents = true;
 
-            _romSetName = romSetName;
+            RomSetName = romSetName;
 
-            _romData?.Dispose();
-            _romData = romData;
+            RomData?.Dispose();
+            RomData = romData;
 
-            _history = new History.History();
-            _spriteService = new SpriteService(_history);
-            _clipboardService = new DefaultSpriteClipboardService(_history);
-            _paletteService = new DefaultPaletteClipboardService();
+            History = new History.History();
+            SpriteService = new SpriteService(History);
+            ClipboardService = new DefaultSpriteClipboardService(History);
+            PaletteService = new DefaultPaletteClipboardService();
 
-            _romService = editorDependencies.RomService;
-            _spriteFactory = editorDependencies.SpriteFactory;
+            RomService = editorDependencies.RomService;
+            SpriteFactory = editorDependencies.SpriteFactory;
             ActivePalette = editorDependencies.PaletteService.GetPalette();
 
-            _spriteRenderer = editorDependencies.SpriteRenderer;
-            spriteDisplay.SpriteRenderer = _spriteRenderer;
+            SpriteRenderer = editorDependencies.SpriteRenderer;
+            spriteDisplay.SpriteRenderer = SpriteRenderer;
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = ZoomLevel;
 
             List<SpriteInfo> allSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
             AvailableSprites = allSprites;
-            SelectActiveSpriteByIndex(0, true);
 
             _suppressControlChangeEvents = false;
-            _romsLoaded = true;
+            IsRomsetLoaded = true;
 
-            OnReady();
+            OnReadyToEdit();
         }
 
         #endregion FILE MENU INVOKED FUNCS
@@ -620,12 +619,12 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoHistory();
 
-            if (!_history!.CanGoBack)
+            if (!History!.CanGoBack)
             {
                 throw new InvalidOperationException("No history item to undo.");
             }
 
-            HistoryItem? item = _history.Back();
+            HistoryItem? item = History.Back();
             SetStateFromHistory(item!);
         }
 
@@ -633,12 +632,12 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoHistory();
 
-            if (!_history!.CanGoForward)
+            if (!History!.CanGoForward)
             {
                 throw new InvalidOperationException("No history item to redo.");
             }
 
-            HistoryItem item = _history.Forward()!;
+            HistoryItem item = History.Forward()!;
             SetStateFromHistory(item!);
         }
 
@@ -646,14 +645,14 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoActiveSprite();
 
-            _clipboardService!.Copy(ActiveSprite!);
+            ClipboardService!.Copy(ActiveSprite!);
         }
 
         protected void PasteSprite()
         {
             ThrowIfNoActiveSprite();
 
-            _clipboardService!.Paste(ActiveSprite!);
+            ClipboardService!.Paste(ActiveSprite!);
             OnSpritePixelsMaybeChanged();
         }
 
@@ -759,7 +758,7 @@ namespace WmsGfxSpriteEditor
         protected void FlipSpriteHorizontal()
         {
             ThrowIfNoActiveSprite();
-            _spriteService!.FlipSpriteHorizontal(ActiveSprite!);
+            SpriteService!.FlipSpriteHorizontal(ActiveSprite!);
             OnSpritePixelsMaybeChanged();
         }
 
@@ -768,7 +767,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.FlipSpriteVertical(ActiveSprite!);
+            SpriteService!.FlipSpriteVertical(ActiveSprite!);
 
             OnSpritePixelsMaybeChanged();
         }
@@ -778,7 +777,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.ShiftSpritePixelsLeft(ActiveSprite!);
+            SpriteService!.ShiftSpritePixelsLeft(ActiveSprite!);
 
             OnSpritePixelsMaybeChanged();
         }
@@ -788,7 +787,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.ShiftSpritePixelsRight(ActiveSprite!);
+            SpriteService!.ShiftSpritePixelsRight(ActiveSprite!);
 
             OnSpritePixelsMaybeChanged();
         }
@@ -798,7 +797,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.ShiftSpritePixelsUp(ActiveSprite!);
+            SpriteService!.ShiftSpritePixelsUp(ActiveSprite!);
 
             OnSpritePixelsMaybeChanged();
         }
@@ -808,7 +807,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.ShiftSpritePixelsDown(ActiveSprite!);
+            SpriteService!.ShiftSpritePixelsDown(ActiveSprite!);
 
             OnSpritePixelsMaybeChanged();
         }
@@ -821,14 +820,14 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoPaletteService();
 
-            string hex = _paletteService!.CopyAsHexString(ActivePaletteColour);
+            string hex = PaletteService!.CopyAsHexString(ActivePaletteColour);
             return hex;
         }
 
         protected string CopyActivePaletteColourAsRGB()
         {
             ThrowIfNoPaletteService();
-            string rgb = _paletteService!.CopyAsRGBString(ActivePaletteColour);
+            string rgb = PaletteService!.CopyAsRGBString(ActivePaletteColour);
             return rgb;
         }
 
@@ -872,7 +871,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
+            SpriteService!.BeginSpriteDrawOp(ActiveSprite!, startX, startY, paletteIndex);
             OnSpritePixelsMaybeChanged();
         }
 
@@ -881,7 +880,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
+            SpriteService!.SpriteDrawOp(ActiveSprite!, x, y, paletteIndex);
             OnSpritePixelsMaybeChanged();
         }
 
@@ -890,7 +889,7 @@ namespace WmsGfxSpriteEditor
             ThrowIfNoActiveSprite();
             ThrowIfNoSpriteService();
 
-            _spriteService!.EndSpriteDrawOp(ActiveSprite!);
+            SpriteService!.EndSpriteDrawOp(ActiveSprite!);
             OnSpritePixelsMaybeChanged();
         }
 
@@ -910,7 +909,7 @@ namespace WmsGfxSpriteEditor
         {
             int offset = AvailableSprites[item.SpriteIndex].Offset;
 
-            new UpdateRomDataFromPixelDataCommand(_romData!).Execute(offset, item.PixelData!);
+            new UpdateRomDataFromPixelDataCommand(RomData!).Execute(offset, item.PixelData!);
             SelectActiveSpriteByIndex(item.SpriteIndex, true);
             OnSpritePixelsMaybeChanged();
         }
@@ -947,7 +946,7 @@ namespace WmsGfxSpriteEditor
         #endregion STATUS BAR
 
         // Called when the ROM is loaded and sprites can be edited. Override this method to perform any additional setup.
-        protected virtual void OnReady()
+        protected virtual void OnReadyToEdit()
         {
             mnuFileSave.Enabled = true;
             cboSprite.Enabled = true;
@@ -956,7 +955,10 @@ namespace WmsGfxSpriteEditor
 
         protected virtual void OnClipboardChanged()
         {
-            ThrowIfNoClipboardService();
+            if (!IsRomsetLoaded)
+            {
+                return;
+            }
 
             if (ActiveSprite == null)
             {
@@ -964,7 +966,10 @@ namespace WmsGfxSpriteEditor
                 return;
             }
 
-            mnuEditPaste.Enabled = _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
+            // If we have an active sprite but no clipboard service, something has gone wrong in the app.
+            ThrowIfNoClipboardService();
+
+            mnuEditPaste.Enabled = ClipboardService!.HasCompatibleBitmap(ActiveSprite!);
         }
 
         protected virtual void OnActivePaletteChanged()
@@ -1041,7 +1046,7 @@ namespace WmsGfxSpriteEditor
             // Edit menu
             mnuEditCopy.Enabled = haveSprite;
             mnuCopySprite.Enabled = haveSprite;
-            mnuEditPaste.Enabled = haveSprite && _clipboardService!.HasCompatibleBitmap(ActiveSprite!);
+            mnuEditPaste.Enabled = haveSprite && ClipboardService!.HasCompatibleBitmap(ActiveSprite!);
             mnuEdit.Enabled = mnuEdit.DropDownItems.Any(item => item.Enabled);
 
             // View menu
@@ -1083,8 +1088,8 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoHistory();
 
-            mnuEditUndo.Enabled = _history!.CanGoBack;
-            mnuEditRedo.Enabled = _history.CanGoForward;
+            mnuEditUndo.Enabled = History!.CanGoBack;
+            mnuEditRedo.Enabled = History.CanGoForward;
 
             spriteDisplay.Invalidate();
         }
@@ -1133,7 +1138,7 @@ namespace WmsGfxSpriteEditor
         /// </summary>
         private ISprite CreateSpriteFromRomData()
         {
-            return new CreateSpriteFromRomDataCommand(_romData!, _spriteFactory!).Execute(ActiveSpriteInfo!, ActivePalette);
+            return new CreateSpriteFromRomDataCommand(RomData!, SpriteFactory!).Execute(ActiveSpriteInfo!, ActivePalette);
         }
 
         #endregion ROM
@@ -1150,9 +1155,9 @@ namespace WmsGfxSpriteEditor
         [Conditional("PRODBUGFIX")]
         protected void ThrowIfNoHistory()
         {
-            if (_history == null)
+            if (History == null)
             {
-                throw new InvalidOperationException($"{nameof(_history)} is null.");
+                throw new InvalidOperationException($"{nameof(History)} is null.");
             }
         }
 
@@ -1160,9 +1165,9 @@ namespace WmsGfxSpriteEditor
         [Conditional("PRODBUGFIX")]
         protected void ThrowIfNoClipboardService()
         {
-            if (_clipboardService == null)
+            if (ClipboardService == null)
             {
-                throw new InvalidOperationException($"{nameof(_clipboardService)} is null.");
+                throw new InvalidOperationException($"{nameof(ClipboardService)} is null.");
             }
         }
 
@@ -1170,9 +1175,9 @@ namespace WmsGfxSpriteEditor
         [Conditional("PRODBUGFIX")]
         protected void ThrowIfNoPaletteService()
         {
-            if (_paletteService == null)
+            if (PaletteService == null)
             {
-                throw new InvalidOperationException($"{nameof(_paletteService)} is null.");
+                throw new InvalidOperationException($"{nameof(PaletteService)} is null.");
             }
         }
 
@@ -1180,9 +1185,9 @@ namespace WmsGfxSpriteEditor
         [Conditional("PRODBUGFIX")]
         protected void ThrowIfNoSpriteService()
         {
-            if (_spriteService == null)
+            if (SpriteService == null)
             {
-                throw new InvalidOperationException($"{nameof(_spriteService)} is null.");
+                throw new InvalidOperationException($"{nameof(SpriteService)} is null.");
             }
         }
 
