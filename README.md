@@ -42,7 +42,7 @@
 - **Copy/Paste**: Copy the current sprite to the clipboard or paste from the clipboard. **NOTE: Only images the same size or smaller, with exactly the same RGB colours, can be pasted from the clipboard.** 
 - **Flip/Shift**: Use the Sprite menu to flip or shift the sprite horizontally/vertically.
 
-**NB: You may be much faster copying a sprite to the clipboard, editing it in an app like Paint.NET and pasting it back into the sprite editor app, than using the inbuilt editing tools.**
+**NB: If you are going to make significant changes to a sprite, you may be much faster copying the sprite to the clipboard, editing it in an app like Paint.NET and pasting it back into the sprite editor app, rather than using the inbuilt editing tools.**
 
 ### Zoom
 - Use the `View` menu Zoom In | Zoom Out or the zoom controls in the status bar to zoom in/out the sprite. **NOTE: You can also use CTRL+ the Mouse Wheel for this.**
