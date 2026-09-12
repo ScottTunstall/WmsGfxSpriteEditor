@@ -67,6 +67,8 @@
 
 - **Replace** the files in the Robotron ROM zip files with the corresponding edited ones.
 - Start MAME and load the game as before. **Ignore** any checksum error warnings.
+- The protection is cracked by the sprite editor, so the game won't hang or reset.
+  
 ---
 
 ## Clipboard Support
