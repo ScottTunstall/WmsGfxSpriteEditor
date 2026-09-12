@@ -199,6 +199,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Sprites
             _sprites.Add(new(134, "tank2", 21902, 7, 16, BitsPerPixel));
             _sprites.Add(new(135, "tank3", 22014, 7, 16, BitsPerPixel));
             _sprites.Add(new(136, "tank4", 22126, 7, 16, BitsPerPixel));
+            _sprites.Add(new(136, "tankshell", 20466, 4, 7, BitsPerPixel));
             _sprites.Add(new(137, "smallfont0", 59947, 2, 5, BitsPerPixel));
             _sprites.Add(new(138, "smallfont1", 59958, 2, 5, BitsPerPixel));
             _sprites.Add(new(139, "smallfont2", 59969, 2, 5, BitsPerPixel));
