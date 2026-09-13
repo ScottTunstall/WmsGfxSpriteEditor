@@ -144,6 +144,10 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084.Shared.Sprites
             _sprites.Add(new(79, "brain10", 9569, 7, 16, BitsPerPixel));
             _sprites.Add(new(80, "brain11", 9681, 7, 16, BitsPerPixel));
             _sprites.Add(new(81, "brain12", 9793, 7, 16, BitsPerPixel));
+            _sprites.Add(new(82, "laser1", 13758, 3, 1, BitsPerPixel));
+            _sprites.Add(new(82, "laser2", 13761, 1, 6, BitsPerPixel));
+            _sprites.Add(new(82, "laser3", 13767, 3, 6, BitsPerPixel));
+            _sprites.Add(new(82, "laser4", 13785, 3, 6, BitsPerPixel));
             _sprites.Add(new(82, "player1", 13851, 4, 12, BitsPerPixel));
             _sprites.Add(new(83, "player2", 13899, 4, 12, BitsPerPixel));
             _sprites.Add(new(84, "player3", 13947, 4, 12, BitsPerPixel));
