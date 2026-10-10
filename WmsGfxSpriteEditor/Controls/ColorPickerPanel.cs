@@ -25,6 +25,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color[] Palette
         {
             get => _palette;
@@ -42,6 +43,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public int SelectedPaletteIndex
         {
             get => _selectedPaletteIndex;
@@ -54,6 +56,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         [EditorBrowsable]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int ColorBoxSize
         {
             get;
@@ -62,6 +65,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         [EditorBrowsable]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int ColorBoxMargin
         {
             get;
@@ -74,6 +78,7 @@ namespace WmsGfxSpriteEditor.Controls
 
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public ContextMenuStrip? ColourContextMenuStrip
         {
             get;

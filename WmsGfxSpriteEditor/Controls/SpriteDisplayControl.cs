@@ -53,6 +53,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ISpriteGridRenderer SpriteRenderer
         {
             get => _spriteGridRenderer;
@@ -64,6 +65,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ISprite? Sprite
         {
             get => _sprite;
@@ -80,6 +82,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public Color GridColor
         {
             get => _gridColor;
@@ -95,6 +98,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int ZoomLevel
         {
             get => _zoomLevel;
@@ -116,6 +120,7 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Browsable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public int ZoomLevelThreshold
         {
             get => _zoomLevelGridThreshold;

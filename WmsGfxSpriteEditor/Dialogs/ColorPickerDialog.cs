@@ -24,6 +24,7 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public required Color[] Palette
         {
             get => _colourPickerPanel.Palette;
@@ -32,6 +33,7 @@ namespace WmsGfxSpriteEditor.Dialogs
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public required int SelectedPaletteIndex
         {
             get => _colourPickerPanel.SelectedPaletteIndex;
