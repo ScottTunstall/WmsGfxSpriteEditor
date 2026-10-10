@@ -19,8 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{CADCA356-F28D-4537-8456-F0EFA74C028A}"
 	ProjectSection(SolutionItems) = preProject
-		WmsGfxSpriteEditor.SetupWmsGfxSpriteEditor.iss = WmsGfxSpriteEditor.SetupWmsGfxSpriteEditor.iss
-		WmsGfxSpriteEditor.Setupbuild-installer.cmd = WmsGfxSpriteEditor.Setupbuild-installer.cmd
+		WmsGfxSpriteEditor.Setup\WmsGfxSpriteEditor.iss = WmsGfxSpriteEditor.Setup\WmsGfxSpriteEditor.iss
+		WmsGfxSpriteEditor.Setup\build-installer.cmd = WmsGfxSpriteEditor.Setup\build-installer.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Readme", "Readme", "{C49DA90C-CF5E-430E-91E1-AA667E0D48BC}"
