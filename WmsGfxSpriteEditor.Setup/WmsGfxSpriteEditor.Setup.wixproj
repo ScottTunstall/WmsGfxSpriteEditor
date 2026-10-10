@@ -1,0 +1,22 @@
+<Project Sdk="WixToolset.Sdk/5.0.2">
+
+  <PropertyGroup>
+    <OutputName>WmsGfxSpriteEditor.Setup</OutputName>
+    <Platforms>x86</Platforms>
+    <Platform>x86</Platform>
+    <ProductVersion>1.0.0</ProductVersion>
+    <PublishDir>$(MSBuildThisFileDirectory)obj\publish\</PublishDir>
+    <DefineConstants>$(DefineConstants);PublishDir=$(PublishDir);ProductVersion=$(ProductVersion)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+  </ItemGroup>
+
+  <!-- Publish the app as a self-contained x86 build so the MSI needs no separate .NET runtime install. -->
+  <Target Name="PublishApp" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="$(PublishDir)" />
+    <Exec Command="dotnet publish &quot;$(MSBuildThisFileDirectory)..\WmsGfxSpriteEditor\WmsGfxSpriteEditor.csproj&quot; -c Release -r win-x86 --self-contained true -p:Platform=x86 -o &quot;$(PublishDir)&quot;" />
+  </Target>
+
+</Project>
