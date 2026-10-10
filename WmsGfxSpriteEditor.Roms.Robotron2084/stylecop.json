@@ -23,6 +23,7 @@
       "prefixLocalCallsWithThis": false
     },
     "rules": {
+      "SA0001": false,
       "SA1101": false,
       "SA1200": false,
       "SA1309": false,
@@ -38,6 +39,7 @@
       "SA1513": false,
       "SA1629": false,
       "SA1206": false
+      ,"SA1118": false
     }
   }
 }

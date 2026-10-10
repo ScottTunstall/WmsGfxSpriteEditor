@@ -7,9 +7,8 @@ namespace WmsGfxSpriteEditor.Controls
         private Color[] _palette = [];
         private int _selectedPaletteIndex = -1;
         private int _hoveredIndex = -1;
-
-        private ToolTip _toolTip;
-        private PictureBox _pictureBox;
+        private ToolTip _toolTip = null!;
+        private PictureBox _pictureBox = null!;
 
         public ColorPickerPanel()
         {
