@@ -11,7 +11,6 @@ namespace WmsGfxSpriteEditor.Controls
         private const int CellSize = 8;
 
         // Required services
-        private ISpriteGridRenderer _spriteGridRenderer = new DefaultSpriteGridRenderer();
 
         private ISprite? _sprite;
 
@@ -54,11 +53,7 @@ namespace WmsGfxSpriteEditor.Controls
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public ISpriteGridRenderer SpriteRenderer
-        {
-            get => _spriteGridRenderer;
-            set => _spriteGridRenderer = value;
-        }
+        public ISpriteGridRenderer SpriteRenderer { get; set; } = new DefaultSpriteGridRenderer();
 
         /// <summary>
         /// Gets or sets the sprite to render.
@@ -146,8 +141,7 @@ namespace WmsGfxSpriteEditor.Controls
             // Calculate the maximum zoom level that fits the sprite in the available size
             int zoomX = size.Width / (_sprite.Width * CellSize);
             int zoomY = size.Height / (_sprite.Height * CellSize);
-            int bestZoom = Math.Max(1, Math.Min(zoomX, zoomY));
-            ZoomLevel = bestZoom;
+            ZoomLevel = Math.Max(1, Math.Min(zoomX, zoomY));
         }
 
         /// <summary>
@@ -165,7 +159,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             if (_zoomLevel < _zoomLevelGridThreshold)
             {
-                _spriteGridRenderer.RenderSpriteWithoutGrid(
+                SpriteRenderer.RenderSpriteWithoutGrid(
                     pe.Graphics,
                     _sprite,
                     _zoomLevel * CellSize,
@@ -174,7 +168,7 @@ namespace WmsGfxSpriteEditor.Controls
             }
             else
             {
-                _spriteGridRenderer.RenderSpriteWithGrid(
+                SpriteRenderer.RenderSpriteWithGrid(
                     pe.Graphics,
                     _sprite,
                     _zoomLevel * CellSize,
@@ -196,7 +190,7 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = SpriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
             if (_sprite.IsInBounds(cell.X, cell.Y))
@@ -218,7 +212,7 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = SpriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
             if (_sprite.IsInBounds(cell.X, cell.Y))
@@ -240,7 +234,7 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell cell = _spriteGridRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = SpriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
             if (_sprite.IsInBounds(cell.X, cell.Y))
@@ -262,7 +256,7 @@ namespace WmsGfxSpriteEditor.Controls
                 return;
             }
 
-            GridCell cell = _spriteGridRenderer!.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
+            GridCell cell = SpriteRenderer.GridCellFromClient(e.X, e.Y, CellSize * _zoomLevel, Size);
 
             // Ensure the coordinates are within sprite bounds
             if (_sprite.IsInBounds(cell.X, cell.Y))
@@ -283,7 +277,7 @@ namespace WmsGfxSpriteEditor.Controls
 
             if (_sprite.Width > 0 && _sprite.Height > 0)
             {
-                Size = _spriteGridRenderer!.CalculateMinimumClientSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
+                Size = SpriteRenderer.CalculateMinimumClientSize(_sprite.Width, _sprite.Height, _zoomLevel * CellSize);
             }
         }
     }

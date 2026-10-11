@@ -3,7 +3,7 @@ namespace WmsGfxSpriteEditor.History
     public enum OperationType
     {
         None = 0,
-        SpritePixelDataSnapshot
+        SpritePixelDataSnapshot = 1
     }
 
     public record HistoryItem

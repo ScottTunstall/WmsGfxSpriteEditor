@@ -64,7 +64,7 @@ namespace WmsGfxSpriteEditor.Sprites
             // Check palette compatibility
             HashSet<Color> targetPaletteSet = [.. target.Palette];
             Color[] imagePalette;
-            if ((clipboardBmp.PixelFormat & PixelFormat.Indexed) != 0)
+            if (clipboardBmp.PixelFormat is PixelFormat.Format1bppIndexed or PixelFormat.Format4bppIndexed or PixelFormat.Format8bppIndexed)
             {
                 ColorPalette pal = clipboardBmp.Palette;
                 imagePalette = pal.Entries;

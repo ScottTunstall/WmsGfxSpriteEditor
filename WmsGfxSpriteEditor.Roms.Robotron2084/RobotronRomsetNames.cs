@@ -3,9 +3,9 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084
     public enum RobotronRomSetType
     {
         None = 0,
-        BlueLabel,
-        TieDieWDPU,
-        TieDieMAME
+        BlueLabel = 1,
+        TieDieWDPU = 2,
+        TieDieMAME = 3
     }
 
     public static class RobotronRomSetNames

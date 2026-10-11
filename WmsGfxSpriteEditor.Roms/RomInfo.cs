@@ -3,9 +3,7 @@ namespace WmsGfxSpriteEditor.Roms
     /// <summary>
     /// Represents information about a ROM file in the system
     /// </summary>
-#pragma warning disable SA1313 // Parameter names should begin with lower-case letter
     public record RomFileInfo(string FileName, int Offset, int Size)
-#pragma warning restore SA1313 // Parameter names should begin with lower-case letter
     {
         /// <summary>
         /// Gets the name of the ROM file

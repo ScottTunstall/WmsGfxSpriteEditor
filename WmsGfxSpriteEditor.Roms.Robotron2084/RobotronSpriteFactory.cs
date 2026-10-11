@@ -24,8 +24,7 @@ namespace WmsGfxSpriteEditor.Roms.Robotron2084
             int bytesToRead = spriteInfo.WidthInBytes * spriteInfo.Height;
             Memory<byte> spriteData = romData!.AsMemory(spriteInfo.Offset, bytesToRead);
 
-            ISprite sprite = new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, palette, spriteInfo.IsLinear);
-            return sprite;
+            return new Sprite4Bpp(spriteInfo.Index, spriteData, spriteInfo.WidthInBytes, spriteInfo.Height, palette, spriteInfo.IsLinear);
         }
     }
 }

@@ -203,9 +203,7 @@ namespace WmsGfxSpriteEditor.Controls
             return new Rectangle(x, y, ColorBoxSize, ColorBoxSize);
         }
 
-#pragma warning disable SA1204 // Static elements should appear before instance elements
         private static Color GetHighlightColor(Color color)
-#pragma warning restore SA1204 // Static elements should appear before instance elements
         {
             int brightness = (int)((color.R * 0.299) + (color.G * 0.587) + (color.B * 0.114));
             if (brightness > 180)

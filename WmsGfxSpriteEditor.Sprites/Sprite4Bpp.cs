@@ -63,7 +63,7 @@ namespace WmsGfxSpriteEditor.Sprites
 
         public bool IsInBounds(int x, int y)
         {
-            return (x > -1 && x < Width) && (y > -1 && y < Height);
+            return x > -1 && x < Width && y > -1 && y < Height;
         }
 
         public int GetPaletteIndexFromPixel(int x, int y)
@@ -75,11 +75,9 @@ namespace WmsGfxSpriteEditor.Sprites
                 // Get the upper nibble (first pixel)
                 return (pixelByte >> 4) & 0x0F;
             }
-            else
-            {
-                // Get the lower nibble (second pixel)
-                return pixelByte & 0x0F;
-            }
+
+            // Get the lower nibble (second pixel)
+            return pixelByte & 0x0F;
         }
 
         public void SetPixelByPaletteIndex(int x, int y, int paletteIndex)
