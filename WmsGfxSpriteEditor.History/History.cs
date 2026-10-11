@@ -77,8 +77,7 @@ namespace WmsGfxSpriteEditor.History
             --Index;
             Debug.WriteLine("Back() - History index is now {0}", Index);
             DumpHistory();
-            HistoryItem item = _historyItems[Index];
-            return item;
+            return _historyItems[Index];
         }
 
         /// <inheritdoc/>
@@ -92,8 +91,7 @@ namespace WmsGfxSpriteEditor.History
             Index++;
             Debug.WriteLine("Forward() - History index is now {0}", Index);
             DumpHistory();
-            HistoryItem item = _historyItems[Index];
-            return item;
+            return _historyItems[Index];
         }
 
         /// <inheritdoc/>

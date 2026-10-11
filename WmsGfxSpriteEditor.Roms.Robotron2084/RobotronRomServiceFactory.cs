@@ -4,7 +4,7 @@ using WmsGfxSpriteEditor.Roms.Robotron2084.WDPUTieDie;
 
 namespace WmsGfxSpriteEditor.Roms.Robotron2084
 {
-    public class RobotronRomServiceFactory
+    public static class RobotronRomServiceFactory
     {
         public static IRomService Create(RobotronRomSetType romSetType)
         {

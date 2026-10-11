@@ -8,7 +8,7 @@ using WmsGfxSpriteEditor.Sprites;
 
 namespace WmsGfxSpriteEditor
 {
-    public class SpriteEditorDependenciesFactory
+    public static class SpriteEditorDependenciesFactory
     {
         public static SpriteEditorDependencies CreateForRobotron(RobotronRomSetType romSetTypes)
         {

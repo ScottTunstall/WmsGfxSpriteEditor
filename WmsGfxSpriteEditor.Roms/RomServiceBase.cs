@@ -64,7 +64,7 @@ namespace WmsGfxSpriteEditor.Roms
 
                 if (!File.Exists(filePath))
                 {
-                    throw new FileNotFoundException($"Required ROM file not found", romInfo.FileName);
+                    throw new FileNotFoundException("Required ROM file not found", romInfo.FileName);
                 }
 
                 // Read the ROM file

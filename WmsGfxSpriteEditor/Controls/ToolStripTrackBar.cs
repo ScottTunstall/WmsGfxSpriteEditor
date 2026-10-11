@@ -116,13 +116,12 @@ namespace WmsGfxSpriteEditor.Controls
         /// </summary>
         private static Control CreateTrackBar()
         {
-            TrackBar tb = new()
+            return new TrackBar
             {
                 AutoSize = false,
                 TickStyle = TickStyle.None,
                 Size = new Size(100, 18)
             };
-            return tb;
         }
     }
 }

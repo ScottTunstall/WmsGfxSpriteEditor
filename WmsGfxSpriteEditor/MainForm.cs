@@ -27,9 +27,7 @@ namespace WmsGfxSpriteEditor
 #pragma warning restore SYSLIB1054
 
         // Consts
-#pragma warning disable SA1201 // Elements should appear in the correct order
         private const int MinZoomLevel = 1;
-#pragma warning restore SA1201 // Elements should appear in the correct order
 
         private const int MaxZoomLevel = 32;
         private const int DefaultZoomLevel = 3;
@@ -84,7 +82,6 @@ namespace WmsGfxSpriteEditor
 
         // This code will need to be refactored. The individual sections defined by regions will need to be extracted to separate classes.
         // For now - disable the warning about ordering of elements
-#pragma warning disable SA1202 // Elements should be ordered by access
 
         // User selections
         protected bool IsRomsetLoaded { get; private set; }
@@ -265,7 +262,7 @@ namespace WmsGfxSpriteEditor
                     components.Dispose();
                 }
 
-                if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
+                if (_colorPickerDialog?.IsDisposed == false)
                 {
                     _colorPickerDialog.Dispose();
                 }
@@ -281,8 +278,6 @@ namespace WmsGfxSpriteEditor
         }
 
 #pragma warning disable IDE1006 // Element should begin with upper-case letter
-#pragma warning disable SA1124 // Do not use regions
-#pragma warning disable SA1300 // Element should begin with upper-case letter
 
         #region FILE MENU EVENT HANDLERS
 
@@ -639,8 +634,7 @@ namespace WmsGfxSpriteEditor
             spriteDisplay.GridColor = _gridColor;
             spriteDisplay.ZoomLevel = ZoomLevel;
 
-            List<SpriteInfo> allSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
-            AvailableSprites = allSprites;
+            AvailableSprites = [.. editorDependencies.SpriteRepository.GetAllSprites()];
 
             mnuFileSave.Enabled = true;
             cboSprite.Enabled = true;
@@ -710,7 +704,7 @@ namespace WmsGfxSpriteEditor
 
         protected void ToggleColourPickerDialog()
         {
-            if (_colorPickerDialog == null || !_colorPickerDialog.Visible)
+            if (_colorPickerDialog?.Visible != true)
             {
                 ShowColourPickerDialog();
             }
@@ -722,7 +716,7 @@ namespace WmsGfxSpriteEditor
 
         protected void ShowColourPickerDialog()
         {
-            if (_colorPickerDialog != null && !_colorPickerDialog.IsDisposed)
+            if (_colorPickerDialog?.IsDisposed == false)
             {
                 _colorPickerDialog.Show();
                 _colorPickerDialog.BringToFront();
@@ -745,14 +739,10 @@ namespace WmsGfxSpriteEditor
                 );
 
                 _colorPickerDialog.SelectedColorChanged += (s, args) =>
-                {
                     ActivePaletteIndex = _colorPickerDialog.SelectedPaletteIndex;
-                };
 
                 _colorPickerDialog.Shown += (s, args) =>
-                {
                     OnColourPickerDialogShown();
-                };
 
                 _colorPickerDialog.FormClosing += (s, args) =>
                 {
@@ -862,15 +852,13 @@ namespace WmsGfxSpriteEditor
         {
             ThrowIfNoPaletteService();
 
-            string hex = PaletteService!.CopyAsHexString(ActivePaletteColour);
-            return hex;
+            return PaletteService!.CopyAsHexString(ActivePaletteColour);
         }
 
         protected string CopyActivePaletteColourAsRGB()
         {
             ThrowIfNoPaletteService();
-            string rgb = PaletteService!.CopyAsRGBString(ActivePaletteColour);
-            return rgb;
+            return PaletteService!.CopyAsRGBString(ActivePaletteColour);
         }
 
         #endregion PALETTE MENU INVOKED FUNCS
@@ -1194,13 +1182,8 @@ namespace WmsGfxSpriteEditor
 
         #endregion ROM
 
-#pragma warning restore SA1300 // Element should begin with upper-case letter
-#pragma warning restore SA1202 // Elements should be ordered by access
-#pragma warning restore SA1124 // Do not use regions
 #pragma warning restore IDE1006 // Element should begin with upper-case letter
-#pragma warning restore SA1202 // Elements should be ordered by access
 
-#pragma warning disable SA1202
 
         // The properties below in the Throw() methods should sanity check themselves for correct values.
         // When I'm developing, I may miss something so these give me peace of mind.
@@ -1285,5 +1268,4 @@ namespace WmsGfxSpriteEditor
         }
     }
 
-#pragma warning restore SA1202 // Elements should be ordered by access
 }

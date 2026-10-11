@@ -2,7 +2,7 @@ namespace WmsGfxSpriteEditor.Controls
 {
     public class MagnificationPanel : Panel
     {
-        public event MouseEventHandler? ZoomMouseWheel;
+        public event EventHandler<MouseEventArgs>? ZoomMouseWheel;
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
