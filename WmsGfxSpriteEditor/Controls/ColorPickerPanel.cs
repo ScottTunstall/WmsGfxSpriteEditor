@@ -160,23 +160,27 @@ namespace WmsGfxSpriteEditor.Controls
         private void PictureBox_MouseClick(object? sender, MouseEventArgs e)
         {
             int idx = HitTest(e.Location);
-            if (idx >= 0 && idx < _palette.Length)
+            if (idx < 0 || idx >= _palette.Length)
             {
-                SelectedPaletteIndex = idx;
-                SelectedColorChanged?.Invoke(this, EventArgs.Empty);
+                return;
             }
+
+            SelectedPaletteIndex = idx;
+            SelectedColorChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void PictureBox_MouseUp(object? sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right && ColourContextMenuStrip != null)
+            if (e.Button != MouseButtons.Right || ColourContextMenuStrip == null)
             {
-                int idx = HitTest(e.Location);
-                if (idx >= 0 && idx < _palette.Length)
-                {
-                    SelectedPaletteIndex = idx;
-                    ColourContextMenuStrip!.Show(_pictureBox, e.Location);
-                }
+                return;
+            }
+
+            int idx = HitTest(e.Location);
+            if (idx >= 0 && idx < _palette.Length)
+            {
+                SelectedPaletteIndex = idx;
+                ColourContextMenuStrip.Show(_pictureBox, e.Location);
             }
         }
 
