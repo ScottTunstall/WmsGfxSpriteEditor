@@ -12,6 +12,7 @@ AppVersion={#AppVersion}
 AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
+DisableDirPage=no
 UninstallDisplayIcon={app}\{#AppExe}
 SetupIconFile=..\WmsGfxSpriteEditor\hulk-fancy.ico
 OutputDir=bin
