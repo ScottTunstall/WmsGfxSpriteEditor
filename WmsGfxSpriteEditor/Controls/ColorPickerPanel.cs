@@ -4,6 +4,10 @@ namespace WmsGfxSpriteEditor.Controls
 {
     public class ColorPickerPanel : Panel
     {
+        private static readonly Color _dark = Color.FromArgb(255, 40, 40, 40); // dark
+        private static readonly Color _white = Color.FromArgb(255, 255, 255, 255); // white
+        private static readonly Color _gold = Color.FromArgb(255, 255, 215, 0); // gold
+
         private Color[] _palette = [];
         private int _selectedPaletteIndex = -1;
         private int _hoveredIndex = -1;
@@ -210,18 +214,12 @@ namespace WmsGfxSpriteEditor.Controls
         private static Color GetHighlightColor(Color color)
         {
             int brightness = (int)((color.R * 0.299) + (color.G * 0.587) + (color.B * 0.114));
-            if (brightness > 180)
+            return brightness switch
             {
-                return Color.FromArgb(255, 40, 40, 40); // dark
-            }
-            else if (brightness < 75)
-            {
-                return Color.FromArgb(255, 255, 255, 255); // white
-            }
-            else
-            {
-                return Color.FromArgb(255, 255, 215, 0); // gold
-            }
+                > 180 => _dark,
+                < 75 => _white,
+                _ => _gold
+            };
         }
 
         private void InitialiseComponent()
